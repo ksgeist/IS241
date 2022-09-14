@@ -86,6 +86,7 @@ fabric.properties
 *.iml
 modules.xml
 .idea/misc.xml
+.idea/discord.xml
 *.ipr
 
 ### Java ###
