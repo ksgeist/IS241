@@ -11,9 +11,10 @@ repositories {
 
 dependencies {
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
-    implementation 'com.sparkjava:spark-core:2.9.3'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation 'com.sparkjava:spark-core:2.9.4'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+    implementation 'com.auth0:java-jwt:4.0.0'
 }
 
 test {
