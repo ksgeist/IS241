@@ -84,7 +84,7 @@ fabric.properties
 # Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-249601023
 
 *.iml
-modules.xml
+.idea/modules.xml
 .idea/misc.xml
 .idea/discord.xml
 *.ipr
@@ -143,3 +143,4 @@ gradle-app.setting
 *.hprof
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+iml,gradle,java
+/.idea/jarRepositories.xml
