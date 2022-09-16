@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -35,6 +34,15 @@ public class WebServer {
         ignite();
     }
 
+    /***
+     * Loads or generate public and private key for JWT Authentication
+     * @param keyFile
+     * @param publicFile
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws IOException
+     * @throws InvalidKeySpecException
+     */
     private static KeyPair loadOrGenerate(String keyFile, String publicFile) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
         File privateKey = new File(keyFile);
         File publicKey  = new File(publicFile);
