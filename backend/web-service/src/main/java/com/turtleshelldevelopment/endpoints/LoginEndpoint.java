@@ -3,8 +3,6 @@ package com.turtleshelldevelopment.endpoints;
 import com.auth0.jwt.JWT;
 import com.turtleshelldevelopment.WebServer;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -20,28 +18,16 @@ public class LoginEndpoint implements Route {
      */
     @Override
     public Object handle(Request request, Response response) {
-        JSONObject jsonBody;
         String username, password;
 
         //Validate Authentication POST Request
-        try {
-            jsonBody = (JSONObject) new JSONParser().parse(request.body());
-            username = (String) jsonBody.get("username");
-            password = (String) jsonBody.get("password");
-        } catch(ParseException e) {
-            JSONObject error = new JSONObject();
-            error.put("error", "Malformed JSON");
-            response.body(error.toJSONString());
-            response.status(400);
-            return "";
-        }
+        username = request.queryParams("username");
+        password = request.queryParams("password");
 
         if(validate(username, password)) {
-            System.out.println("read");
             System.out.println("user: " + username + ", password: " + password);
             JSONObject success = new JSONObject();
             success.put("jwt", generateJWTToken(username));
-            System.out.println("Output is " + success.toJSONString());
             response.status(200);
             return success;
         } else {
