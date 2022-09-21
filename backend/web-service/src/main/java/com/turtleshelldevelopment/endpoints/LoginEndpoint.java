@@ -44,7 +44,7 @@ public class LoginEndpoint implements Route {
             }
         } catch (SQLException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             response.status(500);
-            WebServer.serverLogger.warning(String.format("Error on handling login: %s", e.getMessage()));
+            WebServer.serverLogger.warn(String.format("Error on handling login: %s", e.getMessage()));
         }
         return "";
     }
