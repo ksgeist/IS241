@@ -4,6 +4,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.turtleshelldevelopment.endpoints.LoginEndpoint;
 import com.turtleshelldevelopment.endpoints.NewAccountEndpoint;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,25 +17,22 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.logging.Logger;
 
 import static spark.Service.ignite;
 import static spark.Spark.*;
 
 public class WebServer {
     public static Dotenv env = Dotenv.load();
-    public static Logger serverLogger;
+    public static final Logger serverLogger = LoggerFactory.getLogger("Dashboard-Backend");
     public static Algorithm JWT_ALGO;
     public static Database database;
 
 
     /***
      * Created By: Colin Kinzel
-     * Modified By: Colin (9/20/22)
+     * Modified By: Colin (9/21/22)
      */
     public static void main(String[] args) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
-        serverLogger = Logger.getLogger("Dashboard-Backend");
-
         serverLogger.info("Connecting to Database...");
         database = new Database();
         serverLogger.info("Successfully connected to Database!");
