@@ -18,6 +18,7 @@ dependencies {
     implementation 'com.zaxxer:HikariCP:5.0.1'
     implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.6'
     implementation 'io.github.cdimascio:java-dotenv:5.2.2'
+    testImplementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.2'
 }
 
 test {
