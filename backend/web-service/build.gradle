@@ -16,6 +16,8 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
     implementation 'com.auth0:java-jwt:4.0.0'
     implementation 'com.zaxxer:HikariCP:5.0.1'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.6'
+    implementation 'io.github.cdimascio:java-dotenv:5.2.2'
 }
 
 test {
