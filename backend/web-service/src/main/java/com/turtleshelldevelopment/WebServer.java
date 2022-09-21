@@ -2,6 +2,8 @@ package com.turtleshelldevelopment;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import com.turtleshelldevelopment.endpoints.LoginEndpoint;
+import com.turtleshelldevelopment.endpoints.NewAccountEndpoint;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,9 +21,9 @@ import static spark.Service.ignite;
 import static spark.Spark.*;
 
 public class WebServer {
+    public static Dotenv env = Dotenv.load();
     public static Logger serverLogger;
     public static Algorithm JWT_ALGO;
-
     public static Database database;
 
 
@@ -35,12 +37,17 @@ public class WebServer {
 
         serverLogger.info("Connecting to Database...");
         database = new Database();
-
+        serverLogger.info("Successfully connected to Database!");
         KeyPair jwtPair = loadOrGenerate();
         JWT_ALGO = Algorithm.RSA512((RSAPublicKey) jwtPair.getPublic(), (RSAPrivateKey) jwtPair.getPrivate());
 
         port(80);
-        path("/api", () -> post("/login", new LoginEndpoint()));
+        path("/api", () -> {
+            post("/login", new LoginEndpoint());
+            path("/account", () -> {
+                post("/new", new NewAccountEndpoint());
+            });
+        });
         ignite();
     }
 
