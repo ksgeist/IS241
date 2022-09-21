@@ -33,22 +33,28 @@ public class WebServer {
      */
     public static void main(String[] args) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
         serverLogger = Logger.getLogger("Dashboard-Backend");
-        serverLogger.info("Setting up JWT...");
 
         serverLogger.info("Connecting to Database...");
         database = new Database();
         serverLogger.info("Successfully connected to Database!");
+        serverLogger.info("Setting up JWT...");
         KeyPair jwtPair = loadOrGenerate();
         JWT_ALGO = Algorithm.RSA512((RSAPublicKey) jwtPair.getPublic(), (RSAPrivateKey) jwtPair.getPrivate());
-
+        serverLogger.info("Successfully Setup JWT Provider!");
+        serverLogger.info("Setting up Endpoints");
         port(80);
         path("/api", () -> {
+            serverLogger.info("Routing /login");
             post("/login", new LoginEndpoint());
+            serverLogger.info("Routing /account");
             path("/account", () -> {
+                serverLogger.info("Routing /account/new");
                 post("/new", new NewAccountEndpoint());
             });
         });
+        serverLogger.info("Ready to Fire");
         ignite();
+        serverLogger.info("We have Lift off!");
     }
 
     /***
