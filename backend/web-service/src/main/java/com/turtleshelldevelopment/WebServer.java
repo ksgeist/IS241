@@ -2,8 +2,6 @@ package com.turtleshelldevelopment;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import com.turtleshelldevelopment.endpoints.LoginEndpoint;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,25 +19,24 @@ import static spark.Service.ignite;
 import static spark.Spark.*;
 
 public class WebServer {
-    private static Logger serverLogger;
+    public static Logger serverLogger;
     public static Algorithm JWT_ALGO;
 
-    private static HikariConfig databaseConfig = new HikariConfig();
-    static HikariDataSource db;
+    public static Database database;
+
 
     /***
      * Created By: Colin Kinzel
      * Modified By: Colin (9/20/22)
-     * @param args
-     * @throws NoSuchAlgorithmException
-     * @throws IOException
-     * @throws InvalidKeySpecException
      */
     public static void main(String[] args) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
         serverLogger = Logger.getLogger("Dashboard-Backend");
         serverLogger.info("Setting up JWT...");
 
-        KeyPair jwtPair = loadOrGenerate("priv.key", "key.pub");
+        serverLogger.info("Connecting to Database...");
+        database = new Database();
+
+        KeyPair jwtPair = loadOrGenerate();
         JWT_ALGO = Algorithm.RSA512((RSAPublicKey) jwtPair.getPublic(), (RSAPrivateKey) jwtPair.getPrivate());
 
         port(80);
@@ -49,16 +46,10 @@ public class WebServer {
 
     /***
      * Loads or generate public and private key for JWT Authentication
-     * @param keyFile
-     * @param publicFile
-     * @return
-     * @throws NoSuchAlgorithmException
-     * @throws IOException
-     * @throws InvalidKeySpecException
      */
-    private static KeyPair loadOrGenerate(String keyFile, String publicFile) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
-        File privateKey = new File(keyFile);
-        File publicKey  = new File(publicFile);
+    private static KeyPair loadOrGenerate() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+        File privateKey = new File("priv.key");
+        File publicKey  = new File("key.pub");
         if(privateKey.exists() && publicKey.exists()) {
             //Load Files
             byte[] privKey = Files.readAllBytes(privateKey.toPath());
