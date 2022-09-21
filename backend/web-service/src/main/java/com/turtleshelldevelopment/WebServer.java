@@ -2,6 +2,8 @@ package com.turtleshelldevelopment;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import com.turtleshelldevelopment.endpoints.LoginEndpoint;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,6 +24,17 @@ public class WebServer {
     private static Logger serverLogger;
     public static Algorithm JWT_ALGO;
 
+    private static HikariConfig databaseConfig = new HikariConfig();
+    static HikariDataSource db;
+
+    /***
+     * Created By: Colin Kinzel
+     * Modified By: Colin (9/20/22)
+     * @param args
+     * @throws NoSuchAlgorithmException
+     * @throws IOException
+     * @throws InvalidKeySpecException
+     */
     public static void main(String[] args) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
         serverLogger = Logger.getLogger("Dashboard-Backend");
         serverLogger.info("Setting up JWT...");
