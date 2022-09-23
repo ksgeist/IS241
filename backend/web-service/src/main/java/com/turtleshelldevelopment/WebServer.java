@@ -2,6 +2,7 @@ package com.turtleshelldevelopment;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import com.turtleshelldevelopment.endpoints.LoginEndpoint;
+import com.turtleshelldevelopment.endpoints.MfaEndpoint;
 import com.turtleshelldevelopment.endpoints.NewAccountEndpoint;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.slf4j.Logger;
@@ -44,7 +45,10 @@ public class WebServer {
         port(80);
         path("/api", () -> {
             serverLogger.info("Routing /login");
-            post("/login", new LoginEndpoint());
+            path("/login", () -> {
+                post("/", new LoginEndpoint());
+                post("/mfa", new MfaEndpoint());
+            });
             serverLogger.info("Routing /account");
             path("/account", () -> {
                 serverLogger.info("Routing /account/new");

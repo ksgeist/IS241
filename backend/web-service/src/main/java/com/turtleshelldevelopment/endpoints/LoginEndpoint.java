@@ -21,8 +21,8 @@ public class LoginEndpoint implements Route {
 
     /***
      * Handles Login
-     * Implementation requires a JSON String with username and password keys
-     * example body: {"username": "XXXXX", "password": "XXXXXXX"}
+     * Implementation requires a HTML Form
+     * example query: ?username=XXXXXXXXX&password=XXXXXXXXXXX
      */
     @Override
     public Object handle(Request request, Response response) {
@@ -36,7 +36,9 @@ public class LoginEndpoint implements Route {
             if(validate(username, password)) {
                 System.out.println("user: " + username + ", password: " + password);
                 JSONObject success = new JSONObject();
-                success.put("jwt", generateJWTToken(username));
+                success.put("success", true);
+                success.put("2faRequired", true);
+                success.put("token", generateJWTToken(username, true));
                 response.status(200);
                 return success;
             } else {
@@ -59,23 +61,24 @@ public class LoginEndpoint implements Route {
             KeySpec spec = new PBEKeySpec(password.toCharArray(), rs.getBytes("salt"), 65536, 64 * 8);
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
             byte[] password_hash = factory.generateSecret(spec).getEncoded();
-            System.out.println("Password Hash: " + Arrays.toString(password_hash));
+            WebServer.serverLogger.debug("Password Hash: " + Arrays.toString(password_hash));
             int diff = correct_password_hash.length ^ password_hash.length;
             for(int i = 0; i < correct_password_hash.length && i < password_hash.length; i++)
             {
                 diff |= correct_password_hash[i] ^ password_hash[i];
             }
-            System.out.println("diff is " + diff);
+            WebServer.serverLogger.debug("diff is " + diff);
             return diff == 0;
         }
         getUser.close();
         return true;
     }
 
-    private String generateJWTToken(String username) {
+    private String generateJWTToken(String username, boolean mFAOnly) {
         return JWT.create()
                 .withIssuer("covid-19-dash")
                 .withSubject(username)
+                .withClaim("mfa", mFAOnly)
                 .withNotBefore(Time.valueOf(LocalTime.now()))
                 .sign(WebServer.JWT_ALGO);
     }
