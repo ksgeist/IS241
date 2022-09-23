@@ -7,7 +7,9 @@
 	Date: 19 Sept 2022 
  
 	Supporting files: scripts.js, styles.css
+	
  */
+    
 
 /************ RESET STYLES ************/
 	html {
@@ -15,15 +17,26 @@
 		font-family: 'Arial', sans-serif;
 		font-weight: 300;
 		background-color: #a9bccf;
+		
+		
+
 	}
 
 	div, footer, header, h1, 
 	h2, h3, img, li, nav, p, section, ul {
 	   border: 0;
 	   padding: 0;
-	   margin: 0;
+	   margin: 0%;
+	  
+	   
 	}
 
+  
+	
+	
+	
+
+  
 /************ GLOBAL STYLES ************/
 		/* Written by KG, JM */ 
 
@@ -31,8 +44,15 @@
 		color: #fff;
 		width: 100%;
 		height: 100%;
+		margin-left: 0%;
+		margin-top: 0%;
+		margin-right: 0%;
+		margin-bottom: 0%;
+		position: fixed;
+		
 	/* 	color: #2b3e51; */
 	}
+
 
 	h1 {
 		font-weight: 600;
