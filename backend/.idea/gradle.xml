@@ -4,9 +4,10 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <option name="delegatedBuild" value="true" />
+        <option name="testRunner" value="PLATFORM" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/web-service" />
-        <option name="gradleHome" value="C:/Gradle" />
         <option name="gradleJvm" value="17" />
         <option name="modules">
           <set>
