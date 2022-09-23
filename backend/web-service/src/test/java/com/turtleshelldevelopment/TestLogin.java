@@ -25,7 +25,8 @@ import static spark.Spark.stop;
 
 public class TestLogin {
     HttpClient client;
-
+    private final String serviceURL = "http://localhost:80";
+    private final String baseURL = "/api";
     @Before
     public void setup() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
         //System.setProperty("user.dir", Path.of(System.getProperty("user.dir")).getParent().toString());
@@ -41,19 +42,19 @@ public class TestLogin {
     @DisplayName("Login Route Exists")
     @Test
     public void loginRouteExists() throws URISyntaxException, IOException, InterruptedException {
-        String loginUrl = "/api/login/";
+        String loginUrl = baseURL + "/login/";
 
-        HttpRequest request = HttpRequest.newBuilder().uri(new URI("http://localhost:80" + loginUrl)).POST(HttpRequest.BodyPublishers.ofString("")).build();
+        HttpRequest request = HttpRequest.newBuilder().uri(new URI(serviceURL + loginUrl)).POST(HttpRequest.BodyPublishers.ofString("")).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(400, response.statusCode());
+        assertEquals(401, response.statusCode());
     }
     @DisplayName("Check Invalid User")
     @Test
     public void loginRouteInvalidUser() throws URISyntaxException, IOException, InterruptedException {
-        String loginUrl = "/api/login/?username=InvalidUser&password=1234";
+        String loginUrl = baseURL + "/login/?username=InvalidUser&password=1234";
 
         HttpRequest request = HttpRequest.newBuilder().uri(
-                new URI("http://localhost:80" + loginUrl)
+                new URI(serviceURL + loginUrl)
         ).POST(HttpRequest.BodyPublishers.ofString("")).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(401, response.statusCode());
@@ -62,10 +63,10 @@ public class TestLogin {
     @DisplayName("Check Valid User")
     @Test
     public void loginRouteValidUser() throws URISyntaxException, IOException, InterruptedException, ParseException {
-        String loginUrl = "/api/login/?username=Test2&password=123";
+        String loginUrl = baseURL + "/login/?username=Test2&password=123";
 
         HttpRequest request = HttpRequest.newBuilder().uri(
-                new URI("http://localhost:80" + loginUrl)
+                new URI(serviceURL + loginUrl)
         ).POST(HttpRequest.BodyPublishers.ofString("")).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         System.out.println("Returned Body: " + response.body());
@@ -79,10 +80,10 @@ public class TestLogin {
     @DisplayName("Login with valid username and invalid password")
     @Test
     public void loginRouteValidUserWithInvalidPassword() throws URISyntaxException, ParseException, IOException, InterruptedException {
-        String loginUrl = "/api/login/?username=Test2&password=1234";
+        String loginUrl = baseURL + "/login/?username=Test2&password=1234";
 
         HttpRequest request = HttpRequest.newBuilder().uri(
-                new URI("http://localhost:80" + loginUrl)
+                new URI( serviceURL + loginUrl)
         ).POST(HttpRequest.BodyPublishers.ofString("")).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         System.out.println("Returned Body: " + response.body());
@@ -96,10 +97,10 @@ public class TestLogin {
     @DisplayName("Invalid User & Correct Password")
     @Test
     public void checkInvalidUserValidPassword() throws ParseException, IOException, InterruptedException, URISyntaxException {
-        String loginUrl = "/api/login/?username=InvalidUser&password=123";
+        String loginUrl = baseURL + "/login/?username=InvalidUser&password=123";
 
         HttpRequest request = HttpRequest.newBuilder().uri(
-                new URI("http://localhost:80" + loginUrl)
+                new URI(serviceURL + loginUrl)
         ).POST(HttpRequest.BodyPublishers.ofString("")).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         System.out.println("Returned Body: " + response.body());
@@ -107,15 +108,33 @@ public class TestLogin {
         assertNotEquals("", response.body());
         JSONObject bodyJson = (JSONObject) new JSONParser().parse(response.body());
         assertNotEquals(null, bodyJson);
-        assertEquals(true, bodyJson.get("success"));
+        assertEquals(false, bodyJson.get("success"));
     }
     @DisplayName("Check for SQL Injection on Username")
     @Test
-    public void testSQLInjection() throws ParseException, IOException, InterruptedException, URISyntaxException {
-        String loginUrl = "/api/login/?username=OR%201=1;#&password=1234";
+    public void testSQLInjectionUsername() throws ParseException, IOException, InterruptedException, URISyntaxException {
+        String loginUrl = baseURL + "/login/?username=OR%201=1;#&password=123";
 
         HttpRequest request = HttpRequest.newBuilder().uri(
-                new URI("http://localhost:80" + loginUrl)
+                new URI(serviceURL + loginUrl)
+        ).POST(HttpRequest.BodyPublishers.ofString("")).build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println("Returned Body: " + response.body());
+        assertEquals(401, response.statusCode());
+        assertNotEquals("", response.body());
+        JSONObject bodyJson = (JSONObject) new JSONParser().parse(response.body());
+        assertNotEquals(null, bodyJson);
+        assertEquals(false, bodyJson.get("success"));
+        assertNull(bodyJson.get("jwt"));
+    }
+
+    @DisplayName("Check for SQL Injection on Password")
+    @Test
+    public void testSQLInjectionPassword() throws ParseException, IOException, InterruptedException, URISyntaxException {
+        String loginUrl = baseURL + "/login/?username=Test2&password=OR%201=1;#";
+
+        HttpRequest request = HttpRequest.newBuilder().uri(
+                new URI(serviceURL + loginUrl)
         ).POST(HttpRequest.BodyPublishers.ofString("")).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         System.out.println("Returned Body: " + response.body());

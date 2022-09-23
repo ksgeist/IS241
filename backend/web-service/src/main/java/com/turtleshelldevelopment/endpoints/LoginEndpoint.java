@@ -42,7 +42,10 @@ public class LoginEndpoint implements Route {
                 response.status(200);
                 return success;
             } else {
-                response.status(400);
+                JSONObject failure = new JSONObject();
+                response.status(401);
+                failure.put("success", false);
+                return failure;
             }
         } catch (SQLException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             response.status(500);
@@ -53,8 +56,10 @@ public class LoginEndpoint implements Route {
 
     private boolean validate(String username, String password) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
         if(username == null || password == null || username.equals("") || password.equals("")) return false;
+        //Get User From database if they exist
         CallableStatement getUser = WebServer.database.getConnection().prepareCall("CALL GET_USER(?)");
         getUser.setString(1, username);
+        //Check for a valid user
         ResultSet rs;
         if((rs = getUser.executeQuery()).next()) {
             byte[] correct_password_hash = rs.getBytes("password_hash");
@@ -68,10 +73,11 @@ public class LoginEndpoint implements Route {
                 diff |= correct_password_hash[i] ^ password_hash[i];
             }
             WebServer.serverLogger.debug("diff is " + diff);
+            getUser.close();
             return diff == 0;
+        } else {
+            return false;
         }
-        getUser.close();
-        return true;
     }
 
     private String generateJWTToken(String username, boolean mFAOnly) {
