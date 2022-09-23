@@ -7,6 +7,7 @@ import com.turtleshelldevelopment.endpoints.NewAccountEndpoint;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import spark.Service;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,7 +24,7 @@ import static spark.Service.ignite;
 import static spark.Spark.*;
 
 public class WebServer {
-    public static Dotenv env = Dotenv.load();
+    public static Dotenv env;
     public static final Logger serverLogger = LoggerFactory.getLogger("Dashboard-Backend");
     public static Algorithm JWT_ALGO;
     public static Database database;
@@ -34,6 +35,9 @@ public class WebServer {
      * Modified By: Colin (9/21/22)
      */
     public static void main(String[] args) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+        serverLogger.info("In: " + System.getProperty("user.dir"));
+        serverLogger.info("Loading .env...");
+        env = Dotenv.load();
         serverLogger.info("Connecting to Database...");
         database = new Database();
         serverLogger.info("Successfully connected to Database!");
@@ -42,22 +46,7 @@ public class WebServer {
         JWT_ALGO = Algorithm.RSA512((RSAPublicKey) jwtPair.getPublic(), (RSAPrivateKey) jwtPair.getPrivate());
         serverLogger.info("Successfully Setup JWT Provider!");
         serverLogger.info("Setting up Endpoints");
-        port(80);
-        path("/api", () -> {
-            serverLogger.info("Routing /login");
-            path("/login", () -> {
-                post("/", new LoginEndpoint());
-                post("/mfa", new MfaEndpoint());
-            });
-            serverLogger.info("Routing /account");
-            path("/account", () -> {
-                serverLogger.info("Routing /account/new");
-                post("/new", new NewAccountEndpoint());
-            });
-        });
-        serverLogger.info("Ready to Fire");
-        ignite();
-        serverLogger.info("We have Lift off!");
+        startWebService();
     }
 
     /***
@@ -94,5 +83,26 @@ public class WebServer {
             publicKeyFile.close();
             return kp;
         }
+    }
+
+    public static Service startWebService() {
+        Service webService;
+        port(80);
+        path("/api", () -> {
+            serverLogger.info("Routing /login");
+            path("/login", () -> {
+                post("/", new LoginEndpoint());
+                post("/mfa", new MfaEndpoint());
+            });
+            serverLogger.info("Routing /account");
+            path("/account", () -> {
+                serverLogger.info("Routing /account/new");
+                post("/new", new NewAccountEndpoint());
+            });
+        });
+        serverLogger.info("Ready to Fire");
+        webService = ignite();
+        serverLogger.info("We have Lift off!");
+        return webService;
     }
 }
