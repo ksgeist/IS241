@@ -1,0 +1,23 @@
+version: 0.2
+services:
+
+  dashboard-db:
+    image: "mariadb:latest"
+    ports:
+      - "3306:3306"
+    volumes:
+      - dashboard_db:/var/lib/mysql
+    networks:
+      - backend-dashboard
+  dashboard-nginx:
+    image: "nginx:latest"
+    volumes:
+      - nginx-conf:/etc/nginx/
+
+volumes:
+  dashboard_db:
+  nginx-conf:
+
+networks:
+  backend-dashboard: {}
+  frontend-dashboard: {}
