@@ -4,11 +4,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.turtleshelldevelopment.endpoints.LoginEndpoint;
 import com.turtleshelldevelopment.endpoints.MfaEndpoint;
 import com.turtleshelldevelopment.endpoints.NewAccountEndpoint;
-import com.warrenstrange.googleauth.GoogleAuthenticator;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import spark.Service;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,7 +19,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
-import static spark.Service.ignite;
 import static spark.Spark.*;
 
 public class WebServer {
@@ -30,7 +27,8 @@ public class WebServer {
     public static Algorithm JWT_ALGO;
     public static Database database;
 
-    public static final GoogleAuthenticator gAuth = new GoogleAuthenticator();
+    public static final String issuer = "Covid-19-MO-IIS";
+
 
     /***
      * Created By: Colin Kinzel
@@ -87,8 +85,7 @@ public class WebServer {
         }
     }
 
-    public static Service startWebService() {
-        Service webService;
+    public static void startWebService() {
         port(80);
         path("/api", () -> {
             serverLogger.info("Routing /login");
@@ -103,8 +100,6 @@ public class WebServer {
             });
         });
         serverLogger.info("Ready to Fire");
-        webService = ignite();
         serverLogger.info("We have Lift off!");
-        return webService;
     }
 }

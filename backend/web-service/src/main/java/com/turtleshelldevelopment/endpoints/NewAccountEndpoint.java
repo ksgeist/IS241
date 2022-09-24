@@ -1,12 +1,13 @@
 package com.turtleshelldevelopment.endpoints;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
 import com.turtleshelldevelopment.WebServer;
-import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
+import dev.samstevens.totp.code.HashingAlgorithm;
+import dev.samstevens.totp.exceptions.QrGenerationException;
+import dev.samstevens.totp.qr.QrData;
+import dev.samstevens.totp.qr.QrGenerator;
+import dev.samstevens.totp.qr.ZxingPngQrGenerator;
+import dev.samstevens.totp.secret.DefaultSecretGenerator;
+import dev.samstevens.totp.secret.SecretGenerator;
 import org.json.simple.JSONObject;
 import spark.Request;
 import spark.Response;
@@ -14,11 +15,6 @@ import spark.Route;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -27,14 +23,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Arrays;
-import java.util.Base64;
+
+import static dev.samstevens.totp.util.Utils.getDataUriForImage;
 
 @SuppressWarnings("unchecked")
 public class NewAccountEndpoint implements Route {
-    private final String issuer = "Covid-19-MO-IIS";
 
     @Override
-    public Object handle(Request request, Response response) throws IOException {
+    public Object handle(Request request, Response response) {
         WebServer.serverLogger.info("Handling New Account!");
         JSONObject body = new JSONObject();
         try {
@@ -81,32 +77,38 @@ public class NewAccountEndpoint implements Route {
 
             permissions.close();
             WebServer.serverLogger.info("Permissions is Good");
-
-            //Insert new account
-            CallableStatement insertUser = WebServer.database.getConnection().prepareCall("CALL ADD_USER(?,?,?,?,?)");
-            JSONObject mfa = generateMultiFactor(username);
-            insertUser.setString(1, username);
-            insertUser.setBytes(2, hash);
-            insertUser.setBytes(3, salt);
-            insertUser.setString(4, (String) mfa.get("secret"));
-            insertUser.setInt(5, permissionId);
-
+            try {
+                //Insert new account
+                CallableStatement insertUser = WebServer.database.getConnection().prepareCall("CALL ADD_USER(?,?,?,?,?)");
+                JSONObject mfa = generateTOTPMultiFactor(username);
+                insertUser.setString(1, username);
+                insertUser.setBytes(2, hash);
+                insertUser.setBytes(3, salt);
+                insertUser.setString(4, (String) mfa.get("secret"));
+                insertUser.setInt(5, permissionId);
             if (insertUser.executeUpdate() == 1) {
                 body.put("error", "200");
                 body.put("2fa", mfa.get("qr"));
                 System.out.println("User created: " + username + ", " + password + ", salt=" + Arrays.toString(salt));
                 WebServer.serverLogger.info("Success!");
+
             } else {
                 body.put("error", "500");
                 body.put("message", "Failed to update database");
                 WebServer.serverLogger.info("Failed to update");
             }
-            WebServer.serverLogger.info("Successfully put in database");
             insertUser.close();
+            WebServer.serverLogger.info("Successfully put in database");
+            } catch (QrGenerationException e) {
+                WebServer.serverLogger.error("Error creating QR");
+                body.put("error", "500");
+                body.put("message", "Failed to Create QR Code for 2FA");
+            }
+            return body;
         } catch (SQLException e) {
             WebServer.serverLogger.info(e.getMessage());
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException | URISyntaxException | WriterException e) {
-            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            WebServer.serverLogger.error(e.getMessage());
         }
         return body;
     }
@@ -119,31 +121,27 @@ public class NewAccountEndpoint implements Route {
         return salt;
     }
 
-    public JSONObject generateMultiFactor(String username) throws URISyntaxException, WriterException, IOException {
-        JSONObject multifactor = new JSONObject();
-        GoogleAuthenticatorKey googleAuthkey = WebServer.gAuth.createCredentials();
-        String key = googleAuthkey.getKey();
-        //String secret = generateRawSecret(64);
+    public JSONObject generateTOTPMultiFactor(String username) throws QrGenerationException {
+        JSONObject mfa = new JSONObject();
+        SecretGenerator secretGenerator = new DefaultSecretGenerator();
+        String secret = secretGenerator.generate();
 
-        URI uri = new URI("otpauth", "totp", "/"+ issuer + ":" + username, "secret=" + key + "&issuer=" + issuer);
-        BitMatrix matrix = new MultiFormatWriter().encode(String.valueOf(uri), BarcodeFormat.QR_CODE,
-                64, 64);
-        multifactor.put("secret", key);
+        QrData qr = new QrData.Builder()
+                .label("Covid-19 Dashboard: " + username)
+                .secret(secret)
+                .issuer(WebServer.issuer)
+                .algorithm(HashingAlgorithm.SHA256)
+                .digits(6)
+                .period(30)
+                .build();
+        QrGenerator generator = new ZxingPngQrGenerator();
+        byte[] imageData = generator.generate(qr);
 
-        File createTemp = File.createTempFile("temp", null);
-        MatrixToImageWriter.writeToPath(matrix, "temp",  createTemp.toPath());
-        Base64.Encoder encoder = Base64.getEncoder();
-        String base64Image = encoder.encodeToString(Files.readAllBytes(createTemp.toPath()));
-        multifactor.put("qr", "data:image/png;base64," + base64Image);
-        return multifactor;
+        String mimeType = generator.getImageMimeType();
+        String dataUri = getDataUriForImage(imageData, mimeType);
+        mfa.put("secret", secret);
+        mfa.put("qr", dataUri);
+        return mfa;
     }
-
-    public static String generateRawSecret(int length) {
-        byte[] buf = new byte[length];
-        new SecureRandom().nextBytes(buf);
-        String rawSecret = Base64.getEncoder().encodeToString(buf);
-        return rawSecret.substring(1, length + 1);
-    }
-
 
 }
