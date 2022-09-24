@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'idea'
 }
 
 group 'com.turtleshelldevelopment'
@@ -23,8 +24,8 @@ dependencies {
     testImplementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j18-impl', version: '2.18.0'
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.1'
     //2FA
-    implementation 'com.google.zxing:javase:3.5.0'
-    implementation 'com.warrenstrange:googleauth:1.5.0'
+
+    compileOnly 'dev.samstevens.totp:totp:1.7.1'
 }
 
 test {
