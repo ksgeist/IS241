@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-	
-	<head>
-    	<title>Missouri COVID-19 Vaccine Tracker </title>
-			<!--
+
+<head>
+	<title>Missouri COVID-19 Vaccine Tracker </title>
+	<!--
 			Missouri COVID-19 Vaccine Tracker Application 
 			Filename: index.html
 	  
@@ -13,46 +13,110 @@
 		 
 			 Supporting files: styles.css
 		  -->
-		
-		<meta charset="utf-8">
 
-		<!-- ======== CSS	========================= -->
-		<link rel="stylesheet" href="assets/css/style.css">
-		<link rel="scripts" href="scripts.js">
-		
-	</head>
+	<meta charset="utf-8">
+
+	<!-- ======== CSS	========================= -->
+	<link rel="stylesheet" href="assets/css/style.css">
+	<link rel="scripts" href="scripts.js">
+	<script src="assets/js/modernizr.custom.40753.js" type="text/javascript"></script>
+
+</head>
 
 
-	<body>
-		
-		<!-- ======== HEADER	========================= -->
-		<div class="header">
-			<img src="assets/images/logo-banner.png" alt="Missouri DHSS Logo: COVID-19 Vaccine Tracker, Authorized users only"/>
-				<a href="#help">Help</a> 
-				<a href="#logout">Logout</a>
-	
+<body>
+
+	<!-- ======== HEADER	========================= -->
+	<div class="header">
+		<img src="assets/images/logo-banner.png"
+			alt="Missouri DHSS Logo: COVID-19 Vaccine Tracker, Authorized users only" />
+		<a href="#help" class="trigger">Help</a>
+		<a href="#logout">Logout</a>
+
+	</div>
+
+
+
+
+
+
+	<!-- ======== LOGIN FORM	========================= -->
+	<div id="login-form-wrap">
+		<form id="login-form">
+			<p>
+				<input type="text" id="username" name="username" placeholder="Username" required><i
+					class="validation"><span></span><span></span></i>
+			</p>
+
+			<p>
+				<input type="password" id="password" value="FakePSW" name="password" placeholder="Password" required><i
+					class="validation"><span></span><span></span></i>
+			</p>
+
+			<p>
+				<input type="submit" id="login" value="Submit">
+			</p>
+		</form>
+	</div>
+	<!--  ============= Help Modal ================-->
+	<div>
+		<div class="modal">
+			<div class="modal-content">
+				<span class="close-button">&times;</span>
+				<h1>Please contact the Missouri IIS for assistance!</h1>
+				<p>Phone: XXX-XXX-XXXX</p>
+				<p>Email: helpme@missouri.gov</p>
+			</div>
 		</div>
-		
-        
+	</div>
 
+	<!-- ======== FOOTER	========================= -->
+	<!-- 		Written by KSG -->
+	<div class="footer">
+		<h1>HIPAA Policy</h1>
+		<p>The Missouri COVID-19 Vaccine Tracker complies with <a
+				href="https://www.cdc.gov/phlp/publications/topic/hipaa.html">HIPAA</a> guidelines, including
+			restricting
+			access only to authorized users. This site is routinely monitored for unauthorized access, and violators are
+			punishable under U.S. law.</p>
 
+		<h2>All users must follow these regulations:</h2>
+		<ul>
+			<li><strong>1.</strong> Do not give your username or password to anyone else.
+			</li>
+			<li><strong>2.</strong> Do not leave this workstation unattended.
+			</li>
+			<li><strong>3.</strong> Logout immediately if you must leave this workstation.
+			</li>
+			<li><strong>4.</strong> Only patients or their legal guardians may receive printed copies of their vaccine
+				records.
+			</li>
+			<li><strong>5.</strong> All vaccine record requests by other persons must go through the <a
+					href="https://health.mo.gov/living/wellness/immunizations/showmevax/">Missouri Department of Health
+					and
+					Senior Services</a>.
+			</li>
+		</ul>
+	</div>
+	<script>
+		const modal = document.querySelector(".modal");
+		const trigger = document.querySelector(".trigger");
+		const closeButton = document.querySelector(".close-button");
 
+		function toggleModal() {
+			modal.classList.toggle("show-modal");
+		}
 
-	  <!-- ======== LOGIN FORM	========================= -->
-		<div id="login-form-wrap">
-			<form id="login-form">
-					<p>
-						<input type="text" id="username" name="username" placeholder="Username" required><i class="validation"><span></span><span></span></i>
-					</p>
-				
-					<p>
-						<input type="password" id="password" value="FakePSW" name="password" placeholder="Password" required><i class="validation"><span></span><span></span></i>
-					</p>
-				
-					<p>
-						<input type="submit" id="login" value="Submit">
-					</p>
-			</form>
-		</div>
-		</body>
+		function windowOnClick(event) {
+			if (event.target === modal) {
+				toggleModal();
+			}
+		}
+
+		trigger.addEventListener("click", toggleModal);
+		closeButton.addEventListener("click", toggleModal);
+		window.addEventListener("click", windowOnClick);
+	</script>
+</body>
+
 </html>
