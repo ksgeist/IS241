@@ -38,7 +38,7 @@ public class LoginEndpoint implements Route {
                 JSONObject success = new JSONObject();
                 success.put("success", true);
                 success.put("2faRequired", true);
-                success.put("token", generateJWTToken(username, true));
+                success.put("token", generateMfaJWTToken(username));
                 response.status(200);
                 return success;
             } else {
@@ -80,11 +80,11 @@ public class LoginEndpoint implements Route {
         }
     }
 
-    private String generateJWTToken(String username, boolean mFAOnly) {
+    private String generateMfaJWTToken(String username) {
         return JWT.create()
-                .withIssuer("covid-19-dash")
+                .withIssuer("mfa-auth")
                 .withSubject(username)
-                .withClaim("mfa", mFAOnly)
+                .withClaim("mfa", true)
                 .withNotBefore(Time.valueOf(LocalTime.now()))
                 .sign(WebServer.JWT_ALGO);
     }

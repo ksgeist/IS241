@@ -4,6 +4,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.turtleshelldevelopment.endpoints.LoginEndpoint;
 import com.turtleshelldevelopment.endpoints.MfaEndpoint;
 import com.turtleshelldevelopment.endpoints.NewAccountEndpoint;
+import com.warrenstrange.googleauth.GoogleAuthenticator;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ public class WebServer {
     public static Algorithm JWT_ALGO;
     public static Database database;
 
+    public static final GoogleAuthenticator gAuth = new GoogleAuthenticator();
 
     /***
      * Created By: Colin Kinzel
