@@ -86,18 +86,17 @@ public class WebServer {
     }
 
     public static void startWebService() {
-        port(80);
-        path("/api", () -> {
-            serverLogger.info("Routing /login");
-            path("/login", () -> {
-                post("/", new LoginEndpoint());
-                post("/mfa", new MfaEndpoint());
-            });
-            serverLogger.info("Routing /account");
-            path("/account", () -> {
-                serverLogger.info("Routing /account/new");
-                post("/new", new NewAccountEndpoint());
-            });
+        port(8091);
+        serverLogger.info("Routing /login");
+        get("/test", (req, res) -> "Test");
+        path("/login", () -> {
+            post("/mfa", new MfaEndpoint());
+        });
+        post("/login", new LoginEndpoint());
+        serverLogger.info("Routing /account");
+        path("/account", () -> {
+            serverLogger.info("Routing /account/new");
+            post("/new", new NewAccountEndpoint());
         });
         serverLogger.info("Ready to Fire");
         serverLogger.info("We have Lift off!");
