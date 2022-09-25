@@ -3,6 +3,8 @@ package com.turtleshelldevelopment.endpoints;
 import com.auth0.jwt.JWT;
 import com.turtleshelldevelopment.WebServer;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -25,12 +27,14 @@ public class LoginEndpoint implements Route {
      * example query: ?username=XXXXXXXXX&password=XXXXXXXXXXX
      */
     @Override
-    public Object handle(Request request, Response response) {
+    public Object handle(Request request, Response response) throws ParseException {
         String username, password;
+        JSONObject body = (JSONObject) new JSONParser().parse(request.body());
+
 
         //Validate Authentication POST Request
-        username = request.queryParams("username");
-        password = request.queryParams("password");
+        username = (String) body.get("username");
+        password = (String) body.get("password");
 
         try {
             if(validate(username, password)) {
@@ -45,6 +49,7 @@ public class LoginEndpoint implements Route {
                 JSONObject failure = new JSONObject();
                 response.status(401);
                 failure.put("success", false);
+                failure.put("message","Invalid Username or Password");
                 return failure;
             }
         } catch (SQLException | NoSuchAlgorithmException | InvalidKeySpecException e) {
