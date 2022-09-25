@@ -25,7 +25,7 @@ dependencies {
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.1'
     //2FA
 
-    compileOnly 'dev.samstevens.totp:totp:1.7.1'
+    implementation 'dev.samstevens.totp:totp:1.7.1'
 }
 
 test {
