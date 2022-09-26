@@ -105,7 +105,9 @@ public class WebServer {
                     serverLogger.info("Token received: " + token);
                     DecodedJWT jwt = JWT.decode(token);
                     WebServer.JWT_ALGO.verify(jwt);
-                    if(!jwt.getExpiresAt().before(new Date()) || !jwt.getIssuer().equals(Issuers.MFA_LOGIN.getIssuer())) {
+                    System.out.println(jwt.getIssuer() + " vs. " + Issuers.MFA_LOGIN.getIssuer());
+                    System.out.println(jwt.getExpiresAt().after(new Date()));
+                    if(!jwt.getExpiresAt().after(new Date()) || !jwt.getIssuer().equals(Issuers.MFA_LOGIN.getIssuer())) {
                         res.cookie("token", null, 0, true, true);
                         halt(401, "Invalidated Token");
                     }
