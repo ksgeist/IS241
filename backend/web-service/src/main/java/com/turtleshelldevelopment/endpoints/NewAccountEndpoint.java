@@ -1,5 +1,6 @@
 package com.turtleshelldevelopment.endpoints;
 
+import com.turtleshelldevelopment.Issuers;
 import com.turtleshelldevelopment.WebServer;
 import dev.samstevens.totp.code.HashingAlgorithm;
 import dev.samstevens.totp.exceptions.QrGenerationException;
@@ -45,14 +46,14 @@ public class NewAccountEndpoint implements Route {
                 body.put("error", "Username already exists");
                 return body;
             }
-            WebServer.serverLogger.info("Username is Good");
+            //WebServer.serverLogger.info("Username is Good");
             //Take in the password and hash it
             byte[] salt = getSalt();
             PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 64 * 8);
             SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 
             byte[] hash = skf.generateSecret(spec).getEncoded();
-            WebServer.serverLogger.info("Password is Good");
+            //WebServer.serverLogger.info("Password is Good");
             //Put Permissions
 
             boolean readPatient = Boolean.parseBoolean(request.queryParams("readPatient"));
@@ -76,7 +77,7 @@ public class NewAccountEndpoint implements Route {
             int permissionId = permissions.getInt(1);
 
             permissions.close();
-            WebServer.serverLogger.info("Permissions is Good");
+            //WebServer.serverLogger.info("Permissions is Good");
             try {
                 //Insert new account
                 CallableStatement insertUser = WebServer.database.getConnection().prepareCall("CALL ADD_USER(?,?,?,?,?)");
@@ -91,7 +92,7 @@ public class NewAccountEndpoint implements Route {
                 body.put("2fa", mfa.get("qr"));
                 System.out.println("User created: " + username + ", " + password + ", salt=" + Arrays.toString(salt));
                 WebServer.serverLogger.info("Success!");
-
+                return "<html><img src=" + body.get("2fa") +" /></html>";
             } else {
                 body.put("error", "500");
                 body.put("message", "Failed to update database");
@@ -110,7 +111,7 @@ public class NewAccountEndpoint implements Route {
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             WebServer.serverLogger.error(e.getMessage());
         }
-        return body;
+        return "<html><img src=" + body.get("2fa") +" /></html>";
     }
 
     private static byte[] getSalt() throws NoSuchAlgorithmException
@@ -129,8 +130,8 @@ public class NewAccountEndpoint implements Route {
         QrData qr = new QrData.Builder()
                 .label("Covid-19 Dashboard: " + username)
                 .secret(secret)
-                .issuer(WebServer.issuer)
-                .algorithm(HashingAlgorithm.SHA256)
+                .issuer(Issuers.AUTHENTICATION.getIssuer())
+                .algorithm(HashingAlgorithm.SHA1)
                 .digits(6)
                 .period(30)
                 .build();
