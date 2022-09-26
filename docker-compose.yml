@@ -11,24 +11,18 @@ services:
       - backend-dashboard
     environment:
       - MYSQL_ROOT_PASSWORD=SuperSecurePassword
-  dashboard-nginx:
-    image: turtleshelldevelopment:nginx
-    ports:
-      - "8090:80"
-    networks:
-      - backend-dashboard
-      - frontend-dashboard
-    volumes:
-      - ./frontend/root:/frontend
   dashboard-backend:
     image: turtleshelldevelopment:backend
     ports:
-      - "8091:8091"
+      - "8090:8091"
     networks:
       - backend-dashboard
+    volumes:
+      - backend_store:/store
 
 volumes:
   dashboard_db:
+  backend_store:
 
 networks:
   backend-dashboard: {}
