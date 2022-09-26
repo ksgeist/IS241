@@ -25,7 +25,7 @@ import static spark.Spark.stop;
 
 public class TestLogin {
     HttpClient client;
-    private final String serviceURL = "http://localhost:80";
+    private final String serviceURL = "http://localhost:8091";
     private final String baseURL = "/api";
     @Before
     public void setup() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
