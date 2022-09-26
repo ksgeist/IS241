@@ -3,7 +3,7 @@
 	Filename: index.html
 
 	Team: Turtle Shell Development
-	Authors: Katherine Geist, Justin Macapanan, Jasmin Milicevic, Colin Kinzel, & Tom Prindiville
+	Authors: Katherine Geist (KSG), Justin Macapanpan (JJM), Jasmin Milicevic (JM)
 	Date: 19 Sept 2022 
  
 	Supporting files: scripts.js, styles.css
@@ -12,33 +12,110 @@
 
 
 /************ RESET STYLES ************/
-html {
-	font-size: 14px;
-	font-family: 'Arial', sans-serif;
-	font-weight: 300;
-	background-color: #a9bccf;
+	html {
+		font-size: 14px;
+		font-family: 'Arial', sans-serif;
+		font-weight: 300;
+		background-color: #a9bccf;
+
+	}
+
+	div, footer, header, h1, 
+	h2, h3, img, li, nav, p, section, ul {
+	   border: 0;
+	   padding: 0;
+	   margin: 0;
+	}
 
 
-}
+/************ GLOBAL STYLES ************/
+		/* Written by KSG, JM */ 
 
-div,
-footer,
-header,
-h1,
-h2,
-h3,
-img,
-li,
-nav,
-p,
-section,
-ul {
-	border: 0;
-	padding: 0;
-	margin: 0%;
+	body {
+		color: #fff;
+		width: 100%;
+		height: 100%;
+		margin-left: 0%;
+		margin-top: 0%;
+		margin-right: 0%;
+		margin-bottom: 0%;
+		position: fixed;
+	}
+
+	h1 {
+		font-weight: 600;
+		font-size: 35px;
+	}
+
+	h2 {
+		color: #000;
+		font-size: 22px;
+	}
+	 
+	p {
+	  position: relative;
+	}
+
+	a,
+	a:link,
+	a:visited,
+	a:active {
+		color: #3ca9e2;
+		-webkit-transition: all 0.2s ease;
+		transition: all 0.2s ease;
+	}
+
+	:focus,
+	a:hover,
+	a:link:focus,
+	a:link:hover,
+	a:visited:focus,
+	a:visited:hover,
+	a:active:focus,
+	a:active:hover {
+		color: #329dd5;
+		-webkit-transition: all 0.2s ease;
+		transition: all 0.2s ease;
+	}
 
 
-}
+/**************** POP-UP ****************/
+	/* Written by Justin Macapanpan */ 
+	#pop-up{
+		display: none;
+	
+		position: absolute;
+		z-index: 1;
+		background-color: rgba(0,0,0,0.4);
+	
+		padding-top: 40%;
+		padding-left: 40%;
+		left: 0;
+		top: 0;
+		height: 100%;
+		width: 100%;
+	}
+
+	#pop-up-content{
+		position:absolute;
+		color: black;
+		height: 200px;
+		width: 400px;
+		border: #003366;
+		border-width: 100px;
+		background-color: whitesmoke;
+	}
+
+	#twofa > *{
+		margin-bottom: 10px;
+	}
+
+	#exit {
+		text-align: right;
+	}
+
+/************ HELP MODAL ************/
+/* Written by Katherine Geist */
 
 button {
 	position: fixed;
@@ -55,8 +132,6 @@ button {
 	padding: 2px 5px;
 	margin: 8px 70px;
 }
-
-
 
 .modal {
 	position: fixed;
@@ -111,222 +186,151 @@ button {
 
 }
 
-
-
-
-
-
-
-/************ GLOBAL STYLES ************/
-/* Written by KG, JM */
-
-body {
-	color: #fff;
-	width: 100%;
-	height: 100%;
-	margin-left: 0%;
-	margin-top: 0%;
-	margin-right: 0%;
-	margin-bottom: 0%;
-	position: fixed;
-
-	/* 	color: #2b3e51; */
-}
-
-
-h1 {
-	font-weight: 600;
-	font-size: 35px;
-}
-
-h2 {
-	color: #000;
-	font-size: 22px;
-}
-
-/* 
-	h3 {
-	  text-align: center;
-	  font-size: large;
-	}
-	 */
-
-p {
-	position: relative;
-}
-
-a,
-a:link,
-a:visited,
-a:active {
-	color: #3ca9e2;
-	-webkit-transition: all 0.2s ease;
-	transition: all 0.2s ease;
-}
-
-:focus,
-a:hover,
-a:link:focus,
-a:link:hover,
-a:visited:focus,
-a:visited:hover,
-a:active:focus,
-a:active:hover {
-	color: #329dd5;
-	-webkit-transition: all 0.2s ease;
-	transition: all 0.2s ease;
-}
-
-
 /************ HEADER ************/
-/* Written by Katherine Geist */
-.header {
-	position: relative;
-	width: 100%;
-	background-color: #fff;
-	margin-left: auto;
-	margin-right: auto;
-	overflow: auto;
-	padding: 2em;
-	left: 0%;
-	right: 1%;
-	top: 0%;
-}
+		/* Written by KSG */ 
+	.header {
+		position: relative;
+		width: 100%;
+		background-color: #fff;
+		margin-left: auto;
+		margin-right: auto;
+		overflow: auto;
+		padding: 2em;
+		left: 0%;
+		right: 1%;
+		top: 0%;
+	}
 
-/* Banner Image*/
-.header img {
-	float: left;
-	width: 95%;
-}
+	/* Banner Image*/
+	.header img {
+		float: center;
+		max-height: 150px;
+		min-height: 80px;
+		max-width: 95%;
+	}
 
-/* Header buttons */
-.header a {
-	float: right;
-	color: #083569;
-	text-align: left;
-	text-decoration: none;
-	font-size: 18px;
-	border-radius: 3px;
-	background-color: #fff;
-	margin: 5px 40px 5px 5px;
-}
+	/* Header buttons */
+	.header a {
+		float: right;
+		color: #083569;
+		text-align: left;
+		text-decoration: none;
+		font-size: 18px; 
+		border-radius: 3px;
+		background-color: #fff;
+		margin: 5px 40px 5px 5px;
+	}
 
-/* Change the background color of buttons on mouse-over */
-.header a:hover {
-	background-color: #d3dde8;
-	color: #083569;
-}
+	/* Change the background color of buttons on mouse-over */
+	.header a:hover {
+	  background-color: #d3dde8;
+	  color: #083569;
+	}
 
 
 /**************** LOGIN FORM****************/
-/* Written by Jasmin Milicevic */
+		/* Written by Jasmin Milicevic, small changes by KSG */ 
 
-#login-form-wrap {
-	background-color: whitesmoke;
-	width: 50%;
-	margin: 100px auto;
-	text-align: center;
-	padding: 20px 10px 10px 10px;
-	border-radius: 4px;
-	box-shadow: 0px 30px 50px 0px rgba(0, 0, 0, 0.2);
-}
+	#login-form-wrap {
+	  background-color: whitesmoke;
+	  width: 30%;
+	  min-width: 400px;
+	  margin: 60px auto;
+	  text-align: center;
+	  padding: 20px 10px 10px 10px;
+	  border-radius: 4px;
+	  box-shadow: 0px 30px 50px 0px rgba(0, 0, 0, 0.2);
+	}
 
-#login-form {
-	padding: 0 50px;
-}
+	#login-form {
+	  padding: 0 10px;
+	}
 
-input {
-	display: block;
-	box-sizing: border-box;
-	width: 100%;
-	outline: none;
-	height: 60px;
-	line-height: 60px;
-	border-radius: 4px;
-}
+	input {
+	  display: block;
+	  box-sizing: border-box;
+	  width: 100%;
+	  outline: none;
+	  height: 60px;
+	  line-height: 60px;
+	  border-radius: 4px;
+	}
 
-input[type="text"],
-input[type="password"] {
-	width: 100%;
-	padding: 0 0 0 10px;
-	margin: 0;
-	color: black;
-	border: 1px solid #c2c0ca;
-	font-style: normal;
-	font-size: 16px;
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	position: relative;
-	display: inline-block;
-	background: none;
-}
+	input[type="text"], input[type="password"] {
+	  width: 100%;
+	  padding: 0 0 0 10px;
+	  margin: 0;
+	  color:black;
+	  border: 1px solid #c2c0ca;
+	  font-style: normal;
+	  font-size: 16px;
+	  -webkit-appearance: none;
+		 -moz-appearance: none;
+			  appearance: none;
+	  position: relative;
+	  display: inline-block;
+	  background: none;
+	}
 
-input[type="text"]:focus,
-input[type="password"]:focus {
-	border-color: #3ca9e2;
-}
+	input[type="text"]:focus, input[type="password"]:focus {
+	  border-color: #3ca9e2;
+	}
 
-input[type="submit"] {
-	border: none;
-	display: block;
-	background-color: #d3dde8;
-	color: #083569;
-	font-weight: bold;
-	text-transform: uppercase;
-	cursor: pointer;
-	-webkit-transition: all 0.2s ease;
-	transition: all 0.2s ease;
-	font-size: 18px;
-	position: relative;
-	display: inline-block;
-	cursor: pointer;
-	text-align: center;
-}
+	input[type="submit"] {
+	  border: none;
+	  display: block;
+	  background-color: #d3dde8;
+	  color: #083569;
+	  font-weight: bold;
+	  text-transform: uppercase;
+	  cursor: pointer;
+	  -webkit-transition: all 0.2s ease;
+	  transition: all 0.2s ease;
+	  font-size: 18px;
+	  position: relative;
+	  display: inline-block;
+	  cursor: pointer;
+	  text-align: center;
+	}
 
 /**************** FOOTER ****************/
-/* Written by KSG */
+		/* Written by KSG */ 
 
+	.footer {
+		background-color: #fff;
+		width: inherit;
+		height: 100%
+	}
 
-.footer {
-	background-color: #fff;
-	width: inherit;
-	height: 100%
-}
-
-
-.footer h1 {
-	text-align: center;
-	font-size: 18px;
-	color: #fff;
-	background-color: #003366;
-}
-
-
-.footer h2 {
-	text-align: left;
-	font-size: 14px;
-	color: #ff751a;
-	margin: 15px 0px 10px 5px;
-}
-
-
-.footer p {
-	text-align: center;
-	color: #003366;
-	font-size: 14px;
-	margin: 5px 20px 0px 20px;
-}
-
-
-.footer ul {
-	text-align: left;
-	color: #003366;
-	font-size: 12px;
-}
-
-.footer ul li {
-	display: block;
-	list-style: none;
-	margin: 2.5px;
-}
+	.footer h1 {
+	  text-align: center;
+	  font-size: 18px;
+	  color: #fff;
+	  background-color: #003366;
+	}
+	
+	.footer h2 {
+		text-align: left;
+		font-size: 14px;
+		color: #ff751a;
+		margin: 15px 0px 10px 5px;
+	}
+	
+	.footer p {
+		text-align: center;
+		color: #003366;
+		font-size: 14px;
+		margin: 5px 20px 0px 20px;
+	}
+	
+	.footer ul {
+		text-align: left;
+		color: #003366;
+		font-size: 12px;
+	}
+	
+	.footer ul li {
+		display: block;
+		list-style: none;
+		margin: 2.5px;
+	}
