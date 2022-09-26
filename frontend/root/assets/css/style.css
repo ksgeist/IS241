@@ -87,15 +87,25 @@
 		position: absolute;
 		z-index: 1;
 		background-color: rgba(0,0,0,0.4);
-	
-		padding-top: 40%;
-		padding-left: 40%;
+		
+		padding: 300px 400px;
+
 		left: 0;
 		top: 0;
 		height: 100%;
 		width: 100%;
 	}
-
+	#twofasubmit{
+		border-radius: 2px;
+		border: medium solid #003366;
+		background-color: white;
+		font-family: "Arial", Impact, Charcoal, sans-serif;
+		font-weight: bold;
+		font-size: 20px;
+		color: #003366;
+		width: 70%;
+		margin-left: 15%;
+	}
 	#pop-up-content{
 		position:absolute;
 		color: black;
@@ -106,8 +116,19 @@
 		background-color: whitesmoke;
 	}
 
+
+	#popup-text{
+		font-size: 14px;
+		font-family: 'Arial', sans-serif;
+		font-weight: 300;
+
+	}
+	#twofainput{
+		width: 90%;
+		margin-left: 5%;
+	}
 	#twofa > *{
-		margin-bottom: 10px;
+		margin-bottom: 20px;
 	}
 
 	#exit {
