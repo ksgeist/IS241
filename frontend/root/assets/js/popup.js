@@ -9,8 +9,10 @@
 window.onload = function(){
     console.log("hi")
 }
+
 const submitButton = document.getElementById("login");
 const exit = document.getElementById("exit");
+
 submitButton.onclick = function(){
     document.getElementById("pop-up").style.display = "block";
 }
