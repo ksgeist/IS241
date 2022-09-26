@@ -9,7 +9,7 @@
 	Supporting files: scripts.js, styles.css
 	
  */
-
+ @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 /************ RESET STYLES ************/
 	html {
@@ -96,43 +96,95 @@
 		width: 100%;
 	}
 	#twofasubmit{
-		border-radius: 2px;
-		border: medium solid #003366;
 		background-color: white;
 		font-family: "Arial", Impact, Charcoal, sans-serif;
 		font-weight: bold;
-		font-size: 20px;
+		font-size: 12pt;
 		color: #003366;
-		width: 70%;
-		margin-left: 15%;
+		width: 90%;
+	}
+	#twofasubmit:hover {
+		background-color: #3287b4;
 	}
 	#pop-up-content{
-		position:absolute;
+		display: none;
+		position: absolute;
 		color: black;
-		height: 200px;
+		top: 50%;
+		left: 50%;
+		margin-left: -200px;
+		margin-top: -250px;
+		height: 500px;
 		width: 400px;
+		z-index: 2;
 		border: #003366;
 		border-width: 100px;
 		background-color: whitesmoke;
+		border-radius: 10px 0 10px 0;
+		animation: fade_in_show 0.5s;
 	}
 
+	@keyframes fade_in_show {
+		0% {
+			 opacity: 0;
+			 transform: scale(0)
+		}
+   
+		100% {
+			 opacity: 1;
+			 transform: scale(1)
+		}
+   }
 
-	#popup-text{
+	#twofa-main {
+		padding: 30px;
+		text-align: center;
+	}
+
+	#twofa-information {
+		text-align: center;
+		padding-bottom: 30px;
+	}
+
+	#twofa-icon {
+		font-size: 70pt;
+		text-align: center;
+		width: 100%;
+	}
+
+	#popup-text {
 		font-size: 14px;
-		font-family: 'Arial', sans-serif;
-		font-weight: 300;
+		font-family: 'Roboto', serif;
+		text-align: center;
+	}
+	#twofa-inputs .twofainput {
+		width: 12%;
+		font-weight: bold;
+		font-size: 25pt;
+	}
+	#twofa-inputs .twofainput:nth-child(3) {
+		margin-right: 40px;
+	}
 
-	}
-	#twofainput{
-		width: 90%;
-		margin-left: 5%;
-	}
-	#twofa > *{
-		margin-bottom: 20px;
+	#pop-up-header {
+		width: 100%;
+		min-height: 48px;
 	}
 
+	#exit:hover {
+		color:rgba(0, 0, 0, 1);
+		transition: color 0.5s;
+	}
 	#exit {
-		text-align: right;
+		color:rgba(122, 122, 122, 1);
+		transition: color 0.5s;
+		float: right;
+	}
+	#pop-up-content h3 {
+		margin: auto 20px 5px 20px;
+		text-align: center;
+		font-size: 25pt;
+		padding-bottom: 10px;
 	}
 
 /************ HELP MODAL ************/
@@ -258,10 +310,11 @@ button {
 	  min-width: 400px;
 	  margin: 60px auto;
 	  text-align: center;
-	  padding: 20px 10px 10px 10px;
+	  padding: 20px 20px 20px 20px;
 	  border-radius: 4px;
 	  box-shadow: 0px 30px 50px 0px rgba(0, 0, 0, 0.2);
 	}
+
 
 	#login-form {
 	  padding: 0 10px;
@@ -280,7 +333,7 @@ button {
 	input[type="text"], input[type="password"] {
 	  width: 100%;
 	  padding: 0 0 0 10px;
-	  margin: 0;
+	  margin: 10px auto 10px auto;
 	  color:black;
 	  border: 1px solid #c2c0ca;
 	  font-style: normal;
@@ -300,6 +353,7 @@ button {
 	input[type="submit"] {
 	  border: none;
 	  display: block;
+	  margin: 10px auto 10px auto;
 	  background-color: #d3dde8;
 	  color: #083569;
 	  font-weight: bold;
