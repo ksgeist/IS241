@@ -1,12 +1,18 @@
 package com.turtleshelldevelopment;
 
+import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.turtleshelldevelopment.endpoints.LoginEndpoint;
+import com.turtleshelldevelopment.endpoints.LogoutEndpoint;
 import com.turtleshelldevelopment.endpoints.MfaEndpoint;
 import com.turtleshelldevelopment.endpoints.NewAccountEndpoint;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import spark.Request;
+import spark.Response;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,6 +24,8 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Date;
+import java.util.Map;
 
 import static spark.Spark.*;
 
@@ -26,8 +34,6 @@ public class WebServer {
     public static final Logger serverLogger = LoggerFactory.getLogger("Dashboard-Backend");
     public static Algorithm JWT_ALGO;
     public static Database database;
-
-    public static final String issuer = "Covid-19-MO-IIS";
 
 
     /***
@@ -53,8 +59,8 @@ public class WebServer {
      * Loads or generate public and private key for JWT Authentication
      */
     private static KeyPair loadOrGenerate() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
-        File privateKey = new File("priv.key");
-        File publicKey  = new File("key.pub");
+        File privateKey = new File("store/priv.key");
+        File publicKey  = new File("store/key.pub");
         if(privateKey.exists() && publicKey.exists()) {
             //Load Files
             byte[] privKey = Files.readAllBytes(privateKey.toPath());
@@ -88,17 +94,57 @@ public class WebServer {
     public static void startWebService() {
         port(8091);
         serverLogger.info("Routing /login");
-        get("/test", (req, res) -> "Test");
-        path("/login", () -> {
-            post("/mfa", new MfaEndpoint());
+        staticFileLocation("/frontend");
+        before("/dashboard.html", WebServer::verifyCredentials);
+        before("/api/logout", WebServer::verifyCredentials);
+        before("/api/login/mfa", (req, res) -> {
+            try {
+                Map<String, String> cookies = req.cookies();
+                if(cookies.containsKey("token")) {
+                    String token = cookies.get("token");
+                    serverLogger.info("Token received: " + token);
+                    DecodedJWT jwt = JWT.decode(token);
+                    WebServer.JWT_ALGO.verify(jwt);
+                    if(!jwt.getExpiresAt().before(new Date()) || !jwt.getIssuer().equals(Issuers.MFA_LOGIN.getIssuer())) {
+                        res.cookie("token", null, 0, true, true);
+                        halt(401, "Invalidated Token");
+                    }
+                }
+            } catch (NullPointerException e) {
+                serverLogger.error("Null on Token");
+                halt(401, "Attempted to call multi-factor without logging in");
+            } catch (SignatureVerificationException e) {
+                halt(401, "Invalid Token");
+            }
         });
-        post("/login", new LoginEndpoint());
-        serverLogger.info("Routing /account");
-        path("/account", () -> {
-            serverLogger.info("Routing /account/new");
-            post("/new", new NewAccountEndpoint());
+        path("/api", () -> {
+            get("/test", (req, res) -> "Test");
+            path("/login", () -> post("/mfa", new MfaEndpoint()));
+            post("/login", new LoginEndpoint());
+            get("/logout", new LogoutEndpoint());
+            serverLogger.info("Routing /account");
+            path("/account", () -> {
+                serverLogger.info("Routing /account/new");
+                post("/new", new NewAccountEndpoint());
+            });
         });
         serverLogger.info("Ready to Fire");
         serverLogger.info("We have Lift off!");
+    }
+
+    public static void verifyCredentials(Request req, Response res) {
+        try {
+            Map<String, String> cookies = req.cookies();
+            String token = cookies.get("token");
+            serverLogger.info("Token received: " + token);
+            DecodedJWT jwt = JWT.decode(token);
+            WebServer.JWT_ALGO.verify(jwt);
+            if(!jwt.getExpiresAt().before(new Date()) || !jwt.getIssuer().equals(Issuers.AUTHENTICATION.getIssuer())) {
+                res.cookie("token", null, 0, true, true);
+                halt(401, "Invalidated Token");
+            }
+        } catch(SignatureVerificationException e) {
+            halt(401, "Invalidate Token");
+        }
     }
 }
