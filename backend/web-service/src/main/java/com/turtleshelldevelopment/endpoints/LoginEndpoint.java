@@ -54,9 +54,12 @@ public class LoginEndpoint implements Route {
                 failure.put("message","Invalid Username or Password");
                 return failure;
             }
-        } catch (SQLException | NoSuchAlgorithmException | InvalidKeySpecException | ParseException e) {
+        } catch (SQLException e) {
             response.status(500);
             WebServer.serverLogger.warn(String.format("Error on handling login: %s", e.getMessage()));
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | ParseException e) {
+            response.status(401);
+            //WebServer.serverLogger.warn(String.format("Error on handling login: %s", e.getMessage()));
         }
         return "";
     }
