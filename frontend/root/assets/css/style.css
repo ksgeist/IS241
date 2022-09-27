@@ -115,7 +115,7 @@
 	}
 
 	#pop-up-content{
-		display: block;
+		display: none;
 		position: absolute;
 		color: black;
 		top: 50%;
