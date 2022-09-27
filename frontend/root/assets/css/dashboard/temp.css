@@ -1,0 +1,10 @@
+body {
+    background-color: #79a8d8 !important;
+    height: 100vh;
+}
+
+#center {
+    text-align: center;
+    padding-top: 50px;
+    margin: 0 auto;
+}

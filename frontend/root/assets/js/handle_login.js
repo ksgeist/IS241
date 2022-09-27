@@ -1,3 +1,8 @@
+document.getElementById("login").onclick = (event) => {
+  event.preventDefault();
+  handleLoginCall();
+};
+
 function handleLoginCall() {
   document.getElementById("messages").innerText = "";
   document.getElementsByClassName("lds-ring")[0].style.display = "flex";
@@ -25,12 +30,12 @@ function handleLoginCall() {
         } else {
           document.getElementById("messages").innerText = json_data["message"];
         }
-        validateLogin()
+        validateLogin();
         document.getElementsByClassName("lds-ring")[0].style.display = "none";
       } catch (SyntaxError) {
         document.getElementById("messages").innerText =
           "Server responded with an invalid response. Please try again later.";
-          validateLogin()
+        validateLogin();
         document.getElementsByClassName("lds-ring")[0].style.display = "none";
       }
     }
@@ -62,13 +67,15 @@ document.getElementById("twofasubmit").onclick = (event) => {
           console.log(json_data);
           window.location.replace(window.location.origin + "/dashboard.html");
         } else {
-            if(json_data["retry"] == null || !json_data["retry"]) {
-                document.getElementById("pop-up").style.display = "none";
-                document.getElementById("pop-up-content").style.display = "none";
-                document.getElementById("messages").innerText = json_data["message"];
-            } else if(json_data["retry"]) {
-                document.getElementById("twofa-messages").innerText = json_data["message"];
-            }
+          if (json_data["retry"] == null || !json_data["retry"]) {
+            document.getElementById("pop-up").style.display = "none";
+            document.getElementById("pop-up-content").style.display = "none";
+            document.getElementById("messages").innerText =
+              json_data["message"];
+          } else if (json_data["retry"]) {
+            document.getElementById("twofa-messages").innerText =
+              json_data["message"];
+          }
         }
       } catch (SyntaxError) {
         document.getElementById("twofa-messages").innerText =
@@ -77,11 +84,6 @@ document.getElementById("twofasubmit").onclick = (event) => {
     }
   };
   mfa.send(JSON.stringify(data));
-};
-
-document.getElementById("login").onclick = (event) => {
-  event.preventDefault();
-  handleLoginCall();
 };
 
 function validateLogin() {

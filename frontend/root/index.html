@@ -30,15 +30,15 @@
 
 </head>
 
-
 <body>
-
 	<!-- ======== HEADER	========================= -->
 	<!-- 		Written by KSG -->
 	<div class="header">
-		<a href="#help" class="trigger">Help</a>
-		<img src="assets/images/logo-banner.png"
-			alt="Missouri DHSS Logo: COVID-19 Vaccine Tracker, Authorized users only" />
+		<div id="inner-header">
+			<button class="trigger">Help</button>
+			<img src="assets/images/logo-banner.png"
+				alt="Missouri DHSS Logo: COVID-19 Vaccine Tracker, Authorized users only" />
+		</div>
 	</div>
 
 
@@ -54,7 +54,12 @@
 			<p id="messages"></p>
 			<div id="login-submit">
 				<input type="submit" id="login" value="Login" disabled>
-				<div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+				<div class="lds-ring">
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
 			</div>
 		</form>
 	</div>
@@ -110,10 +115,10 @@
 			</div>
 		</div>
 	</div>
-
+	<div class="spacer"></div>
 	<!-- ======== FOOTER	========================= -->
 	<!-- 		Written by KSG -->
-	<div class="footer">
+	<footer>
 		<h1>HIPAA Policy</h1>
 		<p>The Missouri COVID-19 Vaccine Tracker complies with <a
 				href="https://www.cdc.gov/phlp/publications/topic/hipaa.html">HIPAA</a> guidelines, including
@@ -138,7 +143,7 @@
 					Senior Services</a>.
 			</li>
 		</ul>
-	</div>
+	</footer>
 
 	<!--  ============= SCRIPTS ================-->
 	<!-- 		Written by JM -->
@@ -149,6 +154,7 @@
 
 		function toggleModal() {
 			modal.classList.toggle("show-modal");
+			document.getElementById("pop-up").style.display = (document.getElementById("pop-up").style.display != "block" ? "block" : "none");
 		}
 
 		function windowOnClick(event) {
@@ -160,8 +166,6 @@
 		trigger.addEventListener("click", toggleModal);
 		closeButton.addEventListener("click", toggleModal);
 		window.addEventListener("click", windowOnClick);
-
-		const password = document.getElementById("password").value = "";
 	</script>
 
 </body>
