@@ -55,7 +55,11 @@ public class WebServer {
         serverLogger.info("Successfully connected to Database!");
         serverLogger.info("Setting up JWT...");
         KeyPair jwtPair = loadOrGenerate();
-        JWT_ALGO = Algorithm.RSA512((RSAPublicKey) jwtPair.getPublic(), (RSAPrivateKey) jwtPair.getPrivate());
+        if(jwtPair != null) {
+            JWT_ALGO = Algorithm.RSA512((RSAPublicKey) jwtPair.getPublic(), (RSAPrivateKey) jwtPair.getPrivate());
+        } else {
+            throw new RuntimeException("Failed to generate JWT folder");
+        }
         serverLogger.info("Successfully Setup JWT Provider!");
         serverLogger.info("Setting up Endpoints");
         startWebService();
