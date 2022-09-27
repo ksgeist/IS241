@@ -2,6 +2,7 @@ package com.turtleshelldevelopment;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.turtleshelldevelopment.endpoints.LoginEndpoint;
@@ -9,6 +10,7 @@ import com.turtleshelldevelopment.endpoints.LogoutEndpoint;
 import com.turtleshelldevelopment.endpoints.MfaEndpoint;
 import com.turtleshelldevelopment.endpoints.NewAccountEndpoint;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -60,20 +62,20 @@ public class WebServer {
      */
     private static KeyPair loadOrGenerate() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
         File privateKey = new File("store/priv.key");
-        File publicKey  = new File("store/key.pub");
-        if(privateKey.exists() && publicKey.exists()) {
+        File publicKey = new File("store/key.pub");
+        if (privateKey.exists() && publicKey.exists()) {
             //Load Files
             byte[] privKey = Files.readAllBytes(privateKey.toPath());
             byte[] pubKey = Files.readAllBytes(publicKey.toPath());
 
             PKCS8EncodedKeySpec priv = new PKCS8EncodedKeySpec(privKey);
             X509EncodedKeySpec pub = new X509EncodedKeySpec(pubKey);
-            KeyFactory keyFactory =KeyFactory.getInstance("RSA");
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             PrivateKey loadPrivateKey = keyFactory.generatePrivate(priv);
             PublicKey loadPublicKey = keyFactory.generatePublic(pub);
-            if(!(loadPublicKey instanceof RSAPublicKey)) {
+            if (!(loadPublicKey instanceof RSAPublicKey)) {
                 throw new IllegalArgumentException("Public Key is not an RSA Public Key");
-            } else if(!(loadPrivateKey instanceof RSAPrivateKey)) {
+            } else if (!(loadPrivateKey instanceof RSAPrivateKey)) {
                 throw new IllegalArgumentException("Private Key is not an RSA Private Key");
             }
             return new KeyPair(loadPublicKey, loadPrivateKey);
@@ -100,16 +102,20 @@ public class WebServer {
         before("/api/login/mfa", (req, res) -> {
             try {
                 Map<String, String> cookies = req.cookies();
-                if(cookies.containsKey("token")) {
+                if (cookies.containsKey("token")) {
                     String token = cookies.get("token");
                     serverLogger.info("Token received: " + token);
                     DecodedJWT jwt = JWT.decode(token);
                     WebServer.JWT_ALGO.verify(jwt);
                     System.out.println(jwt.getIssuer() + " vs. " + Issuers.MFA_LOGIN.getIssuer());
                     System.out.println(jwt.getExpiresAt().after(new Date()));
-                    if(!jwt.getExpiresAt().after(new Date()) || !jwt.getIssuer().equals(Issuers.MFA_LOGIN.getIssuer())) {
-                        res.cookie("token", null, 0, true, true);
-                        halt(401, "Invalidated Token");
+                    if (jwt.getExpiresAt().before(new Date()) || !jwt.getIssuer().equals(Issuers.MFA_LOGIN.getIssuer())) {
+                        res.cookie("/", "token", null, 0, true, true);
+                        JSONObject err = new JSONObject();
+                        err.put("success", false);
+                        err.put("message", "Token is no longer valid");
+                        err.put("retry", false);
+                        halt(401, err.toJSONString());
                     }
                 }
             } catch (NullPointerException e) {
@@ -136,17 +142,32 @@ public class WebServer {
 
     public static void verifyCredentials(Request req, Response res) {
         try {
-            Map<String, String> cookies = req.cookies();
-            String token = cookies.get("token");
+            String token = req.cookie("token");
+            if(token == null) {
+                System.out.println("Token did not exist");
+                res.redirect("/");
+                return;
+            }
             serverLogger.info("Token received: " + token);
             DecodedJWT jwt = JWT.decode(token);
             WebServer.JWT_ALGO.verify(jwt);
-            if(!jwt.getExpiresAt().before(new Date()) || !jwt.getIssuer().equals(Issuers.AUTHENTICATION.getIssuer())) {
-                res.cookie("token", null, 0, true, true);
-                halt(401, "Invalidated Token");
+            System.out.println("JWT is " + jwt);
+            System.out.println("JWT expires at is: " + jwt.getExpiresAt());
+            System.out.println("JWT issuer is: " + jwt.getIssuer());
+            if (jwt.getExpiresAt().before(new Date()) || !jwt.getIssuer().equals(Issuers.AUTHENTICATION.getIssuer())) {
+                res.cookie("/", "token", null, 0, true, true);
+                JSONObject err = new JSONObject();
+                err.put("success", false);
+                err.put("message", "Invalid Token");
+                err.put("expired", jwt.getExpiresAt().before(new Date()));
+                err.put("bad-issuer", jwt.getIssuer().equals(Issuers.AUTHENTICATION.getIssuer()));
+                halt(401, err.toJSONString());
             }
-        } catch(SignatureVerificationException e) {
-            halt(401, "Invalidate Token");
+        } catch (SignatureVerificationException | JWTDecodeException e) {
+            JSONObject err = new JSONObject();
+            err.put("success", false);
+            err.put("message", "Invalid Token");
+            halt(401, err.toJSONString());
         }
     }
 }
