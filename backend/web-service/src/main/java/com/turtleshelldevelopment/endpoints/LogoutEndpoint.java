@@ -7,7 +7,7 @@ import spark.Route;
 public class LogoutEndpoint implements Route {
     @Override
     public Object handle(Request request, Response response) {
-        response.cookie("token", "", 0);
+        response.removeCookie("/", "token");
         response.redirect("/");
         return "";
     }

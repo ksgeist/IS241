@@ -97,6 +97,6 @@ public class LoginEndpoint implements Route {
                 .withNotBefore(time.toInstant(ZoneOffset.UTC))
                 .withExpiresAt(inst)
                 .sign(WebServer.JWT_ALGO);
-        response.cookie("token", jwt, 180, true, true);
+        response.cookie("/","token", jwt, 180, true, true);
     }
 }

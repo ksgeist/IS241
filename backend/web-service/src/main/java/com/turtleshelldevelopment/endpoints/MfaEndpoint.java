@@ -19,8 +19,9 @@ import spark.Route;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.time.LocalTime;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 public class MfaEndpoint implements Route {
     @Override
@@ -54,6 +55,7 @@ public class MfaEndpoint implements Route {
                 JSONObject error = new JSONObject();
                 error.put("success", false);
                 error.put("message", "Nonexistent user");
+                error.put("retry", false);
                 response.status(401);
                 return error;
             }
@@ -64,17 +66,20 @@ public class MfaEndpoint implements Route {
 
             if(verifier.isValidCode(secret, code)) {
                 success.put("success", true);
-                response.cookie("token", generateJWTToken(username), 300, true, true);
+                response.removeCookie("/", "token");
+                response.cookie("/","token", generateJWTToken(username), 300, true, true);
                 return success;
             } else {
                 success.put("success", false);
                 success.put("message", "Invalid Two Factor Code");
+                success.put("retry", true);
             }
             return success;
         } catch (SignatureVerificationException | SQLException e) {
             JSONObject error = new JSONObject();
             error.put("success", false);
             error.put("message", "Invalid Signature");
+            error.put("retry", false);
             response.status(401);
             return error.toJSONString();
         }
@@ -82,11 +87,14 @@ public class MfaEndpoint implements Route {
     }
 
     private String generateJWTToken(String username) {
+        LocalDateTime time = LocalDateTime.now();
+        Instant inst = time.plusMinutes(10).toInstant(ZoneOffset.UTC);
         return JWT.create()
                 .withIssuer(Issuers.AUTHENTICATION.getIssuer())
                 .withSubject(username)
                 .withClaim("mfa", true)
-                .withNotBefore(Time.valueOf(LocalTime.now()))
+                .withNotBefore(time.toInstant(ZoneOffset.UTC))
+                .withExpiresAt(inst)
                 .sign(WebServer.JWT_ALGO);
     }
 }
