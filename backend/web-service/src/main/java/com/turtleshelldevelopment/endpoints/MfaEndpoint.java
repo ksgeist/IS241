@@ -34,10 +34,10 @@ public class MfaEndpoint implements Route {
             failure.put("message", "Missing code in Body");
             return failure;
         }
-        String code = (String) bodyJSON.get("code");
-        DecodedJWT jwt = JWT.decode(jwtQuery);
-        WebServer.serverLogger.info("Payload is: " + jwt.getClaims().toString());
         try {
+            String code = (String) bodyJSON.get("code");
+            DecodedJWT jwt = JWT.decode(jwtQuery);
+            WebServer.serverLogger.info("Payload is: " + jwt.getClaims().toString());
             JSONObject success = new JSONObject();
             WebServer.JWT_ALGO.verify(jwt);
 
@@ -79,6 +79,13 @@ public class MfaEndpoint implements Route {
             JSONObject error = new JSONObject();
             error.put("success", false);
             error.put("message", "Invalid Signature");
+            error.put("retry", false);
+            response.status(401);
+            return error.toJSONString();
+        } catch (NullPointerException e) {
+            JSONObject error = new JSONObject();
+            error.put("success", false);
+            error.put("message", "Token is no longer valid");
             error.put("retry", false);
             response.status(401);
             return error.toJSONString();
