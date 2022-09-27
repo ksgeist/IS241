@@ -30,7 +30,7 @@ public class TestLogin {
     @Before
     public void setup() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
         //System.setProperty("user.dir", Path.of(System.getProperty("user.dir")).getParent().toString());
-        WebServer.main(null);
+        WebServer.main(new String[] {"use-test-db"});
         client = HttpClient.newHttpClient();
         awaitInitialization();
     }
@@ -42,7 +42,7 @@ public class TestLogin {
     @DisplayName("Login Route Exists")
     @Test
     public void loginRouteExists() throws URISyntaxException, IOException, InterruptedException {
-        String loginUrl = baseURL + "/login/";
+        String loginUrl = baseURL + "/login";
 
         HttpRequest request = HttpRequest.newBuilder().uri(new URI(serviceURL + loginUrl)).POST(HttpRequest.BodyPublishers.ofString("")).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -51,11 +51,11 @@ public class TestLogin {
     @DisplayName("Check Invalid User")
     @Test
     public void loginRouteInvalidUser() throws URISyntaxException, IOException, InterruptedException {
-        String loginUrl = baseURL + "/login/?username=InvalidUser&password=1234";
+        String loginUrl = baseURL + "/login";
 
         HttpRequest request = HttpRequest.newBuilder().uri(
                 new URI(serviceURL + loginUrl)
-        ).POST(HttpRequest.BodyPublishers.ofString("")).build();
+        ).POST(HttpRequest.BodyPublishers.ofString("{\"username\":\"InvalidUser\",\"password\":\"1234\"}")).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(401, response.statusCode());
     }
@@ -63,11 +63,11 @@ public class TestLogin {
     @DisplayName("Check Valid User")
     @Test
     public void loginRouteValidUser() throws URISyntaxException, IOException, InterruptedException, ParseException {
-        String loginUrl = baseURL + "/login/?username=Test2&password=123";
+        String loginUrl = baseURL + "/login";
 
         HttpRequest request = HttpRequest.newBuilder().uri(
                 new URI(serviceURL + loginUrl)
-        ).POST(HttpRequest.BodyPublishers.ofString("")).build();
+        ).POST(HttpRequest.BodyPublishers.ofString("{\"username\":\"TestUser\",\"password\":\"123\"}")).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         System.out.println("Returned Body: " + response.body());
         assertEquals(200, response.statusCode());
@@ -80,11 +80,11 @@ public class TestLogin {
     @DisplayName("Login with valid username and invalid password")
     @Test
     public void loginRouteValidUserWithInvalidPassword() throws URISyntaxException, ParseException, IOException, InterruptedException {
-        String loginUrl = baseURL + "/login/?username=Test2&password=1234";
+        String loginUrl = baseURL + "/login";
 
         HttpRequest request = HttpRequest.newBuilder().uri(
                 new URI( serviceURL + loginUrl)
-        ).POST(HttpRequest.BodyPublishers.ofString("")).build();
+        ).POST(HttpRequest.BodyPublishers.ofString("{\"username\":\"TestUser\",\"password\":\"1234\"}")).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         System.out.println("Returned Body: " + response.body());
         assertEquals(401, response.statusCode());
