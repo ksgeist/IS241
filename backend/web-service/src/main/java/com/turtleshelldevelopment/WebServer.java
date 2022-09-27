@@ -40,14 +40,14 @@ public class WebServer {
 
     /***
      * Created By: Colin Kinzel
-     * Modified By: Colin (9/21/22)
+     * Modified On: Colin (9/27/22)
      */
     public static void main(String[] args) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
         serverLogger.info("In: " + System.getProperty("user.dir"));
         serverLogger.info("Loading .env...");
         env = Dotenv.load();
         serverLogger.info("Connecting to Database...");
-        if(args[0] != null && args[0].equals("use-test-db")) {
+        if(args.length >= 1 && args[0].equals("use-test-db")) {
             database = new Database(env.get("TEST_DB_URL"), env.get("TEST_DB_USERNAME"), env.get("TEST_DB_PASSWORD"));
         } else {
             database = new Database();
@@ -65,6 +65,14 @@ public class WebServer {
      * Loads or generate public and private key for JWT Authentication
      */
     private static KeyPair loadOrGenerate() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+        File storeFolder = new File("store");
+        if(!storeFolder.exists()) {
+            boolean created = storeFolder.mkdirs();
+            if(!created) {
+                WebServer.serverLogger.error("Failed to create store folder");
+                return null;
+            }
+        }
         File privateKey = new File("store/priv.key");
         File publicKey = new File("store/key.pub");
         if (privateKey.exists() && publicKey.exists()) {
