@@ -1,0 +1,448 @@
+/*
+	Missouri COVID-19 Vaccine Tracker Application 
+	Filename: style.css
+
+	Team: Turtle Shell Development
+	Authors: Katherine Geist (KSG), Justin Macapanpan (JJM), Jasmin Milicevic (JM)
+	Date: 19 Sept 2022 
+ 
+	Supporting files: scripts.js, index.html
+	
+ */
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+/************ RESET STYLES ************/
+html {
+  font-size: 14px;
+  font-family: "Arial", sans-serif;
+  font-weight: 300;
+  background-color: #a9bccf;
+}
+
+div,
+footer,
+header,
+h1,
+h2,
+h3,
+img,
+li,
+nav,
+p,
+section,
+ul {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+/************ GLOBAL STYLES ************/
+/* Written by KSG, JM */
+
+body {
+  color: #fff;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+h1 {
+  font-weight: 600;
+  font-size: 35px;
+}
+
+h2 {
+  color: #000;
+  font-size: 22px;
+}
+
+p {
+  position: relative;
+}
+
+a,
+a:link,
+a:visited,
+a:active {
+  color: #3ca9e2;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+}
+
+:focus,
+a:hover,
+a:link:focus,
+a:link:hover,
+a:visited:focus,
+a:visited:hover,
+a:active:focus,
+a:active:hover {
+  color: #329dd5;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+}
+
+/**************** POP-UP ****************/
+/* Written by Justin Macapanpan */
+#pop-up {
+  display: none;
+
+  position: absolute;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.4);
+
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+#twofasubmit {
+  background-color: white;
+  font-family: "Arial", Impact, Charcoal, sans-serif;
+  font-weight: bold;
+  font-size: 12pt;
+  color: #003366;
+  width: 90%;
+}
+#twofasubmit:hover {
+  background-color: #3287b4;
+}
+
+#twofa-messages {
+  min-height: 34px;
+  color: red;
+  text-align: center;
+  font-weight: bold;
+}
+
+#pop-up-content {
+  display: none;
+  position: absolute;
+  color: black;
+  top: 50%;
+  left: 50%;
+  margin-left: -200px;
+  margin-top: -260px;
+  height: 520px;
+  width: 400px;
+  z-index: 2;
+  border: #003366;
+  border-width: 100px;
+  background-color: whitesmoke;
+  border-radius: 10px 0 10px 0;
+  animation: fade_in_show 0.5s;
+}
+
+@keyframes fade_in_show {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+#twofa-main {
+  padding: 30px;
+  text-align: center;
+}
+
+#twofa-information {
+  text-align: center;
+  padding-bottom: 30px;
+}
+
+#twofa-icon {
+  font-size: 70pt;
+  text-align: center;
+  width: 100%;
+}
+
+#popup-text {
+  font-size: 14px;
+  font-family: "Roboto", serif;
+  text-align: center;
+  margin: auto 10px;
+}
+#twofa-inputs .twofainput {
+  width: 12%;
+  font-weight: bold;
+  font-size: 25pt;
+}
+#twofa-inputs .twofainput:nth-child(3) {
+  margin-right: 40px;
+}
+
+#pop-up-header {
+  width: 100%;
+  min-height: 48px;
+}
+
+#exit:hover {
+  color: rgba(0, 0, 0, 1);
+  transition: color 0.5s;
+}
+#exit {
+  color: rgba(122, 122, 122, 1);
+  transition: color 0.5s;
+  float: right;
+}
+#pop-up-content h3 {
+  margin: auto 20px 5px 20px;
+  text-align: center;
+  font-size: 25pt;
+  padding-bottom: 10px;
+}
+
+/************ HELP MODAL ************/
+/* Written by Katherine Geist */
+
+button {
+  float: right;
+  width: 5%;
+  border-radius: 2px;
+  border: medium solid #003366;
+  background-color: white;
+  font-family: "Arial", Impact, Charcoal, sans-serif;
+  font-weight: bold;
+  font-size: 20px;
+  color: #003366;
+  padding: 2px 5px;
+}
+
+.modal {
+  position: fixed;
+  right: 40%;
+  left: 40%;
+  top: 30%;
+  width: 20%;
+  height: 20%;
+  background-color: white;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 1;
+  transform: scale(1.1);
+  transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+}
+
+.modal-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 5% 20% 10%;
+  width: 24rem;
+  border-radius: 0.5rem;
+  color: #003366;
+  text-align: center;
+  border: medium solid #003366;
+}
+
+.close-button {
+  position: relative;
+  left: 60%;
+  width: 1.5rem;
+  line-height: 1.5rem;
+  text-align: center;
+  cursor: default;
+  border-radius: 0.25rem;
+  font-size: 200%;
+}
+
+.close-button:hover {
+  color: darkgray;
+}
+
+.show-modal {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+  transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+}
+
+/************ HEADER ************/
+/* Written by KSG */
+.header {
+  position: relative;
+  width: 100%;
+  background-color: #fff;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: auto;
+  left: 0%;
+  right: 1%;
+  top: 0%;
+}
+#inner-header {
+  padding: 2em;
+}
+
+/* Banner Image*/
+.header img {
+  max-height: 150px;
+  min-height: 80px;
+  max-width: 95%;
+}
+
+/* Header buttons */
+.header a {
+  float: right;
+  color: #083569;
+  text-align: left;
+  text-decoration: none;
+  font-size: 18px;
+  border-radius: 3px;
+  padding: 5px;
+  background-color: #fff;
+  margin: 5px 40px 5px 5px;
+}
+
+/* Change the background color of buttons on mouse-over */
+.header a:hover {
+  background-color: #d3dde8;
+  color: #083569;
+}
+
+/**************** LOGIN FORM****************/
+/* Written by Jasmin Milicevic, small changes by KSG */
+
+#login-form-wrap {
+  background-color: whitesmoke;
+  width: 30%;
+  min-width: 400px;
+  margin: 60px auto;
+  text-align: center;
+  padding: 20px 20px 20px 20px;
+  border-radius: 4px;
+  box-shadow: 0px 30px 50px 0px rgba(0, 0, 0, 0.2);
+}
+
+#login-form {
+  padding: 0 10px;
+}
+
+#login-submit {
+  width: 100%;
+}
+#login-submit input {
+  display: inline-block;
+  min-width: 50%;
+  max-width: 100%;
+}
+
+input {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  outline: none;
+  height: 60px;
+  line-height: 60px;
+  border-radius: 4px;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 0 0 0 10px;
+  margin: 10px auto 10px auto;
+  color: black;
+  border: 1px solid #c2c0ca;
+  font-style: normal;
+  font-size: 16px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: relative;
+  display: inline-block;
+  background: none;
+}
+
+input[type="text"]:invalid:focus,
+input[type="password"]:invalid:focus {
+  border-color: red;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  border-color: #3ca9e2;
+}
+
+input[type="submit"] {
+  border: none;
+  display: block;
+  margin: 10px auto 10px auto;
+  background-color: #d3dde8;
+  color: #083569;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  font-size: 18px;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  text-align: center;
+}
+input[type="submit"]:disabled {
+  background-color: rgba(77, 77, 77, 0.5);
+  color: rgba(122, 122, 122, 1);
+}
+
+/**************** FOOTER ****************/
+/* Written by KSG */
+
+footer {
+  position: absolute;
+  display: inline-block;
+  bottom: 0;
+  background-color: #fff;
+  width: 100%;
+  margin-top: auto;
+  height: 15rem;
+}
+
+footer h1 {
+  text-align: center;
+  font-size: 18px;
+  color: #fff;
+  background-color: #003366;
+}
+
+footer h2 {
+  text-align: left;
+  font-size: 14px;
+  color: #ff751a;
+  margin: 15px 0px 10px 5px;
+}
+
+footer p {
+  text-align: center;
+  color: #003366;
+  font-size: 14px;
+  margin: 5px 20px 0px 20px;
+}
+
+footer ul {
+  text-align: left;
+  color: #003366;
+  font-size: 12px;
+}
+
+footer ul li {
+  display: block;
+  list-style: none;
+  margin: 2.5px;
+}
+
+.spacer {
+  display: flex;
+  flex: 1 0 auto;
+}
