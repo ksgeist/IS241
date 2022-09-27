@@ -47,7 +47,11 @@ public class WebServer {
         serverLogger.info("Loading .env...");
         env = Dotenv.load();
         serverLogger.info("Connecting to Database...");
-        database = new Database();
+        if(args[0] != null && args[0].equals("use-test-db")) {
+            database = new Database(env.get("TEST_DB_URL"), env.get("TEST_DB_USERNAME"), env.get("TEST_DB_PASSWORD"));
+        } else {
+            database = new Database();
+        }
         serverLogger.info("Successfully connected to Database!");
         serverLogger.info("Setting up JWT...");
         KeyPair jwtPair = loadOrGenerate();
@@ -126,7 +130,6 @@ public class WebServer {
             }
         });
         path("/api", () -> {
-            get("/test", (req, res) -> "Test");
             path("/login", () -> post("/mfa", new MfaEndpoint()));
             post("/login", new LoginEndpoint());
             get("/logout", new LogoutEndpoint());
