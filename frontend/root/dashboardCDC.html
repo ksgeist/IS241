@@ -17,7 +17,8 @@
 	<meta charset="utf-8">
 
 	<!-- ======== CSS	========================= -->
-	<link rel="stylesheet" href="assets/css/style.css">
+	<link rel="stylesheet" href="assets/css/dashboard/dashboard.css">
+    <link rel="stylesheet" href="assets/css/style.css">
     <!-- NOTE: THESE WERE IN THE LOGIN HTML BUT IDK IF THEYRE NECESSARY HERE -JUSTIN
     <link rel="scripts" href="scripts.js"> 
 	<link rel="stylesheet" href="assets/css/login-form.css">
@@ -36,6 +37,7 @@
         <!-- 		Written by KSG -->
         <div class="header">
             <div id="inner-header">
+                <button class="logout">Logout</button>
                 <button class="trigger">Help</button>
                 <img src="assets/images/logo-banner.png"
                     alt="Missouri DHSS Logo: COVID-19 Vaccine Tracker, Authorized users only" />
@@ -53,6 +55,48 @@
             <a>Export Preset Queries</a>
             <a>Create Manual reports</a>
         </div>
+        <div>
+            <div class="modal">
+                <div class="modal-content">
+                    <span class="close-button">&times;</span>
+                    <h1>Please contact the Missouri IIS for assistance!</h1>
+                    <p>Phone: XXX-XXX-XXXX</p>
+                    <p>Email: helpme@missouri.gov</p>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const modal = document.querySelector(".modal");
+            const trigger = document.querySelector(".trigger");
+            const closeButton = document.querySelector(".close-button");
+    
+            function toggleModal() {
+                modal.classList.toggle("show-modal");
+                document.getElementById("pop-up").style.display = (document.getElementById("pop-up").style.display != "block" ? "block" : "none");
+            }
+    
+            function windowOnClick(event) {
+                if (event.target === modal) {
+                    toggleModal();
+                }
+            }
+    
+            trigger.addEventListener("click", toggleModal);
+            closeButton.addEventListener("click", toggleModal);
+            window.addEventListener("click", windowOnClick);
+        </script>
+
+        <script>
+            const logout = document.querySelector(".logout");
+
+            function gohome() {
+                window.location.replace(window.location.origin + "/api/logout");
+            } 
+            logout.onclick = gohome;
+
+            
+        </script>
 </body>
     
 </html>

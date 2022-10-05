@@ -201,11 +201,11 @@ a:active:hover {
 }
 
 /************ HELP MODAL ************/
-/* Written by Katherine Geist */
+/* Written by JM, changed by Katherine Geist */
 
 button {
   float: right;
-  width: 5%;
+  width: 10%;
   border-radius: 2px;
   border: medium solid #003366;
   background-color: white;
