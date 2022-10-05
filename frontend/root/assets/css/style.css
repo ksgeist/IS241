@@ -447,8 +447,21 @@ footer ul li {
   flex: 1 0 auto;
 }
 
+
 /**************** DASHBOARD STYLES ****************/
 /* Written by JJM */
+
+#dashboard-cdc{
+  
+}
+
+#dashboard-iis{
+  display:none;
+}
+
+#dashboard-providers{
+  display: none;
+}
 
 .dash-header{
   text-align: center;
