@@ -40,6 +40,7 @@
         <div class="header">
             <div id="inner-header">
                 <button class="trigger">Help</button>
+                <button class="logout">Logout</button>
                 <img src="assets/images/logo-banner.png"
                     alt="Missouri DHSS Logo: COVID-19 Vaccine Tracker, Authorized users only" />
             </div>
@@ -66,6 +67,48 @@
             <a>Add User</a>
             <a>Edit User Access</a>
         </div>
+        <!-- Written by JM-->
+        <div>
+            <div class="modal">
+                <div class="modal-content">
+                    <span class="close-button">&times;</span>
+                    <h1>Please contact the Missouri IIS for assistance!</h1>
+                    <p>Phone: XXX-XXX-XXXX</p>
+                    <p>Email: helpme@missouri.gov</p>
+                </div>
+        <!-- Written by JM-->
+        <script>
+            const modal = document.querySelector(".modal");
+            const trigger = document.querySelector(".trigger");
+            const closeButton = document.querySelector(".close-button");
+    
+            function toggleModal() {
+                modal.classList.toggle("show-modal");
+                document.getElementById("pop-up").style.display = (document.getElementById("pop-up").style.display != "block" ? "block" : "none");
+            }
+    
+            function windowOnClick(event) {
+                if (event.target === modal) {
+                    toggleModal();
+                }
+            }
+    
+            trigger.addEventListener("click", toggleModal);
+            closeButton.addEventListener("click", toggleModal);
+            window.addEventListener("click", windowOnClick);
+        </script>
+
+        <script>
+            const logout = document.querySelector(".logout");
+
+            function gohome() {
+                window.location.replace(window.location.origin + "/api/logout");
+            } 
+            logout.onclick = gohome;
+
+            
+            
+        </script>
 
 
     </body>
