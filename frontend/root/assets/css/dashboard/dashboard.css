@@ -8,15 +8,16 @@
     background-color: #003366;
     margin-top: 2%;
     margin-bottom: 2%;
-  
   }
-  
+
   .dashboard{
-    
     position: relative;
-  
+    margin-top: 50px;
+    margin-left: 190px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: medium;
   }
-  
+
   .dashboard a{
     position: relative;
     height: 10px;
@@ -26,4 +27,9 @@
     background-color: #003366;
     color: #fff;
   }
+
+  button {
+    margin-left: 10px;
+  }
+
   
