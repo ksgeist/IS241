@@ -1,9 +1,9 @@
 /**************** DASHBOARD STYLES ****************/
-/* Written by JJM */
+/* Written by JJM & KSG */
 
 .dash-header{
     text-align: center;
-    font-size: 18px;
+    font-size: 24px;
     color: #fff;
     background-color: #003366;
     margin-top: 2%;
@@ -11,30 +11,33 @@
   }
 
 .dash-wrapper {
-/* 
-  position: relative;
-  width: 200px;
-  height: 200px;
- */
+    display: flex;
+    justify-content: space-around;
+    align-self: auto;
+    align-items: center;
+/*     Will keep it centered to the page */
+    margin: 0 auto;
 }
+  
   .dashbuttons{
-    position: relative;
-	margin: 50px 0px 0px 0px;
+     margin-top: 60px;
+    text-align: center;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: medium;
+    font-size: 16px;
+    
+/*     To set space between the buttons */
+    display: flex;
+	gap: 30px;
   }
 
   .dashbuttons a{
-    position: relative;
-    height: 10px;
-    width: 10px;
-    padding: 20px 20px 20px 20px;
-    background-color: #003366;
+    padding: 30px 10px 30px 10px;
+/*     background-color: #003366; */
+    background: linear-gradient(to bottom right, #003366, #7b98b5);
     color: #fff;
+    border-radius: 2px;
+    border:1px solid #7b98b5;
+    box-shadow: 0 0 10px #8d78a5;
+    border-radius: 15px 15px 15px 15px;
   }
-
-  button {
-    /*margin-left: 10px;*/
-  }
-
   

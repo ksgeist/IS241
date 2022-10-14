@@ -24,12 +24,20 @@
  */
 
   .dashboard a{
-    position: relative;
+/*     position: relative; */
     height: 10px;
     width: 10px;
     padding: 20px 20px 20px 20px;
-    background-color: #003366;
+/*     background-color: #003366; */
+    background: linear-gradient(to bottom right, #003366, #8d78a5);
     color: #fff;
+    border-radius: 0px;
+    resize: none;
+    border:1px solid #30273a;
+    box-shadow: 0 0 10px #8d78a5;
+    border-radius: 15px 15px 15px 15px;
+    display: flex;
+    justify-content: space-around;
   }
 
   button {

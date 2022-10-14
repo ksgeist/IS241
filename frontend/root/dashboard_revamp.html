@@ -20,170 +20,172 @@
 		<link rel="stylesheet" href="assets/css/style.css">
 		<link rel="stylesheet" href="assets/css/dashboard/dashboard_revamp.css">
 
-	
-		<!-- NOTE: THESE WERE IN THE LOGIN HTML BUT IDK IF THEYRE NECESSARY HERE -JUSTIN
-		<link rel="scripts" href="scripts.js"> 
-		<link rel="stylesheet" href="assets/css/login-form.css">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"> 
-		-->
-
 		<!-- ======== JS	========================= -->
 		<script src="assets/js/modernizr.custom.40753.js" type="text/javascript"></script>
-		<script src="assets/js/popup.js" type="text/javascript" defer></script>
-		<script src="assets/js/dashboardStyle.js" type="text/javascript" defer></script>
+		<script src="assets/js/popup_help.js" type="text/javascript" defer></script>
+		<script src="assets/js/logout.js" type="text/javascript" defer></script>
 
-		<!-- ======== SCRIPTS	========================= -->
+		<!-- ======== SCRIPTS	========================= -->		
+        <!-- Added by KSG to only display the selected block-->
+<!--         Adapted from: https://stackoverflow.com/questions/8211128/multiple-distinct-pages-in-one-html-file -->
 		<script>
-		<!-- Added by KSG to only display the selected block-->
-			function show(shown, hidden) {
-			  document.getElementById(shown).style.display='block';
-			  document.getElementById(hidden).style.display='none';
-			  return false;
-			}
+// 			function show(shown, hidden) {
+// 			  document.getElementById(shown).style.display='block';
+// 			  document.getElementById(hidden).style.display='none';
+// 			  return false;
+// 			}
 		</script>
-
-		<script>
-		<!-- Written by JM-, popup and logout modals->
-			const modal = document.querySelector(".modal");
-			const trigger = document.querySelector(".trigger");
-			const closeButton = document.querySelector(".close-button");
-
-			function toggleModal() {
-				modal.classList.toggle("show-modal");
-				document.getElementById("pop-up").style.display = (document.getElementById("pop-up").style.display != "block" ? "block" : "none");
-			}
-
-			function windowOnClick(event) {
-				if (event.target === modal) {
-					toggleModal();
-				}
-			}
-
-			trigger.addEventListener("click", toggleModal);
-			closeButton.addEventListener("click", toggleModal);
-			window.addEventListener("click", windowOnClick);
-		</script>
-
-		<script>
-			const logout = document.querySelector(".logout");
-
-			function gohome() {
-				window.location.replace(window.location.origin + "/api/logout");
-			} 
-			logout.onclick = gohome;
-		</script>
-    </head>
+</head>
     
     
     
-    <body>
-        <!-- ======== DASHBOARD PAGE - VACCINATION PROVIDERS	========================= -->
-		<div id="VaxProviders">
-                
-			<!-- ======== HEADER	========================= -->
-			<!-- 		Written by KSG -->
-			<div class="header">
-				<div id="inner-header">
-<!-- 					Used to be an a element now a button -->
-					<button class="logout">Logout</button>
-					<button class="trigger">Help</button>
-					<img src="assets/images/logo-banner.png"
-						alt="Missouri DHSS Logo: COVID-19 Vaccine Tracker, Authorized users only" />
+<body>
+<!-- COLLATED AND ORGANIZED BY KSG -->
+
+<!-- ============================================================================ -->
+<!-- ======== DASHBOARD PAGE - VACCINATION PROVIDERS	========================= -->
+	<div id="VaxProviders">
+<!-- 	<div id="VaxProviders" style="display:none"> -->
+			
+		<!-- ======== HEADER	========================= -->
+		<!-- 		Written by KSG -->
+		<div class="header">
+			<div id="inner-header">
+				<button class="logout">Logout</button>
+				<button class="trigger">Help</button>
+				<img src="assets/images/logo-banner.png"
+					alt="Missouri DHSS Logo: COVID-19 Vaccine Tracker, Authorized users only" />
+			</div>
+		</div>
+	
+		 <!-- ======== DASHBOARD FOR PROVIDERS	========================= -->
+			<!-- 		Written by JJM -->
+			<div class="dash-header">
+				Vaccination Providers
+			</div>
+			<div class="dash-wrapper">
+				<div class="dashbuttons">
+					<a href="patient.html">Add Vaccine Record</a>
+					<a href="dummy.html">Edit Record</a>
+					<a href="dummy.html">View / Print Record</a>
 				</div>
 			</div>
-        
-         <!-- ======== DASHBOARD FOR PROVIDERS	========================= -->
-        <!-- 		Written by JJM -->
-        <div class="dash-header">
-            Vaccination Providers
-        </div>
-<!-- 		<div class = "dash-wrapper"> -->
-			<div class="dashbuttons">
-				<a>Add Entry</a>
-				<a>Edit Entry</a>
-				<a>View/Print Entry</a>
-			</div>
-<!-- 		</div> -->
+	</div>
+ <!-- ======== END VACCINATION PROVIDERS	========================= -->
 
-        <!-- Written by JM-->
-        <div>
-            <div class="modal">
-                <div class="modal-content">
-                    <span class="close-button">&times;</span>
-                    <h1>Please contact the Missouri IIS for assistance!</h1>
-                    <p>Phone: XXX-XXX-XXXX</p>
-                    <p>Email: helpme@missouri.gov</p>
-                </div>
-            </div>
-        </div>
+
+<!-- ============================================================================ -->
+<!-- ======== DASHBOARD PAGE - MISSOURI IIS USERS	========================= -->
+<!-- 	<div id="IIS"> -->
+	<div id="IIS" style="display:none">
+			
+		<!-- ======== HEADER	========================= -->
+		<!-- 		Written by KSG -->
+		<div class="header">
+			<div id="inner-header">
+				<button class="logout2">Logout</button>
+				<button class="trigger2">Help</button>
+				<img src="assets/images/logo-banner.png"
+					alt="Missouri DHSS Logo: COVID-19 Vaccine Tracker, Authorized users only" />
+			</div>
+		</div>
+		
+	 <!-- ======== DASHBOARD FOR IIS USERS	========================= -->
+		<!-- 		Written by JJM -->
+		<div class="dash-header">
+			Missouri IIS Users
+		</div>
+		<div class="dash-wrapper">
+			<div class="dashbuttons">
+				<a href="dummy.html">Patient Vaccination Records Request</a>
+				<a href="dummy.html">Export Preset Query</a>
+				<a href="dummy.html">Make Custom Query</a>
+			</div>
+		</div>
+	</div>
+<!-- ======== END IIS USERS	========================= -->
+    
+    
+<!-- ============================================================================ -->
+<!-- ======== DASHBOARD PAGE - CDC USERS	========================= -->
+<!-- 		<div id="CDC"> -->
+	<div id="CDC" style="display:none">
+			
+		<!-- ======== HEADER	========================= -->
+		<!-- 		Written by KSG -->
+		<div class="header">
+			<div id="inner-header">
+				<button class="logout3">Logout</button>
+				<button class="trigger3">Help</button>
+				<img src="assets/images/logo-banner.png"
+					alt="Missouri DHSS Logo: COVID-19 Vaccine Tracker, Authorized users only" />
+			</div>
+		</div>
+		
+	 <!-- ======== DASHBOARD FOR CDC USERS	========================= -->
+		<!-- 		Written by JJM -->
+		<div class="dash-header">
+			CDC Users
+		</div>
+		<div class="dash-wrapper">
+			<div class="dashbuttons">
+				<a href="dummy.html">Export Preset Query</a>
+				<a href="dummy.html">Make Custom Query</a>
+			</div>
+		</div>
+	</div>
+    <!-- ======== END CDC USERS	========================= -->
+        
+    <!-- ============================================================================ -->
+<!-- ======== DASHBOARD PAGE - MISSOURI ADMIN ========================= -->
+<!-- 	<div id="IISadmin"> -->
+	<div id="IISadmin" style="display:none">
+			
+		<!-- ======== HEADER	========================= -->
+		<!-- 		Written by KSG -->
+		<div class="header">
+			<div id="inner-header">
+<!-- 					Used to be an a element now a button -->
+				<button class="logout4">Logout</button>
+				<button class="trigger4">Help</button>
+				<img src="assets/images/logo-banner.png"
+					alt="Missouri DHSS Logo: COVID-19 Vaccine Tracker, Authorized users only" />
+			</div>
+		</div>
+		
+	 <!-- ======== DASHBOARD FOR IIS ADMIN	========================= -->
+		<!-- 		Written by JJM -->
+		<div class="dash-header">
+			Missouri IIS Administrators
+		</div>
+		<div class="dash-wrapper">
+			<div class="dashbuttons">
+				<a href="dummy.html">Add New User Account</a>
+				<a href="dummy.html">Edit / Delete User Access</a>
+				<a href="dummy.html">Register Vaccine Provider Location</a>
+			</div>
+		</div>
+	</div>
+<!-- ======== END IIS ADMIN	========================= -->
+
+
+<!-- ============================================================================ -->
+<!-- ======== FOR ALL PAGES	========================= -->
+
+	<!-- ======== HELP POPUP BUTTON	========================= -->
+	<!-- 		Written by JM -->
+	<div>
+		<div class="modal">
+			<div class="modal-content">
+				<span class="close-button">&times;</span>
+				<h1>Please contact the Missouri IIS for assistance!</h1>
+				<p>Phone: XXX-XXX-XXXX</p>
+				<p>Email: helpme@missouri.gov</p>
+			</div>
+		</div>
 	</div>
 
-        
-        
-        
-        
-        
-        
-<!-- 
-			======== DASHBOARD FOR IIS	=========================					Written by JJM			<div class="dash-header">
-				MO IIS REPORTS
-			</div>
 
-			<div class="dashboard">
-				<a>View/Print Entry</a>
-				<a>Query Vaccination Records</a>
-				<a>Export Preset Queries</a>
-			</div>
-
-        <div class="dash-header">
-            IIS Administrative Users Only
-        </div>
-        <div class="dashboard">
-            <a>Add User</a>
-            <a>Create Vaccine Provider Admin account</a>
-            <a>Edit User Access</a>
-            <a>Register Vaccine Provider Locations</a>
-        </div>
-        Written by JM        <div>
-            <div class="modal">
-                <div class="modal-content">
-                    <span class="close-button">&times;</span>
-                    <h1>Please contact the Missouri IIS for assistance!</h1>
-                    <p>Phone: XXX-XXX-XXXX</p>
-                    <p>Email: helpme@missouri.gov</p>
-                </div>
-        Written by JM        <script>
-            const modal = document.querySelector(".modal");
-            const trigger = document.querySelector(".trigger");
-            const closeButton = document.querySelector(".close-button");
-    
-            function toggleModal() {
-                modal.classList.toggle("show-modal");
-                document.getElementById("pop-up").style.display = (document.getElementById("pop-up").style.display != "block" ? "block" : "none");
-            }
-    
-            function windowOnClick(event) {
-                if (event.target === modal) {
-                    toggleModal();
-                }
-            }
-    
-            trigger.addEventListener("click", toggleModal);
-            closeButton.addEventListener("click", toggleModal);
-            window.addEventListener("click", windowOnClick);
-        </script>
-
-        <script>
-            const logout = document.querySelector(".logout");
-
-            function gohome() {
-                window.location.replace(window.location.origin + "/api/logout");
-            } 
-            logout.onclick = gohome;
-
-            
-            
-        </script>
- -->
+         
     </body>
 </html>

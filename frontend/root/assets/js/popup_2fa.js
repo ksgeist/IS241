@@ -1,6 +1,6 @@
 /*
 	Missouri COVID-19 Vaccine Tracker Application 
-	Filename: 	popup.js
+	Filename: 	popup_24a.js
 	
 	Written by Justin Macapanan
 
