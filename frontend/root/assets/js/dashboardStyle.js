@@ -1,4 +1,4 @@
-var dashboardArray = document.getElementsByClassName("dashboard");
+var dashboardArray = document.getElementsByClassName("dashbuttons");
 window.onload = function () {
 
     //console.log(dashboardArray.length);
@@ -8,15 +8,16 @@ window.onload = function () {
 function resize(){
     for(const dash of dashboardArray ){
         console.log(dash.children.length);
-        let l = (100/ (dash.children.length ));
+//         l is the number of pixels to the left of that button
+        let l = (window.innerWidth / (dash.children.length ));
+//         let l = 400/(dash.children.length );
         //console.log(dash.length);
         //console.log(l)
-        let counter = 1
+        let counter = 0
         for(const child of dash.children){
             // TEMPORARY dummy hrefs TEMPORARY 
-            child.setAttribute('href', "dummy.html")
-
-            child.setAttribute("style", `margin-left:${l*counter}%`)
+            child.setAttribute('href', "dummy.html");
+            child.setAttribute("style", `margin-left:${l+10}px`);
             counter++;
 
         }

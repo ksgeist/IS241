@@ -203,6 +203,8 @@ a:active:hover {
 /************ HELP MODAL ************/
 /* Written by JM, changed by Katherine Geist */
 
+/* KSG commented out */
+/* 
 button {
   float: right;
   width: 10%;
@@ -215,6 +217,7 @@ button {
   color: #003366;
   padding: 2px 5px;
 }
+ */
 
 .modal {
   position: fixed;
@@ -245,6 +248,8 @@ button {
   border: medium solid #003366;
 }
 
+/* KSG commented out */
+/* 
 .close-button {
   position: relative;
   left: 60%;
@@ -255,6 +260,7 @@ button {
   border-radius: 0.25rem;
   font-size: 200%;
 }
+ */
 
 .close-button:hover {
   color: darkgray;
@@ -285,14 +291,15 @@ button {
 }
 
 /* Banner Image*/
+/* Image dimensions have been set to prevent the page from never being too narrow */
 .header img {
   max-height: 150px;
   min-height: 80px;
-  max-width: 95%;
+  max-width: 100%;
 }
 
 /* Header buttons */
-.header a {
+.header button {
   float: right;
   color: #083569;
   text-align: left;
@@ -305,7 +312,7 @@ button {
 }
 
 /* Change the background color of buttons on mouse-over */
-.header a:hover {
+.header button:hover {
   background-color: #d3dde8;
   color: #083569;
 }
@@ -400,7 +407,7 @@ input[type="submit"]:disabled {
 /* Written by KSG */
 
 footer {
-  position: absolute;
+  position: relative;
   display: inline-block;
   bottom: 0;
   background-color: #fff;
