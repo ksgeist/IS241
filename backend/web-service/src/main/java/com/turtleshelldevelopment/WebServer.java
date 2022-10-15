@@ -97,9 +97,11 @@ public class WebServer {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static void startWebService() {
         port(8091);
         serverLogger.info("Routing /login");
+
         staticFileLocation("/frontend");
         before("/dashboard.html", WebServer::verifyCredentials);
         before("/api/logout", WebServer::verifyCredentials);
@@ -143,6 +145,7 @@ public class WebServer {
         serverLogger.info("We have Lift off!");
     }
 
+    @SuppressWarnings("unchecked")
     public static void verifyCredentials(Request req, Response res) {
         try {
             String token = req.cookie("token");
