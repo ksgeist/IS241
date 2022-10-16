@@ -13,6 +13,7 @@
         integrity="sha512-ha3Is9IgbEyIInSb+4S6IlEwpimz00N5J/dVLQFKhePkZ/HywIbxLeEu5w+hRjVBpbujTogNyT311tluwemy9w=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.1.0/ol.css">
+    <script src="assets/js/create_site/map.js" defer></script>
 </head>
 
 <body>
@@ -39,41 +40,33 @@
     </nav>
     <div id="body">
         <aside id="side-info">
-            <h1>Add a new Site Location</h1>
+            <h1 class="text-center">Add a new Vaccine Site</h1>
             <div id="content">
                 <form id="newSiteForm">
-                    <fieldset>
-                        <legend>Site Address</legend>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td><label for="address">Street Address</label></td>
-                                    <td><input type="text" name="address" id="address-autocomplete"></td>
-                                </tr>
-                                <tr>
-                                    <td><label for="zip">Zip Code</label></td>
-                                    <td><input type="zip" name="zip" autocomplete="postal-code"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <fieldset class="form-control">
+                        <legend>Address Information</legend>
+                        <label for="address">Street Address</label>
+                        <input class="form-control" type="text" name="address" id="address-autocomplete"
+                            pattern="\d+(\s{1}\w+)(\s{1}?\w+)+" maxlength="95" required>
+                        <label for="county">County</label>
+                        <input class="form-control" type="text" list="counties-list" id="county"
+                            placeholder="Select County" name="county" autocomplete="on" required>
+                        <datalist id="counties-list"></datalist>
+                        <label for="fips">FIPS Code</label>
+                        <input class="form-control" type="text" name="fips" id="fips" maxlength="5" required>
+                        <label for="zip">Zip Code</label>
+                        <input class="form-control" type="zip" name="zip" autocomplete="postal-code" maxlength="5"
+                            required>
                     </fieldset>
-                    <fieldset>
+                    <br>
+                    <fieldset class="form-control">
                         <legend>Site Information</legend>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td><label for="phone">Site Phone Number</label></td>
-                                    <td><input type="tel" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><label for="fips">FIPS Code</label></td>
-                                    <td><input type="text" name="fips"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <label for="phone">Site Phone Number</label>
+                        <input class="form-control" id="phoneNumber" type="tel" name="phone"
+                                            pattern="\([0-9]{3}\) [0-9]{3} - [0-9]{4}" maxlength="16" required>
                     </fieldset>
-                    <input type="submit" value="Submit" />
+                    <br />
+                    <input type="submit" value="Submit"  class="form-control" />
                 </form>
             </div>
         </aside>
@@ -81,7 +74,7 @@
             <div id="map"></div>
         </div>
     </div>
-    <script type="module" src="./assets/js/create_site/site.js" defer></script>
+    <script src="assets/js/create_site/input_handler.js"></script>
 </body>
 
 </html>
