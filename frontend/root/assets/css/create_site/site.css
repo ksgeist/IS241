@@ -1,5 +1,4 @@
 html, body {
-    background-color: aqua;
     height: 100%;
     overflow: hidden;
 }
@@ -12,7 +11,6 @@ html, body {
 }
 
 #content h1 {
-    background-color: aqua;
     text-align: center;
 }
 
@@ -28,6 +26,7 @@ html, body {
     height: calc(100% - 56px);
     align-items: stretch;
     min-width: 0;
+    background-color: #a9bccf;
 }
 
 #map {
@@ -50,6 +49,9 @@ html, body {
 
 input:invalid {
     border-color: red;
+}
+input[type=submit]:hover {
+    background-color: rgb(212, 209, 209);
 }
 
 fieldset {
