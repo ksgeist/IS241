@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <form action="http://127.0.0.1:8090/api/account/new" method="post">
+            <label for="fname">Username:</label><br>
+            <input type="text" id="username" name="username"><br>
+            <label for="lname">Password:</label><br>
+            <input type="password" id="password" name="password"><br>
+			<label for="fname">Read Patient:</label><br>
+            <input type="checkbox" id="readPatient" name="readPatient"><br>
+			<label for="fname">Reports:</label><br>
+            <input type="checkbox" id="reports" name="reports"><br>
+			<label for="fname">Add User:</label><br>
+            <input type="checkbox" id="addUsers" name="addUsers"><br>
+			<label for="fname">Edit User:</label><br>
+            <input type="checkbox" id="editUsers" name="editUsers"><br>
+			<label for="fname">Write Patient:</label><br>
+            <input type="checkbox" id="writePatient" name="writePatient"><br>
+			<label for="fname">Edit Patient:</label><br>
+            <input type="checkbox" id="editPatient" name="editPatient"><br>
+			<br>
+            <input type="submit" value="Submit">
+        </form>
+		<script>
+		
+		
+			
+			document.getElementById("login").onclick = (event) => {
+				event.preventDefault();
+				    var username = document.getElementById("username");
+					var password = document.getElementById("password");
+					var readPatient = document.getElementById("readPatient");
+					var readPatient = document.getElementById("readPatient");
+					var readPatient = document.getElementById("readPatient");
+					var readPatient = document.getElementById("readPatient");
+			};
+
+		</script>
+    </body>
+</html>
