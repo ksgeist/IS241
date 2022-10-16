@@ -148,6 +148,7 @@ public class WebServer {
                 serverLogger.info("Routing /account/new");
                 post("/new", new NewAccountEndpoint());
             });
+            post("/site/add", new NewSiteEndpoint());
             get("/lookupAddress", new GeocodingEndpoint());
         });
         serverLogger.info("Ready to Fire");
