@@ -5,10 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.turtleshelldevelopment.endpoints.LoginEndpoint;
-import com.turtleshelldevelopment.endpoints.LogoutEndpoint;
-import com.turtleshelldevelopment.endpoints.MfaEndpoint;
-import com.turtleshelldevelopment.endpoints.NewAccountEndpoint;
+import com.turtleshelldevelopment.endpoints.*;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -47,7 +44,7 @@ public class WebServer {
         serverLogger.info("Loading .env...");
         env = Dotenv.load();
         serverLogger.info("Connecting to Database...");
-        if(args[0] != null && args[0].equals("use-test-db")) {
+        if(args.length != 0 && args[0].equals("use-test-db")) {
             database = new Database(env.get("TEST_DB_URL"), env.get("TEST_DB_USERNAME"), env.get("TEST_DB_PASSWORD"));
         } else {
             database = new Database();
@@ -140,6 +137,7 @@ public class WebServer {
                 serverLogger.info("Routing /account/new");
                 post("/new", new NewAccountEndpoint());
             });
+            get("/lookupAddress", new GeocodingEndpoint());
         });
         serverLogger.info("Ready to Fire");
         serverLogger.info("We have Lift off!");
