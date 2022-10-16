@@ -42,26 +42,38 @@
             <h1>Add a new Site Location</h1>
             <div id="content">
                 <form id="newSiteForm">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td><label for="address">Site Street Address</label></td>
-                                <td><input type="text" name="address" autocomplete="street-address"></td>
-                            </tr>
-                            <tr>
-                                <td><label for="phone">Site Phone Number</label></td>
-                                <td><input type="tel" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required></td>
-                            </tr>
-                            <tr>
-                                <td><label for="fips">FIPS Code</label></td>
-                                <td><input type="text" name="fips"></td>
-                            </tr>
-                            <tr>
-                                <td><label for="zip">Zip Code</label></td>
-                                <td><input type="zip" name="zip" autocomplete="postal-code"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <fieldset>
+                        <legend>Site Address</legend>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td><label for="address">Street Address</label></td>
+                                    <td><input type="text" name="address" id="address-autocomplete"></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="zip">Zip Code</label></td>
+                                    <td><input type="zip" name="zip" autocomplete="postal-code"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Site Information</legend>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td><label for="phone">Site Phone Number</label></td>
+                                    <td><input type="tel" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label for="fips">FIPS Code</label></td>
+                                    <td><input type="text" name="fips"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </fieldset>
+                    <input type="submit" value="Submit" />
                 </form>
             </div>
         </aside>
