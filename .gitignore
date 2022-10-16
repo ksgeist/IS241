@@ -148,7 +148,11 @@ gradle-app.setting
 /key.pub
 /priv.key
 .env
-/web-service/key.pub
-/web-service/priv.key
-/.idea/compiler.xml
-/.idea/.name
+/backend/web-service/store/key.pub
+/backend/web-service/store/priv.key
+.idea/compiler.xml
+.idea/.name
+backend/web-service/.idea
+backend/web-service/src/main/resources/frontend
+.idea/vcs.xml
+.idea/.gitignore
