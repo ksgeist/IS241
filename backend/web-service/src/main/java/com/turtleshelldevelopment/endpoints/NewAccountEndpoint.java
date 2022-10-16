@@ -22,11 +22,19 @@ import java.security.spec.InvalidKeySpecException;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.Arrays;
 
 import static dev.samstevens.totp.util.Utils.getDataUriForImage;
 
+//*****************************************************
+//*                                                   *
+//* Created By: Colin Kinzel                          *
+//* Created On: 10/6/2022, 4:28:35 PM                 *
+//* Last Modified By: Colin Kinzel                    *
+//* Last Modified On: 10/6/2022, 4:28:35 PM           *
+//* Description: New Account Endpoint Handler Route   *
+//*                                                   *
+//*****************************************************
 @SuppressWarnings("unchecked")
 public class NewAccountEndpoint implements Route {
 
@@ -55,28 +63,7 @@ public class NewAccountEndpoint implements Route {
             byte[] hash = skf.generateSecret(spec).getEncoded();
             //WebServer.serverLogger.info("Password is Good");
             //Put Permissions
-
-            boolean readPatient = Boolean.parseBoolean(request.queryParams("readPatient"));
-            boolean reports = Boolean.parseBoolean(request.queryParams("reports"));
-            boolean addUsers = Boolean.parseBoolean(request.queryParams("addUsers"));
-            boolean editUsers = Boolean.parseBoolean(request.queryParams("editUsers"));
-            boolean writePatient = Boolean.parseBoolean(request.queryParams("writePatient"));
-            boolean editPatient = Boolean.parseBoolean(request.queryParams("editPatient"));
-
-            CallableStatement permissions = WebServer.database.getConnection().prepareCall("call CREATE_PERMISSIONS(?,?,?,?,?,?, ?)");
-            permissions.registerOutParameter(1, Types.INTEGER);
-            permissions.setBoolean(2, readPatient);
-            permissions.setBoolean(3, reports);
-            permissions.setBoolean(4, addUsers);
-            permissions.setBoolean(5, editUsers);
-            permissions.setBoolean(6, writePatient);
-            permissions.setBoolean(7, editPatient);
-
-            permissions.executeUpdate();
-
-            int permissionId = permissions.getInt(1);
-
-            permissions.close();
+            int userType = Integer.parseInt(request.queryParams("userType"));
             //WebServer.serverLogger.info("Permissions is Good");
             try {
                 //Insert new account
@@ -86,7 +73,7 @@ public class NewAccountEndpoint implements Route {
                 insertUser.setBytes(2, hash);
                 insertUser.setBytes(3, salt);
                 insertUser.setString(4, (String) mfa.get("secret"));
-                insertUser.setInt(5, permissionId);
+                insertUser.setInt(5, userType);
             if (insertUser.executeUpdate() == 1) {
                 body.put("error", "200");
                 body.put("2fa", mfa.get("qr"));

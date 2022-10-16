@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.turtleshelldevelopment.Issuers;
+import com.turtleshelldevelopment.Permissions;
 import com.turtleshelldevelopment.WebServer;
 import dev.samstevens.totp.code.DefaultCodeGenerator;
 import dev.samstevens.totp.code.DefaultCodeVerifier;
@@ -25,6 +26,7 @@ import java.time.ZoneOffset;
 
 public class MfaEndpoint implements Route {
     @Override
+    @SuppressWarnings("unchecked")
     public Object handle(Request request, Response response) throws ParseException {
         String jwtQuery = request.cookie("token");
         JSONObject bodyJSON = (JSONObject) new JSONParser().parse(request.body());
@@ -64,10 +66,14 @@ public class MfaEndpoint implements Route {
             WebServer.serverLogger.info("Secret is: " + secret);
             WebServer.serverLogger.info("Is Code (" + code + ") valid: " + verifier.isValidCode(secret, code));
 
+            set.close();
+            getSecret.close();
             if(verifier.isValidCode(secret, code)) {
                 success.put("success", true);
                 response.removeCookie("/", "token");
-                response.cookie("/","token", generateJWTToken(username), 300, true, true);
+                Permissions perms = new Permissions(username);
+
+                response.cookie("/","token", generateJWTToken(username, perms.getPermissionsAsString()), 300, true, true);
                 return success;
             } else {
                 success.put("success", false);
@@ -93,13 +99,14 @@ public class MfaEndpoint implements Route {
 
     }
 
-    private String generateJWTToken(String username) {
+    private String generateJWTToken(String username, String[] permissions) {
         LocalDateTime time = LocalDateTime.now();
         Instant inst = time.plusMinutes(10).toInstant(ZoneOffset.UTC);
         return JWT.create()
                 .withIssuer(Issuers.AUTHENTICATION.getIssuer())
                 .withSubject(username)
                 .withClaim("mfa", true)
+                .withArrayClaim("perms", permissions)
                 .withNotBefore(time.toInstant(ZoneOffset.UTC))
                 .withExpiresAt(inst)
                 .sign(WebServer.JWT_ALGO);
