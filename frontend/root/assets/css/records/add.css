@@ -1,0 +1,40 @@
+body {
+    margin: 0 auto;
+}
+input[type="text"] {
+    width: 50px;
+}
+
+form {
+    padding-top: 50px;
+    width: 750px;
+    margin: 0 auto;
+}
+
+div.field-flex {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    gap: 10px;
+    flex-wrap: nowrap;
+}
+fieldset {
+    margin: 10px;
+}
+input.name-fields {
+    display: flex;
+    width: 200px;
+}
+#ss4 {
+    width: 95px;
+}
+#dob {
+    width: 147px;
+}
+#lotNumber {
+    width: 100px;
+}
+#date-input {
+    max-width: 275px;
+}
