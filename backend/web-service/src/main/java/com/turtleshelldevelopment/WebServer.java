@@ -1,17 +1,19 @@
 package com.turtleshelldevelopment;
 
-import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.exceptions.SignatureVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.turtleshelldevelopment.endpoints.*;
+import com.turtleshelldevelopment.pages.AddRecordPage;
+import com.turtleshelldevelopment.pages.DashboardPage;
+import com.turtleshelldevelopment.pages.SiteCreatePage;
+import com.turtleshelldevelopment.utils.ModelUtil;
+import com.turtleshelldevelopment.utils.TokenUtils;
 import io.github.cdimascio.dotenv.Dotenv;
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
+import spark.template.velocity.VelocityTemplateEngine;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,8 +25,6 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Date;
-import java.util.Map;
 
 import static spark.Spark.*;
 
@@ -43,6 +43,7 @@ public class WebServer {
         serverLogger.info("In: " + System.getProperty("user.dir"));
         serverLogger.info("Loading .env...");
         env = Dotenv.load();
+        serverLogger.info("Loaded .env");
         serverLogger.info("Connecting to Database...");
         if(args.length != 0 && args[0].equals("use-test-db")) {
             database = new Database(env.get("TEST_DB_URL"), env.get("TEST_DB_USERNAME"), env.get("TEST_DB_PASSWORD"));
@@ -106,38 +107,27 @@ public class WebServer {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public static void startWebService() {
         port(8091);
         serverLogger.info("Routing /login");
         staticFileLocation("/frontend");
-        before("/dashboard.html", WebServer::verifyCredentials);
+        before("/dashboard", WebServer::verifyCredentials);
         before("/api/logout", WebServer::verifyCredentials);
         before("/api/login/mfa", (req, res) -> {
-            try {
-                Map<String, String> cookies = req.cookies();
-                if (cookies.containsKey("token")) {
-                    String token = cookies.get("token");
-                    serverLogger.info("Token received: " + token);
-                    DecodedJWT jwt = JWT.decode(token);
-                    WebServer.JWT_ALGO.verify(jwt);
-                    System.out.println(jwt.getIssuer() + " vs. " + Issuers.MFA_LOGIN.getIssuer());
-                    System.out.println(jwt.getExpiresAt().after(new Date()));
-                    if (jwt.getExpiresAt().before(new Date()) || !jwt.getIssuer().equals(Issuers.MFA_LOGIN.getIssuer())) {
-                        res.cookie("/", "token", null, 0, true, true);
-                        JSONObject err = new JSONObject();
-                        err.put("success", false);
-                        err.put("message", "Token is no longer valid");
-                        err.put("retry", false);
-                        halt(401, err.toJSONString());
-                    }
-                }
-            } catch (NullPointerException e) {
-                serverLogger.error("Null on Token");
-                halt(401, "Attempted to call multi-factor without logging in");
-            } catch (SignatureVerificationException e) {
-                halt(401, "Invalid Token");
+            TokenUtils tokenUtils = new TokenUtils(req.cookie("token"), Issuers.MFA_LOGIN.getIssuer());
+            if(tokenUtils.isInvalid()) {
+                //Invalid token, Remove it
+                res.cookie("/", "token", null, 0, true, true);
+                halt(401, new ModelUtil().addMFAError(false, "Invalid Token", false).build().toJSONString());
             }
+        });
+        before("/site/create", (req, res) -> verifyCredentials(req, res, PermissionType.ADD_SITE));
+        before("/addRecord", (req, resp) -> verifyCredentials(req, resp, PermissionType.WRITE_PATIENT));
+        path("/", () -> {
+            get("/", (req, resp) -> new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().build(), "/frontend/index.vm")));
+           get("/dashboard", new DashboardPage());
+           get("/addRecord", new AddRecordPage());
+           get("/site/create", new SiteCreatePage());
         });
         path("/api", () -> {
             path("/login", () -> post("/mfa", new MfaEndpoint()));
@@ -155,35 +145,23 @@ public class WebServer {
         serverLogger.info("We have Lift off!");
     }
 
-    @SuppressWarnings("unchecked")
-    public static void verifyCredentials(Request req, Response res) {
-        try {
-            String token = req.cookie("token");
-            if(token == null) {
-                System.out.println("Token did not exist");
-                res.redirect("/");
-                return;
+    public static void verifyCredentials(Request req, Response resp, PermissionType requiredEntitlement) {
+        TokenUtils tokenUtils = new TokenUtils(req.cookie("token"), Issuers.AUTHENTICATION.getIssuer());
+        if(!tokenUtils.isInvalid()) {
+            if(requiredEntitlement == null) return;
+            if(!tokenUtils.getPermissions().get(requiredEntitlement)) {
+                ModelUtil error = new ModelUtil()
+                        .addError(401, "You do not have permission to view this page");
+                halt(401, new VelocityTemplateEngine().render(new ModelAndView(error.build(), "/frontend/error.vm")));
             }
-            serverLogger.info("Token received: " + token);
-            DecodedJWT jwt = JWT.decode(token);
-            WebServer.JWT_ALGO.verify(jwt);
-            System.out.println("JWT is " + jwt);
-            System.out.println("JWT expires at is: " + jwt.getExpiresAt());
-            System.out.println("JWT issuer is: " + jwt.getIssuer());
-            if (jwt.getExpiresAt().before(new Date()) || !jwt.getIssuer().equals(Issuers.AUTHENTICATION.getIssuer())) {
-                res.cookie("/", "token", null, 0, true, true);
-                JSONObject err = new JSONObject();
-                err.put("success", false);
-                err.put("message", "Invalid Token");
-                err.put("expired", jwt.getExpiresAt().before(new Date()));
-                err.put("bad-issuer", jwt.getIssuer().equals(Issuers.AUTHENTICATION.getIssuer()));
-                halt(401, err.toJSONString());
-            }
-        } catch (SignatureVerificationException | JWTDecodeException e) {
-            JSONObject err = new JSONObject();
-            err.put("success", false);
-            err.put("message", "Invalid Token");
-            halt(401, err.toJSONString());
+        } else {
+            resp.redirect("/");
+            ModelUtil error = new ModelUtil()
+                    .addError(401, tokenUtils.getErrorReason());
+            halt(401, new VelocityTemplateEngine().render(new ModelAndView(error.build(), "/frontend/error.vm")));
         }
+    }
+    public static void verifyCredentials(Request req, Response res) {
+        verifyCredentials(req, res, null);
     }
 }
