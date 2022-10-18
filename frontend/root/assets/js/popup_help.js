@@ -19,7 +19,7 @@ const closeButton = document.querySelector(".close-button");
 
 function toggleModal() {
 	modal.classList.toggle("show-modal");
-	document.getElementById("pop-up").style.display = (document.getElementById("pop-up").style.display != "block" ? "block" : "none");
+	//document.getElementById("pop-up").style.display = (document.getElementById("pop-up").style.display != "block" ? "block" : "none");
 }
 
 function windowOnClick(event) {
