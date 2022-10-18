@@ -109,7 +109,7 @@ ${header}
 		<div class="dash-wrapper">
 			<div class="dashbuttons">
 			#if ($add_user)
-				<a href="dummy.html">Add New User Account</a>
+				<a href="/user/add">Add New User Account</a>
 			#end
 			#if ($edit_user)
 				<a href="dummy.html">Edit / Delete User Access</a>

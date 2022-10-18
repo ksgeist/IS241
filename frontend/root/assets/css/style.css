@@ -219,7 +219,12 @@ button {
 }
  */
 
+#modal-parent::before {
+  box-sizing: content-box;
+}
+
 .modal {
+  display: block;
   position: fixed;
   right: 40%;
   left: 40%;
@@ -232,6 +237,8 @@ button {
   z-index: 1;
   transform: scale(1.1);
   transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+  box-sizing: content-box;
+  overflow: visible;
 }
 
 .modal-content {

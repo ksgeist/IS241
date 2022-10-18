@@ -5,6 +5,7 @@ import com.turtleshelldevelopment.endpoints.*;
 import com.turtleshelldevelopment.pages.AddRecordPage;
 import com.turtleshelldevelopment.pages.DashboardPage;
 import com.turtleshelldevelopment.pages.SiteCreatePage;
+import com.turtleshelldevelopment.pages.UserCreatePage;
 import com.turtleshelldevelopment.utils.ModelUtil;
 import com.turtleshelldevelopment.utils.TokenUtils;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -113,6 +114,7 @@ public class WebServer {
         staticFileLocation("/frontend");
         before("/dashboard", WebServer::verifyCredentials);
         before("/api/logout", WebServer::verifyCredentials);
+        before("/user/add", (req, resp) -> verifyCredentials(req, resp, PermissionType.ADD_USER));
         before("/api/login/mfa", (req, res) -> {
             TokenUtils tokenUtils = new TokenUtils(req.cookie("token"), Issuers.MFA_LOGIN.getIssuer());
             if(tokenUtils.isInvalid()) {
@@ -129,6 +131,10 @@ public class WebServer {
            get("/AddRecord", new AddRecordPage());
            post("/AddRecord", new AddEntryEndpoint());
            get("/site/create", new SiteCreatePage());
+           path("/user", () -> {
+               get("/add", new UserCreatePage());
+               post("/add", new NewAccountEndpoint());
+           });
         });
         path("/api", () -> {
             path("/login", () -> post("/mfa", new MfaEndpoint()));

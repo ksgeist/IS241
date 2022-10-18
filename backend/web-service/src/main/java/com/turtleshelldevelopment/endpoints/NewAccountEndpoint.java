@@ -3,11 +3,14 @@ package com.turtleshelldevelopment.endpoints;
 import com.turtleshelldevelopment.Account;
 import com.turtleshelldevelopment.MultiFactorResponse;
 import com.turtleshelldevelopment.WebServer;
+import com.turtleshelldevelopment.utils.ModelUtil;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import org.json.simple.JSONObject;
+import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.Route;
+import spark.template.velocity.VelocityTemplateEngine;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -33,6 +36,10 @@ public class NewAccountEndpoint implements Route {
         try {
             String username = request.queryParams("username");
             String password = request.queryParams("password");
+            String firstName = request.queryParams("fname");
+            String lastName = request.queryParams("lname");
+            String email = request.queryParams("email");
+            int site = Integer.parseInt(request.queryParams("site"));
             System.out.println("Username: " + username + ", password: " + password);
 
             //Validate Username
@@ -49,23 +56,27 @@ public class NewAccountEndpoint implements Route {
             byte[] salt = acc.getPasswordSalt();
             //WebServer.serverLogger.info("Password is Good");
             //Put Permissions
-            int userType = Integer.parseInt(request.queryParams("userType"));
+            int userType = Integer.parseInt(request.queryParams("user_type"));
             //WebServer.serverLogger.info("Permissions is Good");
             try {
                 //Insert new account
-                CallableStatement insertUser = WebServer.database.getConnection().prepareCall("CALL ADD_USER(?,?,?,?,?)");
+                CallableStatement insertUser = WebServer.database.getConnection().prepareCall("CALL ADD_USER(?,?,?,?,?,?,?,?,?)");
                 MultiFactorResponse mfa = acc.generateTOTPMultiFactor();
                 insertUser.setString(1, username);
                 insertUser.setBytes(2, acc.getPasswordHash());
                 insertUser.setBytes(3, salt);
                 insertUser.setString(4, mfa.secret());
-                insertUser.setInt(5, userType);
+                insertUser.setString(5, firstName);
+                insertUser.setString(6, lastName);
+                insertUser.setInt(7, site);
+                insertUser.setInt(8, userType);
+                insertUser.setString(9, email);
             if (insertUser.executeUpdate() == 1) {
                 body.put("error", "200");
                 body.put("2fa", mfa.qr_code());
                 System.out.println("User created: " + username + ", " + password + ", salt=" + Arrays.toString(salt));
                 WebServer.serverLogger.info("Success!");
-                return "<html><img src=" + body.get("2fa") +" /></html>";
+                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().add("qr_code", body.get("2fa")).build(), "success_create.vm"));
             } else {
                 body.put("error", "500");
                 body.put("message", "Failed to update database");
@@ -80,9 +91,9 @@ public class NewAccountEndpoint implements Route {
             }
             return body;
         } catch (SQLException e) {
-            WebServer.serverLogger.info(e.getMessage());
+            WebServer.serverLogger.info("ERROR: " + e.getMessage());
         }
-        return "<html><img src=" + body.get("2fa") +" /></html>";
+        return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().add("qr_code", body.get("2fa")).build(), "success_create.vm"));
     }
 
 }
