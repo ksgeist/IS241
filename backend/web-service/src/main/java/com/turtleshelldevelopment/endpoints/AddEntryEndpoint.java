@@ -1,6 +1,7 @@
 package com.turtleshelldevelopment.endpoints;
 
 import com.turtleshelldevelopment.WebServer;
+import com.turtleshelldevelopment.utils.FormValidator;
 import com.turtleshelldevelopment.utils.ModelUtil;
 import spark.ModelAndView;
 import spark.Request;
@@ -11,7 +12,7 @@ import spark.template.velocity.VelocityTemplateEngine;
 import java.sql.CallableStatement;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.concurrent.Callable;
+import java.time.*;
 
 //*******************************************************************
 //*                                                                 *
@@ -26,11 +27,8 @@ public class AddEntryEndpoint implements Route {
     @Override
     public Object handle(Request request, Response response) {
         if(request.requestMethod().equalsIgnoreCase("POST")) {
-
             System.out.println("Params are: " + request.queryParams());
-
             String date = request.queryParams("curr-date");
-            String time = request.queryParams("curr-time");
             String patientFirstName = request.queryParams("fname");
             String patientMiddleName = request.queryParams("mname");
             String patientLastName = request.queryParams("lname");
@@ -57,14 +55,42 @@ public class AddEntryEndpoint implements Route {
             String vaccineLotNum = request.queryParams("lotNumber");
             String vaccineSeries = request.queryParams("dose");
 
-            try(CallableStatement patientCall = WebServer.database.getConnection().prepareCall("CALL ADD_PATIENT()")) {
+            String siteId = request.queryParams("siteid");
+
+            if(!FormValidator.checkValues()) {
+                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().addError(500, "Missing Values").build(), "/frontend/error.vm"));
+            }
+            LocalDate dateFiled;
+            if((dateFiled = FormValidator.parseDateFromForm(date)) == null) {
+                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().addError(500, "Invalid Date").build(), "/frontend/error.vm"));
+            }
+            LocalDate dateOfBirth;
+            if((dateOfBirth = FormValidator.parseDateFromForm(patientBirthDate)) == null) {
+                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().addError(500, "Invalid Date").build(), "/frontend/error.vm"));
+            }
+
+            try(CallableStatement patientCall = WebServer.database.getConnection().prepareCall("CALL ADD_PATIENT_INFO(?,?,?,?,?)")) {
                 patientCall.setString(1, patientFirstName);
                 patientCall.setString(2, patientMiddleName);
                 patientCall.setString(3, patientLastName);
                 patientCall.setInt(4, Integer.parseInt(patientSSN));
-                patientCall.setDate(5, );
-                if(patientCall.executeUpdate() == 1) {
+                ZoneOffset timeZone = ZoneId.systemDefault().getRules().getOffset(LocalDateTime.now());
 
+                patientCall.setDate(5, new Date(dateOfBirth.toEpochSecond(LocalTime.now(), timeZone)));
+                patientCall.setString(6, contactEmail);
+                patientCall.setString(7, contactAddress);
+                patientCall.setString(8, contactPhone);
+                patientCall.setString(9, contactPhoneType);
+                patientCall.setString(10, insuranceProviderName);
+                patientCall.setString(11, insuranceGroupNumber);
+                patientCall.setString(12, insurancePolicyNumber);
+                patientCall.setDate(13, new Date(dateFiled.toEpochSecond(LocalTime.now(), timeZone)));
+                patientCall.setString(14, vaccineManu);
+                patientCall.setString(15, vaccineLotNum);
+                patientCall.setString(16, vaccineSeries);
+                patientCall.setString(17, siteId);
+                if(patientCall.executeUpdate() == 1) {
+                    System.out.println("Successfully wrote patient to database");
                 }
 
             } catch (SQLException e) {
