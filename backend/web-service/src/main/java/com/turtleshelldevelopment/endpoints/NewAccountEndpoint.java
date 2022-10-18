@@ -1,30 +1,18 @@
 package com.turtleshelldevelopment.endpoints;
 
-import com.turtleshelldevelopment.Issuers;
+import com.turtleshelldevelopment.Account;
+import com.turtleshelldevelopment.MultiFactorResponse;
 import com.turtleshelldevelopment.WebServer;
-import dev.samstevens.totp.code.HashingAlgorithm;
 import dev.samstevens.totp.exceptions.QrGenerationException;
-import dev.samstevens.totp.qr.QrData;
-import dev.samstevens.totp.qr.QrGenerator;
-import dev.samstevens.totp.qr.ZxingPngQrGenerator;
-import dev.samstevens.totp.secret.DefaultSecretGenerator;
-import dev.samstevens.totp.secret.SecretGenerator;
 import org.json.simple.JSONObject;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
-
-import static dev.samstevens.totp.util.Utils.getDataUriForImage;
 
 //*****************************************************
 //*                                                   *
@@ -54,13 +42,11 @@ public class NewAccountEndpoint implements Route {
                 body.put("error", "Username already exists");
                 return body;
             }
+
+            Account acc = new Account(username, password);
             //WebServer.serverLogger.info("Username is Good");
             //Take in the password and hash it
-            byte[] salt = getSalt();
-            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 64 * 8);
-            SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-
-            byte[] hash = skf.generateSecret(spec).getEncoded();
+            byte[] salt = acc.getPasswordSalt();
             //WebServer.serverLogger.info("Password is Good");
             //Put Permissions
             int userType = Integer.parseInt(request.queryParams("userType"));
@@ -68,15 +54,15 @@ public class NewAccountEndpoint implements Route {
             try {
                 //Insert new account
                 CallableStatement insertUser = WebServer.database.getConnection().prepareCall("CALL ADD_USER(?,?,?,?,?)");
-                JSONObject mfa = generateTOTPMultiFactor(username);
+                MultiFactorResponse mfa = acc.generateTOTPMultiFactor();
                 insertUser.setString(1, username);
-                insertUser.setBytes(2, hash);
+                insertUser.setBytes(2, acc.getPasswordHash());
                 insertUser.setBytes(3, salt);
-                insertUser.setString(4, (String) mfa.get("secret"));
+                insertUser.setString(4, mfa.secret());
                 insertUser.setInt(5, userType);
             if (insertUser.executeUpdate() == 1) {
                 body.put("error", "200");
-                body.put("2fa", mfa.get("qr"));
+                body.put("2fa", mfa.qr_code());
                 System.out.println("User created: " + username + ", " + password + ", salt=" + Arrays.toString(salt));
                 WebServer.serverLogger.info("Success!");
                 return "<html><img src=" + body.get("2fa") +" /></html>";
@@ -95,41 +81,8 @@ public class NewAccountEndpoint implements Route {
             return body;
         } catch (SQLException e) {
             WebServer.serverLogger.info(e.getMessage());
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            WebServer.serverLogger.error(e.getMessage());
         }
         return "<html><img src=" + body.get("2fa") +" /></html>";
-    }
-
-    private static byte[] getSalt() throws NoSuchAlgorithmException
-    {
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-        byte[] salt = new byte[16];
-        sr.nextBytes(salt);
-        return salt;
-    }
-
-    public JSONObject generateTOTPMultiFactor(String username) throws QrGenerationException {
-        JSONObject mfa = new JSONObject();
-        SecretGenerator secretGenerator = new DefaultSecretGenerator();
-        String secret = secretGenerator.generate();
-
-        QrData qr = new QrData.Builder()
-                .label("Covid-19 Dashboard: " + username)
-                .secret(secret)
-                .issuer(Issuers.AUTHENTICATION.getIssuer())
-                .algorithm(HashingAlgorithm.SHA1)
-                .digits(6)
-                .period(30)
-                .build();
-        QrGenerator generator = new ZxingPngQrGenerator();
-        byte[] imageData = generator.generate(qr);
-
-        String mimeType = generator.getImageMimeType();
-        String dataUri = getDataUriForImage(imageData, mimeType);
-        mfa.put("secret", secret);
-        mfa.put("qr", dataUri);
-        return mfa;
     }
 
 }
