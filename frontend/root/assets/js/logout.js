@@ -5,9 +5,6 @@
 	Written by Jasmin Milicevic, put into separate file by KSG & updated to work with dashboards
 
 */
-window.onload = function () {
-  console.log("logout executed");
-};
 
 // Have to add multiple logout variables because multiple instances in dashboard HTML
 const logout = document.querySelector(".logout");
