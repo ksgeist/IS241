@@ -126,7 +126,8 @@ public class WebServer {
         path("/", () -> {
             get("/", (req, resp) -> new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().build(), "/frontend/index.vm")));
            get("/dashboard", new DashboardPage());
-           get("/addRecord", new AddRecordPage());
+           get("/AddRecord", new AddRecordPage());
+           post("/AddRecord", new AddEntryEndpoint());
            get("/site/create", new SiteCreatePage());
         });
         path("/api", () -> {
