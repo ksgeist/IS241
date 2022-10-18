@@ -10,7 +10,7 @@ public class Permissions {
     JSONArray permissions = new JSONArray();
     @SuppressWarnings("unchecked")
     public Permissions(String user) throws SQLException {
-        CallableStatement getPermissions = WebServer.database.getConnection().prepareCall("CALL GET_PERMISSIONS(?);");
+        CallableStatement getPermissions = WebServer.database.getConnection().prepareCall("CALL GET_PERMISSIONS(?)");
         getPermissions.setString(1, user);
         ResultSet set = getPermissions.executeQuery();
         if(set.next()) {
@@ -20,6 +20,8 @@ public class Permissions {
             if(set.getBoolean("reports")) permissions.add("REPORTS");
             if(set.getBoolean("add_user")) permissions.add("ADD_USER");
             if(set.getBoolean("edit_user")) permissions.add("EDIT_USER");
+            if(set.getBoolean("add_site")) permissions.add("ADD_SITE");
+            if(set.getBoolean("request_records")) permissions.add("REQUEST_RECORDS");
         }
         set.close();
         getPermissions.close();
