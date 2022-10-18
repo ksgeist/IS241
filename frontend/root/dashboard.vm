@@ -43,138 +43,85 @@
 				
 <!-- ======== HEADER	========================= -->
 <!-- 		Written by KSG -->
-<div class="header">
-	<div id="inner-header">
-		<button class="logout">Logout</button>
-		<button class="trigger">Help</button>
-	<img src="assets/images/header/logo-banner.png"
-			alt="Missouri DHSS Logo: COVID-19 Vaccine Tracker, Authorized users only" />
-	</div>
-</div>
-
+${header}
 <!-- COLLATED AND ORGANIZED BY KSG -->
-
 <!-- ============================================================================ -->
 <!-- ======== DASHBOARD PAGE - VACCINATION PROVIDERS	========================= -->
+#if ( $edit_patient || $add_patient || $read_patient)
 	<div id="VaxProviders">
 <!-- 	<div id="VaxProviders" style="display:none"> -->
 	
 		 <!-- ======== DASHBOARD FOR PROVIDERS	========================= -->
 			<!-- 		Written by JJM -->
 			<div class="dash-header">
-				Vaccination Providers
+				Records
 			</div>
 			<div class="dash-wrapper">
 				<div class="dashbuttons">
+				#if ($add_patient)
 					<a href="add_record.html">Add Vaccine Record</a>
+				#end
+				#if ($edit_patient)
 					<a href="edit_record.html">Edit Record</a>
+				#end
+				#if ($read_patient)
 					<a href="dummy.html">View / Print Record</a>
+				#end
+				#if ($request_records)
+					<a href="dummy.html">Patient Vaccination Records Request</a>
+				#end
+
 				</div>
 			</div>
 	</div>
- <!-- ======== END VACCINATION PROVIDERS	========================= -->
-
-
+#end
+<!-- ======== END VACCINATION PROVIDERS	========================= -->
+#if ( $reports )
 <!-- ============================================================================ -->
 <!-- ======== DASHBOARD PAGE - MISSOURI IIS USERS	========================= -->
 <!-- 	<div id="IIS"> -->
-	<div id="IIS" style="display:none">
+	<div id="IIS">
 	 <!-- ======== DASHBOARD FOR IIS USERS	========================= -->
 		<!-- 		Written by JJM -->
 		<div class="dash-header">
-			Missouri IIS Users
+			Generate a Report
 		</div>
 		<div class="dash-wrapper">
 			<div class="dashbuttons">
-				<a href="dummy.html">Patient Vaccination Records Request</a>
 				<a href="dummy.html">Export Preset Query</a>
 				<a href="dummy.html">Make Custom Query</a>
 			</div>
 		</div>
 	</div>
+#end
 <!-- ======== END IIS USERS	========================= -->
-    
-    
-<!-- ============================================================================ -->
-<!-- ======== DASHBOARD PAGE - CDC USERS	========================= -->
-<!-- 		<div id="CDC"> -->
-	<div id="CDC" style="display:none">
-		
-	 <!-- ======== DASHBOARD FOR CDC USERS	========================= -->
-		<!-- 		Written by JJM -->
-		<div class="dash-header">
-			CDC Users
-		</div>
-		<div class="dash-wrapper">
-			<div class="dashbuttons">
-				<a href="dummy.html">Export Preset Query</a>
-				<a href="dummy.html">Make Custom Query</a>
-			</div>
-		</div>
-	</div>
+#if($create_user || $edit_user || $add_site)
     <!-- ======== END CDC USERS	========================= -->
-        
     <!-- ============================================================================ -->
 	<!-- ======== DASHBOARD PAGE - MISSOURI ADMIN ========================= -->
 <!-- 		<div id="IISadmin"> -->
-	<div id="IISadmin" style="display:none">
-		
+	<div id="IISadmin">
 	 <!-- ======== DASHBOARD FOR IIS ADMIN	========================= -->
 		<!-- 		Written by JJM -->
 		<div class="dash-header">
-			Missouri IIS Administrators
+			Manage Accounts / Locations
 		</div>
 		<div class="dash-wrapper">
 			<div class="dashbuttons">
+			#if ($add_user)
 				<a href="dummy.html">Add New User Account</a>
+			#end
+			#if ($edit_user)
 				<a href="dummy.html">Edit / Delete User Access</a>
+			#end
+			#if ($add_site)
 				<a href="create_site.html">Register Vaccine Provider Location</a>
+			#end
 			</div>
 		</div>
 	</div>
 	<!-- ======== END IIS ADMIN	========================= -->
-
-    <!-- ============================================================================ -->
-	<!-- ======== DASHBOARD PAGE - SYSTEM ADMIN ========================= -->
-<!-- 		<div id="sysAdmin"> -->
-	<div id="sysAdmin" style="display:none">
-		
-	 <!-- ======== DASHBOARD FOR IIS ADMIN	========================= -->
-		<!-- 		Written by KSG -->
-		<div class="dash-header">
-			System Administrators
-		</div>
-		<!-- 		Put the buttons on rows -->
-		<div class = "row">
-			<div class="dash-wrapper">
-				<div class="dashbuttons">
-						<a href="dummy.html">Add New User Account</a>
-						<a href="dummy.html">Edit / Delete User Access</a>
-						<a href="create_site.html">Register Vaccine Provider Location</a>
-				</div>
-			</div>
-		</div>
-		<div class = "row">
-			<div class="dash-wrapper">
-				<div class="dashbuttons">
-					<a href="add_record.html">Add Vaccine Record</a>
-					<a href="edit_record.html">Edit Record</a>
-					<a href="dummy.html">View / Print Record</a>
-				</div>
-			</div>
-		</div>				
-		<div class = "row">
-			<div class="dash-wrapper">
-				<div class="dashbuttons">
-					<a href="dummy.html">Patient Vaccination Records Request</a>
-					<a href="dummy.html">Export Preset Query</a>
-					<a href="dummy.html">Make Custom Query</a>
-				</div>
-			</div>
-		</div>	
-	</div>	
-	
-	<!-- ======== END IIS ADMIN	========================= -->
+#end
 
 <!-- ============================================================================ -->
 <!-- ======== FOR ALL PAGES	========================= -->
