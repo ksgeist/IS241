@@ -65,7 +65,7 @@ document.getElementById("twofasubmit").onclick = (event) => {
         if (json_data["success"]) {
           console.log("Success: ");
           console.log(json_data);
-          window.location.replace(window.location.origin + "/dashboard.html");
+          window.location.replace(window.location.origin + "/dashboard");
         } else {
           if (json_data["retry"] == null || !json_data["retry"]) {
             document.getElementById("pop-up").style.display = "none";
