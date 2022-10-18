@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-	<title>Add a New Vaccine Administration Site</title>
-		<!--
+<!--
 				Missouri COVID-19 Vaccine Tracker Application 
 				Filename: index.html
 	  
@@ -11,8 +8,10 @@
 				Authors: Colin Kinzel
 				Date: 15 October 2022 
 		-->
-			
-    <link href="assets/css/create_site/site.css" rel="stylesheet" />
+
+<head>
+    <title>Add a New Vaccine Administration Site</title>
+    <link href="/assets/css/create_site/site.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
@@ -23,13 +22,13 @@
         integrity="sha512-ha3Is9IgbEyIInSb+4S6IlEwpimz00N5J/dVLQFKhePkZ/HywIbxLeEu5w+hRjVBpbujTogNyT311tluwemy9w=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.1.0/ol.css">
-    <script src="assets/js/create_site/map.js" defer></script>
+    <script src="/assets/js/create_site/map.js" defer></script>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="dashboard.html">Dashboard</a>
+            <a class="navbar-brand" href="/dashboard">Dashboard</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -56,27 +55,29 @@
                     <fieldset class="form-control">
                         <legend>Address Information</legend>
                         <label for="address">Street Address</label>
-                        <input class="form-control" type="text" name="address" id="address-autocomplete"
+                        <input class="form-control" type="text" name="address" id="address"
                             pattern="\d+(\s{1}\w+)(\s{1}?\w+)+" maxlength="95" required>
+                        <label for="city">City</label>
+                        <input class="form-control" type="text" id="city" name="city" autocomplete="on" required>
+                        <label for="zip">Zip Code</label>
+                        <input class="form-control" id="zip" type="zip" name="zip" autocomplete="postal-code"
+                            maxlength="5" required>
                         <label for="county">County</label>
                         <input class="form-control" type="text" list="counties-list" id="county"
                             placeholder="Select County" name="county" autocomplete="on" required>
                         <datalist id="counties-list"></datalist>
                         <label for="fips">FIPS Code</label>
                         <input class="form-control" type="text" name="fips" id="fips" maxlength="5" required>
-                        <label for="zip">Zip Code</label>
-                        <input class="form-control" type="zip" name="zip" autocomplete="postal-code" maxlength="5"
-                            required>
                     </fieldset>
                     <br>
                     <fieldset class="form-control">
                         <legend>Site Information</legend>
-                        <label for="phone">Site Phone Number</label>
+                        <label for="phoneNumber">Site Phone Number</label>
                         <input class="form-control" id="phoneNumber" type="tel" name="phone"
-                                            pattern="\([0-9]{3}\) [0-9]{3} - [0-9]{4}" maxlength="16" required>
+                            pattern="\([0-9]{3}\) [0-9]{3} - [0-9]{4}" maxlength="16" required>
                     </fieldset>
                     <br />
-                    <input type="submit" value="Submit"  class="form-control" />
+                    <input type="submit" value="Submit" class="form-control" method="POST" id="newSite" />
                 </form>
             </div>
         </aside>
@@ -84,7 +85,7 @@
             <div id="map"></div>
         </div>
     </div>
-    <script src="assets/js/create_site/input_handler.js"></script>
+    <script src="/assets/js/create_site/input_handler.js"></script>
 </body>
 
 </html>
