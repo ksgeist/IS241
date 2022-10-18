@@ -19,8 +19,7 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 
 @SuppressWarnings("unchecked")
 public class LoginEndpoint implements Route {
@@ -91,13 +90,16 @@ public class LoginEndpoint implements Route {
     }
 
     private void generateMfaJWTToken(String username, Response response) {
-        LocalDateTime time = LocalDateTime.now();
-        Instant inst = time.plusMinutes(3).toInstant(ZoneOffset.UTC);
+        Instant time = Instant.now();
+        Instant inst = time.plus(3, ChronoUnit.MINUTES);
+        System.out.println("time is:  " + time);
+        System.out.println("time is with zone offset: " + inst);
         String jwt = JWT.create()
                 .withIssuer(Issuers.MFA_LOGIN.getIssuer())
                 .withSubject(username)
                 .withClaim("mfa", true)
-                .withNotBefore(time.toInstant(ZoneOffset.UTC))
+                .withNotBefore(time.minus(1, ChronoUnit.SECONDS))
+                .withIssuedAt(time)
                 .withExpiresAt(inst)
                 .sign(WebServer.JWT_ALGO);
         response.cookie("/","token", jwt, 180, true, true);

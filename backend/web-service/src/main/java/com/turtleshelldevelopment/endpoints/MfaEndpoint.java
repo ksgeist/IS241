@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 
 public class MfaEndpoint implements Route {
     @Override
@@ -81,7 +82,7 @@ public class MfaEndpoint implements Route {
                 success.put("retry", true);
             }
             return success;
-        } catch (SignatureVerificationException | SQLException e) {
+        } catch (SignatureVerificationException e) {
             JSONObject error = new JSONObject();
             error.put("success", false);
             error.put("message", "Invalid Signature");
@@ -95,19 +96,28 @@ public class MfaEndpoint implements Route {
             error.put("retry", false);
             response.status(401);
             return error.toJSONString();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JSONObject error = new JSONObject();
+            error.put("success", false);
+            error.put("message", "Database failed with an error");
+            error.put("retry", false);
+            response.status(401);
+            return error.toJSONString();
         }
 
     }
 
     private String generateJWTToken(String username, String[] permissions) {
-        LocalDateTime time = LocalDateTime.now();
-        Instant inst = time.plusMinutes(10).toInstant(ZoneOffset.UTC);
+        Instant currTime = Instant.now();
+        Instant inst = currTime.plus(10, ChronoUnit.MINUTES);
         return JWT.create()
                 .withIssuer(Issuers.AUTHENTICATION.getIssuer())
                 .withSubject(username)
                 .withClaim("mfa", true)
                 .withArrayClaim("perms", permissions)
-                .withNotBefore(time.toInstant(ZoneOffset.UTC))
+                .withNotBefore(currTime.minus(1, ChronoUnit.SECONDS))
+                .withIssuedAt(currTime)
                 .withExpiresAt(inst)
                 .sign(WebServer.JWT_ALGO);
     }
