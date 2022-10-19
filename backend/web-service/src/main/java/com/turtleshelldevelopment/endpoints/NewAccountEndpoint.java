@@ -76,7 +76,7 @@ public class NewAccountEndpoint implements Route {
                 body.put("2fa", mfa.qr_code());
                 System.out.println("User created: " + username + ", " + password + ", salt=" + Arrays.toString(salt));
                 WebServer.serverLogger.info("Success!");
-                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().add("qr_code", body.get("2fa")).build(), "success_create.vm"));
+                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().add("qr_code", body.get("2fa")).build(), "/frontend/success_create.vm"));
             } else {
                 body.put("error", "500");
                 body.put("message", "Failed to update database");
@@ -93,7 +93,7 @@ public class NewAccountEndpoint implements Route {
         } catch (SQLException e) {
             WebServer.serverLogger.info("ERROR: " + e.getMessage());
         }
-        return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().add("qr_code", body.get("2fa")).build(), "success_create.vm"));
+        return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().add("qr_code", body.get("2fa")).build(), "/frontend/success_create.vm"));
     }
 
 }
