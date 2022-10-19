@@ -47,7 +47,7 @@ ${header}
 <!-- COLLATED AND ORGANIZED BY KSG -->
 <!-- ============================================================================ -->
 <!-- ======== DASHBOARD PAGE - VACCINATION PROVIDERS	========================= -->
-#if ( $edit_patient || $add_patient || $read_patient)
+#if ( $edit_patient || $write_patient || $read_patient)
 	<div id="VaxProviders">
 <!-- 	<div id="VaxProviders" style="display:none"> -->
 	
@@ -58,8 +58,8 @@ ${header}
 			</div>
 			<div class="dash-wrapper">
 				<div class="dashbuttons">
-				#if ($add_patient)
-					<a href="add_record.html">Add Vaccine Record</a>
+				#if ($write_patient)
+					<a href="AddRecord">Add Vaccine Record</a>
 				#end
 				#if ($edit_patient)
 					<a href="edit_record.html">Edit Record</a>
