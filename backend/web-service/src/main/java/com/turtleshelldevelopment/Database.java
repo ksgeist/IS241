@@ -5,10 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import org.apache.commons.lang.RandomStringUtils;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class Database {
     private static final HikariConfig config = new HikariConfig();
@@ -26,8 +23,12 @@ public class Database {
         db = new HikariDataSource(config);
 
         try {
+            WebServer.serverLogger.info("Checking Account...");
             PreparedStatement checkForUser = db.getConnection().prepareStatement("SELECT user_id FROM User LIMIT 1;");
-            if(!checkForUser.executeQuery().next()) {
+            ResultSet set = checkForUser.executeQuery();
+            if(set.next()) {
+                System.out.println("Found account: " + set.getInt("user_id") + " on database " + url);
+            } else {
                 WebServer.serverLogger.info("Creating System Admin Account...");
                 String adminPassword = RandomStringUtils.random(16, true, true);
                 String systemAdminUsername = "admin";
@@ -49,6 +50,7 @@ public class Database {
                     WebServer.serverLogger.info("Password: " + adminPassword);
                     WebServer.serverLogger.info("Remember this Information, This information will not show on next startup!");
                 }
+
                 statement.close();
             }
             checkForUser.close();
