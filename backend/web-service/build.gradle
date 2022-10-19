@@ -9,6 +9,9 @@ targetCompatibility = "16"
 
 group 'com.turtleshelldevelopment'
 version '1.0-SNAPSHOT'
+configurations {
+    jar.archiveName = 'backend-dashboard.jar'
+}
 
 repositories {
     mavenCentral()
