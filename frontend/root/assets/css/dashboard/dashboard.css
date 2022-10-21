@@ -33,7 +33,7 @@
 	  gap: 30px;
   }
 
-  .dashbuttons a{
+  div.dashbuttons a {
     padding: 30px 10px 30px 10px;
 /*     background-color: #003366; */
     background: linear-gradient(to bottom right, #003366, #7b98b5);
@@ -43,6 +43,9 @@
     box-shadow: 0 0 10px #8d78a5;
     border-radius: 15px 15px 15px 15px;
     text-decoration: none;
+  }
+  div.dashbuttons a:hover {
+    color: lightgray;
   }
   
   .row {
