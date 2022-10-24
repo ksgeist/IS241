@@ -1,6 +1,30 @@
-body {
-    margin: 0 auto;
+/* WIP styles
+JJM*/
+html{
+    /* background-color: blue;  */
+   /* display: inline-block; */
 }
+body#add_record_body {
+    /* border: 8px solid #000; */
+    margin: 0 auto;
+    /* max-width: max-content;  */
+    background-color: whitesmoke;
+    /* border: 8px solid #000; */
+    /* width: 0px; */
+
+}
+
+.form-control legend{
+    background-color: #003366;
+    color: white;
+}
+
+body form{
+    border: 1px solid #003366;
+/* background-color: blue;     */
+    
+}
+/*########################################*/
 input[type="text"] {
     width: 50px;
 }
