@@ -1,10 +1,12 @@
 package com.turtleshelldevelopment.endpoints;
 
+import com.turtleshelldevelopment.WebServer;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
@@ -14,8 +16,14 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 
 public class GeocodingEndpoint implements Route {
-    private final HttpClient client = HttpClient.newHttpClient();
-
+    private static HttpClient client = null;
+    static {
+        try {
+            client = HttpClient.newHttpClient();
+        } catch (UncheckedIOException e) {
+            WebServer.serverLogger.error("Failed to create new HTTP Client for Geocoding");
+        }
+    }
     @Override
     public Object handle(Request request, Response response) throws IOException, InterruptedException, URISyntaxException {
         String addressLookup = request.queryParams("address");

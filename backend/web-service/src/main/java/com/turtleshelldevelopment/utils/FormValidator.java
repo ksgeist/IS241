@@ -10,6 +10,7 @@ public class FormValidator {
                 return false;
             }
         }
+        System.out.println("Test");
         return true;
     }
 
