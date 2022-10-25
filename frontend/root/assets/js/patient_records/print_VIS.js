@@ -18,6 +18,7 @@ window.onload = function() {
 	var lang = document.getElementsByName('lang');
 
 	function getFromRadio(radios) {
+		val = "english"
 		// 	Get the manufacturer selected from the radio buttons
 		for (var i = 0, length = radios.length; i < length; i++) {
 		  if (radios[i].checked) {
@@ -27,10 +28,11 @@ window.onload = function() {
 			break;
 		  }
 		}	
-	return val;
+		return val;
 	}
 	
-	function getOptions() {
+	function getOptions(event) {
+		event.preventDefault();
 		// 	Get the vaccine dose selected from the dropdown
 		vax = dose.options[dose.selectedIndex].value;
 // 		document.querySelector('.vax').textContent = vax;
