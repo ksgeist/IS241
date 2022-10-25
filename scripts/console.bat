@@ -1,1 +1,0 @@
-powershell -Command "java -jar console.jar"
