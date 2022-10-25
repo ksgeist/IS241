@@ -124,17 +124,18 @@
                 <label for="janssen" class="vaxMan-label">Johnson & Johnson’s Janssen</label><br>
                 <input type="radio" id="novavax" name="vaxMan" value="novavax" class="vaxMan">
                 <label for="novavax" class="vaxMan-label">Novavax</label><br><br>
-                <div class="field-flex">
-                    <label for="lotNumber">Lot Number</label>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">#</span>
-                            <input
-                                type="text"
-                                id="lotNumber"
-                                name="lotNumber"
-                                class="form-control"
-                                aria-describedby="basic-addon1">
-                        </div>
+				
+				<!-- Vaccine Lot Number -->
+				<label for="lotNumber">Lot Number</label>
+					<div class="input-group mb-3">
+						<span class="input-group-text" id="basic-addon1">#</span>
+						<input
+							type="text"
+							id="lotNumber"
+							name="lotNumber"
+							class="form-control"
+							aria-describedby="basic-addon1">
+					</div>
 
                     <!-- Dropdown for Vax Dose -->
                     <label for="dose">Please select the Vaccine Series Dose
@@ -161,7 +162,8 @@
                         </select>
                     </label>
                     <br>
-                    			
+                    
+					<!--  Print Vaccine Information Sheet (VIS)	 -->
 					<button type="button" class="print-button" formaction="">Print Vaccine Information Sheet</button>
 					 	<p>Choose language for printing:</p>
                			<input type="radio" id="english" name="lang" value="english" class="lang" checked>
@@ -177,7 +179,6 @@
 						<p> The value of manufacturer is: <span class="manu"></span> </p>
 						<p> The language is: <span class="language"></span> </p>
  -->
-                </div>
             </fieldset>
             <br>
             <input type="submit" value="Submit" class="form-control">
