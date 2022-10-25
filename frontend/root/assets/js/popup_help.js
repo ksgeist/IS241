@@ -10,10 +10,7 @@ window.onload = function () {
 };
 
 const modal = document.querySelector(".modal");
-
-// We have multiple trigger events in order for the modal to work for each instance in the dashboard HTML
 const trigger = document.querySelector(".trigger");
-
 const closeButton = document.querySelector(".close-button");
 
 
@@ -28,8 +25,6 @@ function windowOnClick(event) {
 	}
 }
 
-// We have multiple trigger events in order for the modal to work for each instance in the dashboard HTML
 trigger.addEventListener("click", toggleModal);
-
 closeButton.addEventListener("click", toggleModal);
 window.addEventListener("click", windowOnClick);
