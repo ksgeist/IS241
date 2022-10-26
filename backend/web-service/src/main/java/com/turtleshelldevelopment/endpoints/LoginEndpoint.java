@@ -1,8 +1,9 @@
 package com.turtleshelldevelopment.endpoints;
 
 import com.auth0.jwt.JWT;
-import com.turtleshelldevelopment.Issuers;
+import com.turtleshelldevelopment.utils.Issuers;
 import com.turtleshelldevelopment.WebServer;
+import com.turtleshelldevelopment.utils.ResponseUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -24,45 +25,56 @@ import java.time.temporal.ChronoUnit;
 @SuppressWarnings("unchecked")
 public class LoginEndpoint implements Route {
 
-    /***
-     * Handles Login
-     * Implementation requires a HTML Form
-     * example query: ?username=XXXXXXXXX&password=XXXXXXXXXXX
+    /**
+     * Login with username and password. Username and password must be in a well-formed
+     * JSON body.
+     * @param request  The request object providing information about the HTTP request
+     * @param response The response object providing functionality for modifying the response
+     * @return response body
      */
     @Override
     public Object handle(Request request, Response response) {
         String username, password;
         try {
             JSONObject body = (JSONObject) new JSONParser().parse(request.body());
-
             //Validate Authentication POST Request
             username = (String) body.get("username");
             password = (String) body.get("password");
             if(validate(username, password)) {
-                //System.out.println("user: " + username + ", password: " + password);
                 JSONObject success = new JSONObject();
-                success.put("success", true);
-                success.put("2faRequired", true);
+                success.put("request_2fa", true);
                 generateMfaJWTToken(username, response);
                 response.status(200);
                 return success;
             } else {
-                JSONObject failure = new JSONObject();
-                response.status(401);
-                failure.put("success", false);
-                failure.put("message","Invalid Username or Password");
-                return failure;
+                return ResponseUtils.createError("Invalid Username or Password");
             }
         } catch (SQLException e) {
             response.status(500);
             WebServer.serverLogger.warn(String.format("Error on handling login: %s", e.getMessage()));
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException | ParseException e) {
+            return ResponseUtils.createError("Server was unable to handle this request, Try again later.");
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             response.status(401);
-            //WebServer.serverLogger.warn(String.format("Error on handling login: %s", e.getMessage()));
+            return ResponseUtils.createError("Invalid Token");
+        } catch (ParseException e) {
+            response.status(400);
+            return ResponseUtils.createError("Invalid request");
         }
-        return "";
     }
 
+
+    /**
+     * Validates the clients requested username and password
+     * Verifying that none are missing or empty and that the
+     * expected password is correct for the username provided
+     * @param username The username as given by the client
+     * @param password The password as given by the client
+     * @return true if the client should be given a JWT token for the requested user, false if the
+     * username, password is missing, empty, or incorrect
+     * @throws SQLException If the Database request fails to respond
+     * @throws NoSuchAlgorithmException If the cryptography algorithm does not exist
+     * @throws InvalidKeySpecException If the security spec is invalid
+     */
     private boolean validate(String username, String password) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
         if(username == null || password == null || username.equals("") || password.equals("")) return false;
         //Get User From database if they exist
@@ -89,11 +101,19 @@ public class LoginEndpoint implements Route {
         }
     }
 
+    /**
+     * Creates a JWT Token specifically for continuing with a 2FA request
+     * This must be given back to the server on request to /api/mfa as
+     * the token.
+     * This method will give append the token cookie directly to the response
+     * object it is given.
+     * @param username Username of the user this will be providing access to
+     * @param response The response that will be given to the client once
+     *                 completed.
+     */
     private void generateMfaJWTToken(String username, Response response) {
         Instant time = Instant.now();
         Instant inst = time.plus(3, ChronoUnit.MINUTES);
-        System.out.println("time is:  " + time);
-        System.out.println("time is with zone offset: " + inst);
         String jwt = JWT.create()
                 .withIssuer(Issuers.MFA_LOGIN.getIssuer())
                 .withSubject(username)
