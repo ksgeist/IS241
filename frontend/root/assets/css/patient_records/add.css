@@ -14,13 +14,24 @@ body#add_record_body {
 
 }
 
-.form-control legend{
+fieldset.form-control {
     background-color: #003366;
+    color: black;
+    padding: 0;
+}
+fieldset.form-control legend {
     color: white;
+    padding-left: 10px;
+}
+fieldset.form-control > div {
+    padding: 13px;
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 0 0 .375rem .375rem;
 }
 
 body form{
-    border: 1px solid #003366;
+    /* border: 1px solid #003366; */
 /* background-color: blue;     */
     
 }
@@ -50,15 +61,27 @@ input.name-fields {
     display: flex;
     width: 200px;
 }
-#ss4 {
+input[type="text"]#ss4 {
     width: 95px;
 }
-#dob {
+input[type="date"]#dob {
     width: 147px;
 }
-#lotNumber {
+input[type="text"]#lotNumber {
     width: 100px;
 }
-#date-input {
+input[type="date"]#date-input {
     max-width: 275px;
+}
+input[type="text"]#address {
+    width: 712px;
+}
+input[type="email"]#email {
+    min-width: 440px;
+}
+input[type="text"]#phone {
+    width: 150px;
+}
+input[type="text"]#insProvider, input[type="text"]#insGroup, input[type="text"]#insPolicy {
+    width: 50%;
 }

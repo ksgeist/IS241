@@ -35,7 +35,7 @@ const map = new ol.Map({
 
 const stateLayer = new ol.layer.VectorImage({
   source: new ol.source.Vector({
-    url: `/assets/us-state-boundaries.geojson`,
+    url: `assets/us-state-boundaries.geojson`,
     format: new ol.format.GeoJSON(),
   }),
   visible: true,
@@ -52,7 +52,7 @@ const markers = new ol.layer.Vector({
       anchor: [0.5, 1],
       size: [384, 512],
       scale: 0.15,
-      src: `/assets/marker.png`,
+      src: `assets/marker.png`,
     }),
   }),
 });

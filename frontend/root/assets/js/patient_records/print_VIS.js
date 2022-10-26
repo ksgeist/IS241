@@ -54,7 +54,7 @@ window.onload = function() {
 				if(vax == "adDose1" | vax == "teenDose1") {
 					url = "https://www.fda.gov/media/159898/download";
 				} else {
-					window.alert("This vaccine dose not available for this manufacturer and/or age group.")
+					window.alert("This vaccine dose is not available for this manufacturer and/or age group.")
 					url = "";
 				}	
 			}
@@ -62,7 +62,7 @@ window.onload = function() {
 				if(vax == "adDose1" | vax == "teenDose1") {
 					url = "https://www.fda.gov/media/160242/download";
 				} else {
-					window.alert("This vaccine dose not available for this manufacturer and/or age group.")
+					window.alert("This vaccine dose is not available for this manufacturer and/or age group.")
 					url = "";
 				}				
 			}
@@ -73,7 +73,7 @@ window.onload = function() {
 				if(vax == "adDose1" | vax == "adDose2" | "adBoosterBiv") {
 					url = "https://www.janssenlabels.com/emergency-use-authorization/Janssen+COVID-19+Vaccine-Recipient-fact-sheet.pdf";
 				} else {
-					window.alert("This vaccine dose not available for this manufacturer and/or age group.")
+					window.alert("This vaccine dose is not available for this manufacturer and/or age group.")
 					url = "";
 				}	
 			}
@@ -81,7 +81,7 @@ window.onload = function() {
 				if(vax == "adDose1" | vax == "adDose2" | "adBoosterBiv") {
 					url = "https://www.janssenlabels.com/emergency-use-authorization/Janssen+COVID-19+Vaccine-Recipient-fact-sheet-es.pdf";
 				} else {
-					window.alert("This vaccine dose not available for this manufacturer and/or age group.")
+					window.alert("This vaccine dose is not available for this manufacturer and/or age group.")
 					url = "";
 				}				
 			}
