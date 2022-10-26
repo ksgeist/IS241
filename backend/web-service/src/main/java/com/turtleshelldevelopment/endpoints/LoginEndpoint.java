@@ -22,7 +22,6 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-@SuppressWarnings("unchecked")
 public class LoginEndpoint implements Route {
 
     /**
@@ -36,27 +35,38 @@ public class LoginEndpoint implements Route {
     public Object handle(Request request, Response response) {
         String username, password;
         try {
+            //parse body as JSON throw error if it cannot be parsed
             JSONObject body = (JSONObject) new JSONParser().parse(request.body());
-            //Validate Authentication POST Request
+            //get username and password from JSON body
             username = (String) body.get("username");
             password = (String) body.get("password");
+            //Validate that the credentials are valid in our database
             if(validate(username, password)) {
-                JSONObject success = new JSONObject();
-                success.put("request_2fa", true);
                 generateMfaJWTToken(username, response);
+                //Set status to 200 OK
                 response.status(200);
-                return success;
+                //Return successful login response
+                return ResponseUtils.createLoginSuccess(true);
             } else {
+                //Invalid login, return error
                 return ResponseUtils.createError("Invalid Username or Password");
             }
         } catch (SQLException e) {
+            //Set status to 500 Internal Server Error
             response.status(500);
-            WebServer.serverLogger.warn(String.format("Error on handling login: %s", e.getMessage()));
+            //Log error
+            WebServer.serverLogger.warn("Error on handling login: {}", e.getMessage());
+            //Return error due to SQL related error (most likely going to be an issue with the server being unresponsive)
             return ResponseUtils.createError("Server was unable to handle this request, Try again later.");
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            response.status(401);
-            return ResponseUtils.createError("Invalid Token");
+            //Set status to 401 Unauthorized
+            response.status(500);
+            //Log error
+            WebServer.serverLogger.error("Error on handling login: {}", e.getMessage());
+            //Return error due to Issues related to the Java runtime environment
+            return ResponseUtils.createError("Error with java runtime environment");
         } catch (ParseException e) {
+            //Set status to 400 Bad Request
             response.status(400);
             return ResponseUtils.createError("Invalid request");
         }
@@ -77,26 +87,32 @@ public class LoginEndpoint implements Route {
      */
     private boolean validate(String username, String password) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
         if(username == null || password == null || username.equals("") || password.equals("")) return false;
-        //Get User From database if they exist
+        //Check database if the user exists with Stored procedure
         CallableStatement getUser = WebServer.database.getConnection().prepareCall("CALL GET_USER(?)");
         getUser.setString(1, username);
-        //Check for a valid user
         ResultSet rs;
+        //Execute Stored procedure call
         if((rs = getUser.executeQuery()).next()) {
-            byte[] correct_password_hash = rs.getBytes("password_hash");
-            KeySpec spec = new PBEKeySpec(password.toCharArray(), rs.getBytes("salt"), 65536, 64 * 8);
+            //Pull out the correct password hash from row (since we only store hashes in the database with salt)
+            byte[] correctPasswordHash = rs.getBytes("password_hash");
+            //Pull out salt from row
+            byte[] salt = rs.getBytes("salt");
+            KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 64 * 8);
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+            //Get the password hash of the password received from the client
             byte[] password_hash = factory.generateSecret(spec).getEncoded();
-            //WebServer.serverLogger.debug("Password Hash: " + Arrays.toString(password_hash));
-            int diff = correct_password_hash.length ^ password_hash.length;
-            for(int i = 0; i < correct_password_hash.length && i < password_hash.length; i++)
+            //Get the difference and verify that the password is correct
+            int diff = correctPasswordHash.length ^ password_hash.length;
+            for(int i = 0; i < correctPasswordHash.length && i < password_hash.length; i++)
             {
-                diff |= correct_password_hash[i] ^ password_hash[i];
+                diff |= correctPasswordHash[i] ^ password_hash[i];
             }
-            //WebServer.serverLogger.debug("diff is " + diff);
+            //Close callable statement
             getUser.close();
+            //return if the difference is 0
             return diff == 0;
         } else {
+            //If there is no rows return false
             return false;
         }
     }
@@ -112,16 +128,20 @@ public class LoginEndpoint implements Route {
      *                 completed.
      */
     private void generateMfaJWTToken(String username, Response response) {
-        Instant time = Instant.now();
-        Instant inst = time.plus(3, ChronoUnit.MINUTES);
+        //Get the time now
+        Instant currentTime = Instant.now();
+        //Add three minutes to current time, this being our expiration for the token
+        Instant expiration = currentTime.plus(3, ChronoUnit.MINUTES);
+        //Generate JWT token to be sent to client
         String jwt = JWT.create()
                 .withIssuer(Issuers.MFA_LOGIN.getIssuer())
                 .withSubject(username)
                 .withClaim("mfa", true)
-                .withNotBefore(time.minus(1, ChronoUnit.SECONDS))
-                .withIssuedAt(time)
-                .withExpiresAt(inst)
+                .withNotBefore(currentTime.minus(1, ChronoUnit.SECONDS))
+                .withIssuedAt(currentTime)
+                .withExpiresAt(expiration)
                 .sign(WebServer.JWT_ALGO);
+        //Set token cookie in response to client
         response.cookie("/","token", jwt, 180, true, true);
     }
 }
