@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+    implementation 'org.json:json:20200518'
     implementation 'com.sparkjava:spark-core:2.9.4'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
@@ -37,7 +37,7 @@ dependencies {
 }
 
 application {
-    mainClassName = 'com.turtleshelldevelopment.WebServer'
+    mainClassName = 'com.turtleshelldevelopment.BackendServer'
 }
 
 run {
