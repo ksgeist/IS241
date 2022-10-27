@@ -1,6 +1,9 @@
 package com.turtleshelldevelopment;
 
+import com.turtleshelldevelopment.utils.EnvironmentType;
+import com.turtleshelldevelopment.utils.Issuers;
 import com.turtleshelldevelopment.utils.ModelUtil;
+import com.turtleshelldevelopment.utils.permissions.PermissionType;
 import com.turtleshelldevelopment.utils.TokenUtils;
 import spark.ModelAndView;
 import spark.Request;
@@ -12,7 +15,7 @@ import static spark.Spark.halt;
 public class EndpointFilters {
 
     public static void verifyCredentials(Request req, Response resp, PermissionType requiredEntitlement) {
-        if(WebServer.environment.equals(EnvironmentType.FRONT_DEVEL)) return;
+        if(BackendServer.environment.equals(EnvironmentType.FRONT_DEVEL)) return;
         TokenUtils tokenUtils = new TokenUtils(req.cookie("token"), Issuers.AUTHENTICATION.getIssuer());
         if(!tokenUtils.isInvalid()) {
             if(requiredEntitlement == null) return;

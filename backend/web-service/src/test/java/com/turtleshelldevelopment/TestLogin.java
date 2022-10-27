@@ -1,12 +1,10 @@
 package com.turtleshelldevelopment;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 
@@ -16,22 +14,21 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static spark.Spark.awaitInitialization;
 import static spark.Spark.stop;
+
 
 public class TestLogin {
     static HttpClient client;
     private static final String serviceURL = "http://localhost:8091";
     private static final String baseURL = "/api";
     @Before
-    public void setup() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+    public void setup() {
         //System.setProperty("user.dir", Path.of(System.getProperty("user.dir")).getParent().toString());
-        WebServer.main(new String[]{"use-test-db"});
+        BackendServer.main(new String[]{"use-test-db"});
         client = HttpClient.newHttpClient();
         awaitInitialization();
     }
@@ -80,7 +77,7 @@ public class TestLogin {
 
     @DisplayName("Check Valid User")
     @Test
-    public void loginRouteValidUser() throws URISyntaxException, IOException, InterruptedException, ParseException {
+    public void loginRouteValidUser() throws URISyntaxException, IOException, InterruptedException, JSONException {
         assertNotNull(client);
         String loginUrl = baseURL + "/login";
         HttpRequest request = HttpRequest.newBuilder().uri(
@@ -90,14 +87,14 @@ public class TestLogin {
         System.out.println("Returned Body: " + response.body());
         assertEquals(200, response.statusCode());
         assertNotEquals("", response.body());
-        JSONObject bodyJson = (JSONObject) new JSONParser().parse(response.body());
+        JSONObject bodyJson = new JSONObject(response.body());
         assertNotEquals(null, bodyJson);
         assertEquals(true, bodyJson.get("success"));
     }
 
     @DisplayName("Login with valid username and invalid password")
     @Test
-    public void loginRouteValidUserWithInvalidPassword() throws URISyntaxException, ParseException, IOException, InterruptedException {
+    public void loginRouteValidUserWithInvalidPassword() throws URISyntaxException, JSONException, IOException, InterruptedException {
         assertNotNull(client);
         String loginUrl = baseURL + "/login";
 
@@ -108,14 +105,14 @@ public class TestLogin {
         System.out.println("Returned Body: " + response.body());
         assertEquals(401, response.statusCode());
         assertNotEquals("", response.body());
-        JSONObject bodyJson = (JSONObject) new JSONParser().parse(response.body());
+        JSONObject bodyJson = new JSONObject(response.body());
         assertNotEquals(null, bodyJson);
         assertEquals(false, bodyJson.get("success"));
     }
 
     @DisplayName("Invalid User & Correct Password")
     @Test
-    public void checkInvalidUserValidPassword() throws ParseException, IOException, InterruptedException, URISyntaxException {
+    public void checkInvalidUserValidPassword() throws JSONException, IOException, InterruptedException, URISyntaxException {
         assertNotNull(client);
         String loginUrl = baseURL + "/login";
 
@@ -126,13 +123,13 @@ public class TestLogin {
         System.out.println("Returned Body: " + response.body());
         assertEquals(401, response.statusCode());
         assertNotEquals("", response.body());
-        JSONObject bodyJson = (JSONObject) new JSONParser().parse(response.body());
+        JSONObject bodyJson = new JSONObject(response.body());
         assertNotEquals(null, bodyJson);
         assertEquals(false, bodyJson.get("success"));
     }
     @DisplayName("Check for SQL Injection on Username")
     @Test
-    public void testSQLInjectionUsername() throws ParseException, IOException, InterruptedException, URISyntaxException {
+    public void testSQLInjectionUsername() throws JSONException, IOException, InterruptedException, URISyntaxException {
         assertNotNull(client);
         String loginUrl = baseURL + "/login";
 
@@ -143,7 +140,7 @@ public class TestLogin {
         System.out.println("Returned Body: " + response.body());
         assertEquals(401, response.statusCode());
         assertNotEquals("", response.body());
-        JSONObject bodyJson = (JSONObject) new JSONParser().parse(response.body());
+        JSONObject bodyJson = new JSONObject(response.body());
         assertNotEquals(null, bodyJson);
         assertEquals(false, bodyJson.get("success"));
         assertNull(bodyJson.get("jwt"));
@@ -151,7 +148,7 @@ public class TestLogin {
 
     @DisplayName("Check for SQL Injection on Password")
     @Test
-    public void testSQLInjectionPassword() throws ParseException, IOException, InterruptedException, URISyntaxException {
+    public void testSQLInjectionPassword() throws JSONException, IOException, InterruptedException, URISyntaxException {
         assertNotNull(client);
         String loginUrl = baseURL + "/login";
 
@@ -162,7 +159,7 @@ public class TestLogin {
         System.out.println("Returned Body: " + response.body());
         assertEquals(401, response.statusCode());
         assertNotEquals("", response.body());
-        JSONObject bodyJson = (JSONObject) new JSONParser().parse(response.body());
+        JSONObject bodyJson = new JSONObject(response.body());
         assertNotEquals(null, bodyJson);
         assertEquals(false, bodyJson.get("success"));
         assertNull(bodyJson.get("jwt"));

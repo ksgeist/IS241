@@ -1,5 +1,8 @@
 package com.turtleshelldevelopment;
 
+import com.turtleshelldevelopment.utils.TextQR;
+import com.turtleshelldevelopment.utils.db.Account;
+import com.turtleshelldevelopment.utils.mfa.MultiFactorResponse;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import dev.samstevens.totp.exceptions.QrGenerationException;
@@ -23,13 +26,13 @@ public class Database {
         db = new HikariDataSource(config);
 
         try {
-            WebServer.serverLogger.info("Checking Account...");
+            BackendServer.serverLogger.info("Checking Account...");
             PreparedStatement checkForUser = db.getConnection().prepareStatement("SELECT user_id FROM User LIMIT 1;");
             ResultSet set = checkForUser.executeQuery();
             if(set.next()) {
                 System.out.println("Found account: " + set.getInt("user_id") + " on database " + url);
             } else {
-                WebServer.serverLogger.info("Creating System Admin Account...");
+                BackendServer.serverLogger.info("Creating System Admin Account...");
                 String adminPassword = RandomStringUtils.random(16, true, true);
                 String systemAdminUsername = "admin";
                 Account admin = new Account(systemAdminUsername, adminPassword);
@@ -45,10 +48,10 @@ public class Database {
                 statement.setInt(8, 1);
                 statement.setString(9, "unconfigured@example.com");
                 if(statement.executeUpdate() == 1) {
-                    WebServer.serverLogger.info("Two-Factor Authentication for Admin: ");
-                    WebServer.serverLogger.info("\n" + TextQR.getQrStringFromURI(tfa.qr_data()));
-                    WebServer.serverLogger.info("Password: " + adminPassword);
-                    WebServer.serverLogger.info("Remember this Information, This information will not show on next startup!");
+                    BackendServer.serverLogger.info("Two-Factor Authentication for Admin: ");
+                    BackendServer.serverLogger.info("\n" + TextQR.getQrStringFromURI(tfa.qr_data()));
+                    BackendServer.serverLogger.info("Password: " + adminPassword);
+                    BackendServer.serverLogger.info("Remember this Information, This information will not show on next startup!");
                 }
 
                 statement.close();
@@ -61,7 +64,7 @@ public class Database {
     }
 
     public Database() {
-        this(WebServer.env.get("DB_URL"), WebServer.env.get("DB_USERNAME", "db_team"), WebServer.env.get("DB_PASSWORD", ""));
+        this(BackendServer.env.get("DB_URL"), BackendServer.env.get("DB_USERNAME", "db_team"), BackendServer.env.get("DB_PASSWORD", ""));
     }
 
     public Connection getConnection() throws SQLException {

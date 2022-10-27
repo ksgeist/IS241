@@ -31,7 +31,7 @@ public class Routing {
             if (tokenUtils.isInvalid()) {
                 //Invalid token, Remove it
                 res.cookie("/", "token", null, 0, true, true);
-                halt(401, new ModelUtil().addMFAError(false, "Invalid Token", false).build().toJSONString());
+                halt(401, new ModelUtil().addMFAError(false, "Invalid Token", false).build().toString());
             }
         });
         before("/site/create", (req, res) -> verifyCredentials(req, res, PermissionType.ADD_SITE));

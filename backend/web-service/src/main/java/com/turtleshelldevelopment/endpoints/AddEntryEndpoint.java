@@ -1,6 +1,6 @@
 package com.turtleshelldevelopment.endpoints;
 
-import com.turtleshelldevelopment.WebServer;
+import com.turtleshelldevelopment.BackendServer;
 import com.turtleshelldevelopment.utils.FormValidator;
 import com.turtleshelldevelopment.utils.ModelUtil;
 import spark.ModelAndView;
@@ -68,8 +68,8 @@ public class AddEntryEndpoint implements Route {
             if((dateOfBirth = FormValidator.parseDateFromForm(patientBirthDate)) == null) {
                 return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().addError(500, "Invalid Date").build(), "/frontend/error.vm"));
             }
-
-            try(CallableStatement patientCall = WebServer.database.getConnection().prepareCall("CALL ADD_PATIENT_INFO(?,?,?,?,?)")) {
+            //TODO fix this
+            try(CallableStatement patientCall = BackendServer.database.getConnection().prepareCall("CALL ADD_PATIENT_INFO(?,?,?,?,?)")) {
                 patientCall.setString(1, patientFirstName);
                 patientCall.setString(2, patientMiddleName);
                 patientCall.setString(3, patientLastName);

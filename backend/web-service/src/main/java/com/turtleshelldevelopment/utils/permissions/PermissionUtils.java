@@ -1,7 +1,7 @@
-package com.turtleshelldevelopment.utils;
+package com.turtleshelldevelopment.utils.permissions;
 
-import com.turtleshelldevelopment.PermissionType;
-import org.json.simple.JSONObject;
+
+import org.json.JSONObject;
 
 import java.util.List;
 

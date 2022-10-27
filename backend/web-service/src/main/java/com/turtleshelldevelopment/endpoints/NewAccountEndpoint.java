@@ -1,11 +1,11 @@
 package com.turtleshelldevelopment.endpoints;
 
-import com.turtleshelldevelopment.Account;
-import com.turtleshelldevelopment.MultiFactorResponse;
-import com.turtleshelldevelopment.WebServer;
+import com.turtleshelldevelopment.utils.db.Account;
+import com.turtleshelldevelopment.utils.mfa.MultiFactorResponse;
+import com.turtleshelldevelopment.BackendServer;
 import com.turtleshelldevelopment.utils.ModelUtil;
 import dev.samstevens.totp.exceptions.QrGenerationException;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -26,12 +26,11 @@ import java.util.Arrays;
 //* Description: New Account Endpoint Handler Route   *
 //*                                                   *
 //*****************************************************
-@SuppressWarnings("unchecked")
 public class NewAccountEndpoint implements Route {
 
     @Override
     public Object handle(Request request, Response response) {
-        WebServer.serverLogger.info("Handling New Account!");
+        BackendServer.serverLogger.info("Handling New Account!");
         JSONObject body = new JSONObject();
         try {
             String username = request.queryParams("username");
@@ -43,7 +42,7 @@ public class NewAccountEndpoint implements Route {
             System.out.println("Username: " + username + ", password: " + password);
 
             //Validate Username
-            PreparedStatement statement = WebServer.database.getConnection().prepareStatement("CALL CHECK_USERNAME(?);");
+            PreparedStatement statement = BackendServer.database.getConnection().prepareStatement("CALL CHECK_USERNAME(?);");
             statement.setString(1, username);
             if (statement.executeQuery().next()) {
                 body.put("error", "Username already exists");
@@ -60,7 +59,7 @@ public class NewAccountEndpoint implements Route {
             //WebServer.serverLogger.info("Permissions is Good");
             try {
                 //Insert new account
-                CallableStatement insertUser = WebServer.database.getConnection().prepareCall("CALL ADD_USER(?,?,?,?,?,?,?,?,?)");
+                CallableStatement insertUser = BackendServer.database.getConnection().prepareCall("CALL ADD_USER(?,?,?,?,?,?,?,?,?)");
                 MultiFactorResponse mfa = acc.generateTOTPMultiFactor();
                 insertUser.setString(1, username);
                 insertUser.setBytes(2, acc.getPasswordHash());
@@ -75,23 +74,23 @@ public class NewAccountEndpoint implements Route {
                 body.put("error", "200");
                 body.put("2fa", mfa.qr_code());
                 System.out.println("User created: " + username + ", " + password + ", salt=" + Arrays.toString(salt));
-                WebServer.serverLogger.info("Success!");
+                BackendServer.serverLogger.info("Success!");
                 return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().add("qr_code", body.get("2fa")).build(), "/frontend/success_create.vm"));
             } else {
                 body.put("error", "500");
                 body.put("message", "Failed to update database");
-                WebServer.serverLogger.info("Failed to update");
+                BackendServer.serverLogger.info("Failed to update");
             }
             insertUser.close();
-            WebServer.serverLogger.info("Successfully put in database");
+            BackendServer.serverLogger.info("Successfully put in database");
             } catch (QrGenerationException e) {
-                WebServer.serverLogger.error("Error creating QR");
+                BackendServer.serverLogger.error("Error creating QR");
                 body.put("error", "500");
                 body.put("message", "Failed to Create QR Code for 2FA");
             }
             return body;
         } catch (SQLException e) {
-            WebServer.serverLogger.info("ERROR: " + e.getMessage());
+            BackendServer.serverLogger.info("ERROR: " + e.getMessage());
         }
         return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().add("qr_code", body.get("2fa")).build(), "/frontend/success_create.vm"));
     }

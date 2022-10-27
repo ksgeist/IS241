@@ -1,12 +1,11 @@
 package com.turtleshelldevelopment.endpoints;
 
 import com.auth0.jwt.JWT;
+import com.turtleshelldevelopment.BackendServer;
 import com.turtleshelldevelopment.utils.Issuers;
-import com.turtleshelldevelopment.WebServer;
 import com.turtleshelldevelopment.utils.ResponseUtils;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONException;
+import org.json.JSONObject;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -22,6 +21,10 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
+
+/**
+ * Login Route to handle requests to /api/login
+ */
 public class LoginEndpoint implements Route {
 
     /**
@@ -36,7 +39,7 @@ public class LoginEndpoint implements Route {
         String username, password;
         try {
             //parse body as JSON throw error if it cannot be parsed
-            JSONObject body = (JSONObject) new JSONParser().parse(request.body());
+            JSONObject body = new JSONObject(request.body());
             //get username and password from JSON body
             username = (String) body.get("username");
             password = (String) body.get("password");
@@ -55,17 +58,17 @@ public class LoginEndpoint implements Route {
             //Set status to 500 Internal Server Error
             response.status(500);
             //Log error
-            WebServer.serverLogger.warn("Error on handling login: {}", e.getMessage());
+            BackendServer.serverLogger.warn("Error on handling login: {}", e.getMessage());
             //Return error due to SQL related error (most likely going to be an issue with the server being unresponsive)
             return ResponseUtils.createError("Server was unable to handle this request, Try again later.");
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             //Set status to 401 Unauthorized
             response.status(500);
             //Log error
-            WebServer.serverLogger.error("Error on handling login: {}", e.getMessage());
+            BackendServer.serverLogger.error("Error on handling login: {}", e.getMessage());
             //Return error due to Issues related to the Java runtime environment
             return ResponseUtils.createError("Error with java runtime environment");
-        } catch (ParseException e) {
+        } catch (JSONException e) {
             //Set status to 400 Bad Request
             response.status(400);
             return ResponseUtils.createError("Invalid request");
@@ -88,7 +91,7 @@ public class LoginEndpoint implements Route {
     private boolean validate(String username, String password) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
         if(username == null || password == null || username.equals("") || password.equals("")) return false;
         //Check database if the user exists with Stored procedure
-        CallableStatement getUser = WebServer.database.getConnection().prepareCall("CALL GET_USER(?)");
+        CallableStatement getUser = BackendServer.database.getConnection().prepareCall("CALL GET_USER(?)");
         getUser.setString(1, username);
         ResultSet rs;
         //Execute Stored procedure call
@@ -140,7 +143,7 @@ public class LoginEndpoint implements Route {
                 .withNotBefore(currentTime.minus(1, ChronoUnit.SECONDS))
                 .withIssuedAt(currentTime)
                 .withExpiresAt(expiration)
-                .sign(WebServer.JWT_ALGO);
+                .sign(BackendServer.JWT_ALGO);
         //Set token cookie in response to client
         response.cookie("/","token", jwt, 180, true, true);
     }

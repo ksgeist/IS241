@@ -3,16 +3,15 @@ package com.turtleshelldevelopment.endpoints;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.turtleshelldevelopment.Issuers;
-import com.turtleshelldevelopment.Permissions;
-import com.turtleshelldevelopment.WebServer;
+import com.turtleshelldevelopment.utils.Issuers;
+import com.turtleshelldevelopment.utils.permissions.Permissions;
+import com.turtleshelldevelopment.BackendServer;
 import dev.samstevens.totp.code.DefaultCodeGenerator;
 import dev.samstevens.totp.code.DefaultCodeVerifier;
 import dev.samstevens.totp.code.HashingAlgorithm;
 import dev.samstevens.totp.time.SystemTimeProvider;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONException;
+import org.json.JSONObject;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -21,17 +20,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 
 public class MfaEndpoint implements Route {
     @Override
-    @SuppressWarnings("unchecked")
-    public Object handle(Request request, Response response) throws ParseException {
+    public Object handle(Request request, Response response) throws JSONException {
         String jwtQuery = request.cookie("token");
-        JSONObject bodyJSON = (JSONObject) new JSONParser().parse(request.body());
-        if(!bodyJSON.containsKey("code")) {
+        JSONObject bodyJSON = new JSONObject(request.body());
+        if(!bodyJSON.has("code")) {
             JSONObject failure = new JSONObject();
             failure.put("success", false);
             failure.put("message", "Missing code in Body");
@@ -40,9 +36,9 @@ public class MfaEndpoint implements Route {
         try {
             String code = (String) bodyJSON.get("code");
             DecodedJWT jwt = JWT.decode(jwtQuery);
-            WebServer.serverLogger.info("Payload is: " + jwt.getClaims().toString());
+            BackendServer.serverLogger.info("Payload is: " + jwt.getClaims().toString());
             JSONObject success = new JSONObject();
-            WebServer.JWT_ALGO.verify(jwt);
+            BackendServer.JWT_ALGO.verify(jwt);
 
             String username = jwt.getSubject();
             SystemTimeProvider timeProvider = new SystemTimeProvider();
@@ -51,7 +47,7 @@ public class MfaEndpoint implements Route {
             verifier.setAllowedTimePeriodDiscrepancy(2);
 
             //Get Secret from Database
-            PreparedStatement getSecret = WebServer.database.getConnection().prepareStatement("SELECT 2fa_secret FROM User WHERE username = ?;");
+            PreparedStatement getSecret = BackendServer.database.getConnection().prepareStatement("SELECT 2fa_secret FROM User WHERE username = ?;");
             getSecret.setString(1, username);
             ResultSet set;
             if(!(set = getSecret.executeQuery()).next()) {
@@ -64,8 +60,8 @@ public class MfaEndpoint implements Route {
             }
             String secret = set.getString("2fa_secret");
 
-            WebServer.serverLogger.info("Secret is: " + secret);
-            WebServer.serverLogger.info("Is Code (" + code + ") valid: " + verifier.isValidCode(secret, code));
+            BackendServer.serverLogger.info("Secret is: " + secret);
+            BackendServer.serverLogger.info("Is Code (" + code + ") valid: " + verifier.isValidCode(secret, code));
 
             set.close();
             getSecret.close();
@@ -88,14 +84,14 @@ public class MfaEndpoint implements Route {
             error.put("message", "Invalid Signature");
             error.put("retry", false);
             response.status(401);
-            return error.toJSONString();
+            return error.toString();
         } catch (NullPointerException e) {
             JSONObject error = new JSONObject();
             error.put("success", false);
             error.put("message", "Token is no longer valid");
             error.put("retry", false);
             response.status(401);
-            return error.toJSONString();
+            return error.toString();
         } catch (SQLException e) {
             e.printStackTrace();
             JSONObject error = new JSONObject();
@@ -103,7 +99,7 @@ public class MfaEndpoint implements Route {
             error.put("message", "Database failed with an error");
             error.put("retry", false);
             response.status(401);
-            return error.toJSONString();
+            return error.toString();
         }
 
     }
@@ -119,6 +115,6 @@ public class MfaEndpoint implements Route {
                 .withNotBefore(currTime.minus(1, ChronoUnit.SECONDS))
                 .withIssuedAt(currTime)
                 .withExpiresAt(inst)
-                .sign(WebServer.JWT_ALGO);
+                .sign(BackendServer.JWT_ALGO);
     }
 }

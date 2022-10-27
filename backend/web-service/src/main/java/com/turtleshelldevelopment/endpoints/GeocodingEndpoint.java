@@ -1,6 +1,6 @@
 package com.turtleshelldevelopment.endpoints;
 
-import com.turtleshelldevelopment.WebServer;
+import com.turtleshelldevelopment.BackendServer;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -21,7 +21,7 @@ public class GeocodingEndpoint implements Route {
         try {
             client = HttpClient.newHttpClient();
         } catch (UncheckedIOException e) {
-            WebServer.serverLogger.error("Failed to create new HTTP Client for Geocoding");
+            BackendServer.serverLogger.error("Failed to create new HTTP Client for Geocoding");
         }
     }
     @Override

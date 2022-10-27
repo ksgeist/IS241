@@ -1,12 +1,12 @@
 package com.turtleshelldevelopment.pages;
 
-import com.turtleshelldevelopment.EnvironmentType;
-import com.turtleshelldevelopment.Issuers;
-import com.turtleshelldevelopment.WebServer;
+import com.turtleshelldevelopment.utils.EnvironmentType;
+import com.turtleshelldevelopment.utils.Issuers;
+import com.turtleshelldevelopment.BackendServer;
 import com.turtleshelldevelopment.utils.DevelopmentTokenUtils;
 import com.turtleshelldevelopment.utils.ModelUtil;
 import com.turtleshelldevelopment.utils.TokenUtils;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -16,7 +16,7 @@ import spark.template.velocity.VelocityTemplateEngine;
 public class DashboardPage implements Route {
     @Override
     public Object handle(Request request, Response response) {
-        if(WebServer.environment.equals(EnvironmentType.FRONT_DEVEL)) {
+        if(BackendServer.environment.equals(EnvironmentType.FRONT_DEVEL)) {
             JSONObject modelData = new ModelUtil().addPermissions(new DevelopmentTokenUtils().getPermissions()).build();
             return new VelocityTemplateEngine().render(new ModelAndView(modelData, "/frontend/dashboard.vm"));
         }

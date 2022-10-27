@@ -1,8 +1,8 @@
 package com.turtleshelldevelopment.pages;
 
-import com.turtleshelldevelopment.Sites;
-import com.turtleshelldevelopment.UserType;
-import com.turtleshelldevelopment.WebServer;
+import com.turtleshelldevelopment.utils.db.Sites;
+import com.turtleshelldevelopment.utils.UserType;
+import com.turtleshelldevelopment.BackendServer;
 import com.turtleshelldevelopment.utils.ModelUtil;
 import spark.ModelAndView;
 import spark.Request;
@@ -18,7 +18,7 @@ import java.util.List;
 public class UserCreatePage implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-        CallableStatement sites = WebServer.database.getConnection().prepareCall("CALL GET_SITES()");
+        CallableStatement sites = BackendServer.database.getConnection().prepareCall("CALL GET_SITES()");
         List<Sites> sitesList = new ArrayList<>();
         ResultSet set = sites.executeQuery();
         while (set.next()) {
@@ -26,7 +26,7 @@ public class UserCreatePage implements Route {
         }
         set.close();
         sites.close();
-        CallableStatement types = WebServer.database.getConnection().prepareCall("CALL GET_TYPES()");
+        CallableStatement types = BackendServer.database.getConnection().prepareCall("CALL GET_TYPES()");
         List<UserType> typesList = new ArrayList<>();
         ResultSet typeSet = types.executeQuery();
         while (typeSet.next()) {

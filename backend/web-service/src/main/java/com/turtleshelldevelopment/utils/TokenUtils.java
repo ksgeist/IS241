@@ -5,8 +5,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.turtleshelldevelopment.PermissionType;
-import com.turtleshelldevelopment.WebServer;
+import com.turtleshelldevelopment.BackendServer;
+import com.turtleshelldevelopment.utils.permissions.PermissionType;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,7 +14,6 @@ import java.util.List;
 
 public class TokenUtils {
 
-    private String token;
     private DecodedJWT decodedJWT;
     private boolean invalid;
     private String errorReason = "";
@@ -25,7 +24,7 @@ public class TokenUtils {
             return;
         }
         decodedJWT = JWT.decode(token);
-        JWTVerifier validator = JWT.require(WebServer.JWT_ALGO).withIssuer(requiredIssuer).build();
+        JWTVerifier validator = JWT.require(BackendServer.JWT_ALGO).withIssuer(requiredIssuer).build();
         try {
             validator.verify(decodedJWT);
         } catch (TokenExpiredException e) {
@@ -52,9 +51,5 @@ public class TokenUtils {
 
     public String getErrorReason() {
         return this.errorReason;
-    }
-
-    public String getToken() {
-        return token;
     }
 }

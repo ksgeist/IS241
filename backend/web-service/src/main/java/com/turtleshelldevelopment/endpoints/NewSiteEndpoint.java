@@ -1,18 +1,19 @@
 package com.turtleshelldevelopment.endpoints;
 
-import com.turtleshelldevelopment.WebServer;
-import org.json.simple.JSONObject;
+import com.turtleshelldevelopment.BackendServer;
+import org.json.JSONObject;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
 import java.sql.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NewSiteEndpoint implements Route {
-    private final Pattern streetAddressPattern = Pattern.compile("^\\d+(\\s{1}\\w+)(\\s{1}?\\w+)+$");
+    private final Pattern streetAddressPattern = Pattern.compile("^\\d+(\\s\\w+)(\\s?\\w+)+$");
 
+
+    //TODO Properly handle and make sure this works
     @Override
     public Object handle(Request request, Response response) throws SQLException {
 
@@ -22,10 +23,10 @@ public class NewSiteEndpoint implements Route {
         String fips = request.queryParams("fips");
         String zip = request.queryParams("zip");
 
-        Connection conn = WebServer.database.getConnection();
+        Connection conn = BackendServer.database.getConnection();
 
         if(streetAddressPattern.matcher(location).find()) {
-            CallableStatement createSite = conn.prepareCall("CALL ADD_SITE(?,?,?,?)");
+            CallableStatement createSite = conn.prepareCall("CALL ADD_SITE(?,?,?,?,?)");
             createSite.setString(1, location);
             createSite.setString(2, county);
             createSite.setString(3, phoneNum);
@@ -40,7 +41,7 @@ public class NewSiteEndpoint implements Route {
                 JSONObject err = new JSONObject();
                 err.put("error", "500");
                 err.put("message", "Could not add new site to the database!");
-                response.body(err.toJSONString());
+                response.body(err.toString());
             }
             createSite.close();
 
