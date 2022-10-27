@@ -1,6 +1,6 @@
 package com.turtleshelldevelopment.utils;
 
-import com.turtleshelldevelopment.PermissionType;
+import com.turtleshelldevelopment.utils.permissions.PermissionType;
 
 import java.util.HashMap;
 

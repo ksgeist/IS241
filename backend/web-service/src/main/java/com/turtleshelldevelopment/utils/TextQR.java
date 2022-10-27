@@ -1,4 +1,4 @@
-package com.turtleshelldevelopment;
+package com.turtleshelldevelopment.utils;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Writer;

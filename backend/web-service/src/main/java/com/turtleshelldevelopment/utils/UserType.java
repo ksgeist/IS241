@@ -1,8 +1,8 @@
-package com.turtleshelldevelopment;
+package com.turtleshelldevelopment.utils;
 
 public class UserType {
-    private String name;
-    private int id;
+    private final String name;
+    private final int id;
 
     public UserType(String name, int id) {
         this.name = name;

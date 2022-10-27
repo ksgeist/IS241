@@ -1,13 +1,14 @@
 package com.turtleshelldevelopment.utils;
 
-import com.turtleshelldevelopment.PermissionType;
-import com.turtleshelldevelopment.WebServer;
-import org.json.simple.JSONObject;
+import com.turtleshelldevelopment.BackendServer;
+import com.turtleshelldevelopment.utils.permissions.PermissionType;
+import org.json.JSONObject;
 import spark.utils.IOUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ModelUtil {
 
@@ -15,7 +16,7 @@ public class ModelUtil {
 
     static {
         try {
-            headerFile = IOUtils.toString(WebServer.class.getResourceAsStream("/header.html"));
+            headerFile = IOUtils.toString(Objects.requireNonNull(BackendServer.class.getResourceAsStream("/header.html")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

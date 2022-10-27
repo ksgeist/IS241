@@ -1,9 +1,9 @@
-package com.turtleshelldevelopment;
+package com.turtleshelldevelopment.utils;
 
 public enum Issuers {
     MFA_LOGIN("mfa-auth"), AUTHENTICATION("covid-19-dash");
 
-    String issue;
+    final String issue;
 
     Issuers(String issue) {
         this.issue = issue;

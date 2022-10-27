@@ -1,4 +1,4 @@
-package com.turtleshelldevelopment;
+package com.turtleshelldevelopment.utils.permissions;
 
 public enum PermissionType {
     ADD_SITE("add_site"),
