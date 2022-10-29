@@ -29,4 +29,12 @@ public class ResponseUtils {
         success.put("request_2fa", needsMfa);
         return success;
     }
+
+    public static JSONObject createCreateUserSuccessResponse(String qrCode, Response response) {
+        JSONObject json = new JSONObject();
+        json.put("2fa", qrCode);
+        response.status(200);
+        response.header("Content-Type", "application/json");
+        return json;
+    }
 }
