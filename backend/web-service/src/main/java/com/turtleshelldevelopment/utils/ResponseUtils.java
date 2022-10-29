@@ -1,17 +1,21 @@
 package com.turtleshelldevelopment.utils;
 
 import org.json.JSONObject;
+import spark.Response;
 
 public class ResponseUtils {
     /**
      * Convenience method to create an error response for Routes
      * @param error Error Message to send to client
+     * @param resp The response to be edited adding specific headers
      * @return JSONObject to be given as route response body
      */
-    public static JSONObject createError(String error) {
+    public static JSONObject createError(String error, int status, Response resp) {
         JSONObject errorResponse = new JSONObject();
         errorResponse.put("error", true);
         errorResponse.put("message", error);
+        resp.status(status);
+        resp.header("Content-Type","application/api-problem+json");
         return errorResponse;
     }
 
