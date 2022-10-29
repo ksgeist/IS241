@@ -52,7 +52,7 @@ public class LoginEndpoint implements Route {
                 return ResponseUtils.createLoginSuccess(true);
             } else {
                 //Invalid login, return error
-                return ResponseUtils.createError("Invalid Username or Password");
+                return ResponseUtils.createError("Invalid Username or Password", 401, response);
             }
         } catch (SQLException e) {
             //Set status to 500 Internal Server Error
@@ -60,18 +60,17 @@ public class LoginEndpoint implements Route {
             //Log error
             BackendServer.serverLogger.warn("Error on handling login: {}", e.getMessage());
             //Return error due to SQL related error (most likely going to be an issue with the server being unresponsive)
-            return ResponseUtils.createError("Server was unable to handle this request, Try again later.");
+            return ResponseUtils.createError("Server was unable to handle this request, Try again later.", 500, response);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             //Set status to 401 Unauthorized
             response.status(500);
             //Log error
             BackendServer.serverLogger.error("Error on handling login: {}", e.getMessage());
             //Return error due to Issues related to the Java runtime environment
-            return ResponseUtils.createError("Error with java runtime environment");
+            return ResponseUtils.createError("Error with java runtime environment", 500, response);
         } catch (JSONException e) {
             //Set status to 400 Bad Request
-            response.status(400);
-            return ResponseUtils.createError("Invalid request");
+            return ResponseUtils.createError("Invalid request", 400, response);
         }
     }
 
