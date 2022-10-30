@@ -1,6 +1,7 @@
 package com.turtleshelldevelopment.utils;
 
 import com.turtleshelldevelopment.BackendServer;
+import com.turtleshelldevelopment.utils.db.Counties;
 import com.turtleshelldevelopment.utils.permissions.PermissionType;
 import org.json.JSONObject;
 import spark.utils.IOUtils;
@@ -16,7 +17,7 @@ public class ModelUtil {
 
     static {
         try {
-            headerFile = IOUtils.toString(Objects.requireNonNull(BackendServer.class.getResourceAsStream("/header.html")));
+            headerFile = IOUtils.toString(Objects.requireNonNull(BackendServer.class.getResourceAsStream("/frontend/header.html")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
