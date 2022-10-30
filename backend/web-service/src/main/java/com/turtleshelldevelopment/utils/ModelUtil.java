@@ -58,7 +58,7 @@ public class ModelUtil {
         return this;
     }
 
-    public JSONObject build() {
-        return this.modelData;
+    public Map<String, Object> build() {
+        return this.modelData.toMap();
     }
 }
