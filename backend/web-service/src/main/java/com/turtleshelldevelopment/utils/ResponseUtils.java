@@ -24,15 +24,25 @@ public class ResponseUtils {
      * @param needsMfa if the client should
      * @return JSONObject to be given as route response body
      */
-    public static JSONObject createLoginSuccess(boolean needsMfa) {
+    public static JSONObject createLoginSuccess(boolean needsMfa, Response response) {
         JSONObject success = new JSONObject();
         success.put("request_2fa", needsMfa);
+        response.status(200);
+        response.header("Content-Type", "application/json");
         return success;
     }
 
     public static JSONObject createCreateUserSuccessResponse(String qrCode, Response response) {
         JSONObject json = new JSONObject();
         json.put("2fa", qrCode);
+        response.status(200);
+        response.header("Content-Type", "application/json");
+        return json;
+    }
+
+    public static JSONObject createMFASuccess(Response response) {
+        JSONObject json = new JSONObject();
+        json.put("success", true);
         response.status(200);
         response.header("Content-Type", "application/json");
         return json;
