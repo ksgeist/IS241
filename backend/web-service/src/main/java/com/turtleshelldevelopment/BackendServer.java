@@ -53,7 +53,7 @@ public class BackendServer implements Runnable {
         serverLogger.info("Successfully connected to Database!");
         serverLogger.info("Setting up JWT...");
         KeyPair jwtPair;
-        jwtPair = new JWT().loadJwt();
+        jwtPair = new JWTAuthentication().loadJwt();
         if(jwtPair != null) {
             JWT_ALGO = Algorithm.RSA512((RSAPublicKey) jwtPair.getPublic(), (RSAPrivateKey) jwtPair.getPrivate());
         } else {
