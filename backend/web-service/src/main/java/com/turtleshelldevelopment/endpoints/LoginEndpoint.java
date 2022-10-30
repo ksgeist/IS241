@@ -1,9 +1,10 @@
 package com.turtleshelldevelopment.endpoints;
 
-import com.auth0.jwt.JWT;
 import com.turtleshelldevelopment.BackendServer;
-import com.turtleshelldevelopment.utils.Issuers;
+import com.turtleshelldevelopment.JWTAuthentication;
+import com.turtleshelldevelopment.utils.EnvironmentType;
 import com.turtleshelldevelopment.utils.ResponseUtils;
+import com.turtleshelldevelopment.utils.permissions.Permissions;
 import org.json.JSONException;
 import org.json.JSONObject;
 import spark.Request;
@@ -18,8 +19,6 @@ import java.security.spec.KeySpec;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 
 /**
@@ -43,13 +42,16 @@ public class LoginEndpoint implements Route {
             //get username and password from JSON body
             username = (String) body.get("username");
             password = (String) body.get("password");
+            //Check if were in development and just accept it
+            if(BackendServer.environment.equals(EnvironmentType.DEVEL)) {
+                JWTAuthentication.generateAuthToken(username, new Permissions(username).getPermissionsAsString(), response);
+                return ResponseUtils.createLoginSuccess(true, response).toString();
+            }
             //Validate that the credentials are valid in our database
             if(validate(username, password)) {
-                generateMfaJWTToken(username, response);
-                //Set status to 200 OK
-                response.status(200);
+                JWTAuthentication.generateMultiFactorToken(username, response);
                 //Return successful login response
-                return ResponseUtils.createLoginSuccess(true);
+                return ResponseUtils.createLoginSuccess(true, response).toString();
             } else {
                 //Invalid login, return error
                 return ResponseUtils.createError("Invalid Username or Password", 401, response);
@@ -119,31 +121,4 @@ public class LoginEndpoint implements Route {
         }
     }
 
-    /**
-     * Creates a JWT Token specifically for continuing with a 2FA request
-     * This must be given back to the server on request to /api/mfa as
-     * the token.
-     * This method will give append the token cookie directly to the response
-     * object it is given.
-     * @param username Username of the user this will be providing access to
-     * @param response The response that will be given to the client once
-     *                 completed.
-     */
-    private void generateMfaJWTToken(String username, Response response) {
-        //Get the time now
-        Instant currentTime = Instant.now();
-        //Add three minutes to current time, this being our expiration for the token
-        Instant expiration = currentTime.plus(3, ChronoUnit.MINUTES);
-        //Generate JWT token to be sent to client
-        String jwt = JWT.create()
-                .withIssuer(Issuers.MFA_LOGIN.getIssuer())
-                .withSubject(username)
-                .withClaim("mfa", true)
-                .withNotBefore(currentTime.minus(1, ChronoUnit.SECONDS))
-                .withIssuedAt(currentTime)
-                .withExpiresAt(expiration)
-                .sign(BackendServer.JWT_ALGO);
-        //Set token cookie in response to client
-        response.cookie("/","token", jwt, 180, true, true);
-    }
 }
