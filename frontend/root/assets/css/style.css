@@ -11,4 +11,8 @@
  */
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 @import url("../css/global/colors.css");
+@import url("../css/global/header_modal.css");
+@import url("../css/global/help_modal.css");
+@import url("../css/global/popup.css");
+
 
