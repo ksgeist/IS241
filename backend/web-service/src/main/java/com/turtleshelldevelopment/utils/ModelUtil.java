@@ -35,6 +35,10 @@ public class ModelUtil {
         }
         return this;
     }
+    public ModelUtil addCounties() {
+        modelData.put("counties", Counties.getCounties());
+        return this;
+    }
     public ModelUtil add(String key, Object value) {
         modelData.put(key, value);
         return this;
