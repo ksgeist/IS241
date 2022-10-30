@@ -38,14 +38,17 @@ body form{
 /*########################################*/
 input[type="text"] {
     width: 50px;
+    height: 40px;
 }
-
+input[type="date"] {
+    width: 180px;
+    height: 40px;
+}
 form {
     padding-top: 50px;
     width: 750px;
     margin: 0 auto;
 }
-
 div.field-flex {
     margin: 0 auto;
     display: flex;
@@ -59,19 +62,22 @@ fieldset {
 }
 input.name-fields {
     display: flex;
-    width: 200px;
+    width: 230px;
+}
+input.address-fields {
+    display: flex;
+}
+input[type="text"]#city {
+    width: 500px;
+}
+input[type="text"]#zip {
+    width: 100px;
 }
 input[type="text"]#ss4 {
     width: 95px;
 }
-input[type="date"]#dob {
-    width: 147px;
-}
 input[type="text"]#lotNumber {
-    width: 100px;
-}
-input[type="date"]#date-input {
-    max-width: 275px;
+    width: 50;
 }
 input[type="text"]#address {
     width: 712px;
@@ -82,6 +88,16 @@ input[type="email"]#email {
 input[type="text"]#phone {
     width: 150px;
 }
-input[type="text"]#insProvider, input[type="text"]#insGroup, input[type="text"]#insPolicy {
+/* 
+input[type="text"]#insProvider, input[type="text"]#insGroup, input[type="text"]#insPolicy, input[type="text"]#lotNumber {
     width: 50%;
+}
+ */
+#Submit {
+    width: 150px;
+        margin: 0 auto;
+
+}
+input.group-text {
+width: 50%;
 }

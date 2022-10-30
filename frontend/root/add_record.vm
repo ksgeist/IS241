@@ -38,36 +38,52 @@
                     readonly required="required">
             </div>
         </fieldset>
-        <br>
         <fieldset class="form-control">
             <legend>PATIENT RECEIVING VACCINE</legend>
             <div>
-                <div class="field-flex">
+                    <label for="dob">DOB</label>
+                    <input type="date" id="dob" name="dob" class="form-control">
+                <div>
+                    <label for="lname">Last Name
+                    <input type="text" id="lname" name="lname" class="form-control name-fields">
+                    </label>
                     <label for="fname">First Name
                         <input type="text" id="fname" name="fname" class="form-control name-fields">
                     </label>
                     <label for="mname">Middle Name
                         <input type="text" id="mname" name="mname" class="form-control name-fields">
                     </label>
-                    <label for="lname">Last Name
-                        <input type="text" id="lname" name="lname" class="form-control name-fields">
-                    </label>
-                    <label for="ss4">SSN (Last 4)
+                </div>
+                <div class="field-flex">
+                    <!-- Dropdown for Sex Identuty -->
+					<label for="sex">Sex Identity
+						<select id="sex" name="sex" class="form-select">
+							<option value="Female">Female</option>
+							<option value="Male">Male</option>
+							<option value="Non-Binary">Non-Binary</option>
+						</select>
+					</label>
+                    <label for="ss4">Last 4-digits SSN
                         <input type="text" id="ss4" name="ss4" class="form-control" maxlength="4">
                     </label>
-                </div>
-                <div>
-                    <label for="dob">Date of birth:</label>
-                    <input type="date" id="dob" name="dob" class="form-control">
-                </div>
+
+				</div>
             </div>
         </fieldset>
         <br>
         <fieldset class="form-control">
             <legend>CONTACT INFORMATION</legend>
             <div>
-                <label for="address">Address:</label>
+                <label for="address">Street Address</label>
                 <input type="text" id="address" name="address" class="form-control">
+                <div>
+					<label for="city">City
+					<input type="text" id="city" name="city" class="form-control address-fields">
+					</label>
+					<label for="zip">Zipcode
+					<input type="text" id="zip" name="zip" class="form-control address-fields">
+					</label>
+                </div>
                 <div class="field-flex">
                     <!-- Dropdown for Phone Type -->
                     <label for="phoneType">Phone Type
@@ -80,7 +96,7 @@
                     <label for="phone">Phone Number
                         <input type="text" id="phone" name="phone" class="form-control">
                     </label>
-                    <label for="email">Email Address:
+                    <label for="email">Email Address
                         <input type="email" id="email" name="email" class="form-control">
                     </label>
                     <br>
@@ -91,15 +107,21 @@
         <fieldset class="form-control">
             <legend>INSURANCE INFORMATION</legend>
             <div>
-
-                <label for="insProvider">Insurance Provider:</label>
-                <input type="text" id="insProvider" name="insProvider" class="form-control"><br>
-
-                <label for="insGroup">Group Number:</label>
-                <input type="text" id="insGroup" name="insGroup" class="form-control"><br>
-
-                <label for="insPolicy">Policy Number:</label>
-                <input type="text" id="insPolicy" name="insPolicy" class="form-control"><br>
+                <div class="input-group">
+					<span class="input-group-text" id="insProvider">Provider</span>
+                	<input type="text" id="insProvider" name="insProvider" class="form-control" aria-describedby="insurance">
+				</div>
+				<br>
+				<div class="field-flex">
+					<div class="input-group">
+						<span class="input-group-text" id="insGroup">Group #</span>
+						<input type="text" id="insGroup" name="insGroup" class="form-control" aria-describedby="insurance">
+					</div>
+					<div class="input-group">
+						<span class="input-group-text" id="insPolicy">Policy #</span>
+						<input type="text" id="insPolicy" name="insPolicy" class="form-control" aria-describedby="insurance">
+					</div>
+				</div>
             </div>
         </fieldset>
         <br>
@@ -127,7 +149,7 @@
                 <!-- Vaccine Lot Number -->
                 <br>
                 <div class="input-group mb-3">
-                    <span class="input-group-text" id="lot-num-addon">Lot Number #</span>
+                    <span class="input-group-text" id="lot-num-addon">Lot Number</span>
                     <input type="text" id="lotNumber" name="lotNumber" class="form-control"
                         aria-describedby="lot-num-addon">
                 </div>
