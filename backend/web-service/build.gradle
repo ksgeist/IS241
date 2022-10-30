@@ -42,6 +42,7 @@ application {
 
 run {
     systemProperties System.properties
+    args("-eDEVEL")
 }
 
 jar {

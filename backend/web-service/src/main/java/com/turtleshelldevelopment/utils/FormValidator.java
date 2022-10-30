@@ -22,6 +22,17 @@ public class FormValidator {
         }
     }
 
+    public static boolean isValidUsername(String username) {
+        if(username == null) return false;
+        int nameLen = username.length();
+        for(int i = 0; i < nameLen; i++) {
+            if((!Character.isLetterOrDigit(username.charAt(i)))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
 
 }

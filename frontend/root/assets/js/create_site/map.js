@@ -1,3 +1,4 @@
+"use strict";
 proj4.defs(
   "ESRI:102696",
   "+proj=tmerc +lat_0=35.8333333333333 +lon_0=-90.5 +k=0.999933333333333 +x_0=250000 +y_0=0 +datum=NAD83 +units=us-ft +no_defs +type=crs"
@@ -35,7 +36,7 @@ const map = new ol.Map({
 
 const stateLayer = new ol.layer.VectorImage({
   source: new ol.source.Vector({
-    url: `assets/us-state-boundaries.geojson`,
+    url: `/assets/us-state-boundaries.geojson`,
     format: new ol.format.GeoJSON(),
   }),
   visible: true,

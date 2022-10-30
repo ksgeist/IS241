@@ -1,21 +1,19 @@
 package com.turtleshelldevelopment.endpoints;
 
+import com.turtleshelldevelopment.BackendServer;
+import com.turtleshelldevelopment.utils.FormValidator;
+import com.turtleshelldevelopment.utils.ResponseUtils;
+import com.turtleshelldevelopment.utils.UserType;
 import com.turtleshelldevelopment.utils.db.Account;
 import com.turtleshelldevelopment.utils.mfa.MultiFactorResponse;
-import com.turtleshelldevelopment.BackendServer;
-import com.turtleshelldevelopment.utils.ModelUtil;
 import dev.samstevens.totp.exceptions.QrGenerationException;
-import org.json.JSONObject;
-import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.Route;
-import spark.template.velocity.VelocityTemplateEngine;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Arrays;
 
 //*****************************************************
 //*                                                   *
@@ -30,8 +28,7 @@ public class NewAccountEndpoint implements Route {
 
     @Override
     public Object handle(Request request, Response response) {
-        BackendServer.serverLogger.info("Handling New Account!");
-        JSONObject body = new JSONObject();
+        BackendServer.serverLogger.debug("Handling New Account!");
         try {
             String username = request.queryParams("username");
             String password = request.queryParams("password");
@@ -39,24 +36,34 @@ public class NewAccountEndpoint implements Route {
             String lastName = request.queryParams("lname");
             String email = request.queryParams("email");
             int site = Integer.parseInt(request.queryParams("site"));
-            System.out.println("Username: " + username + ", password: " + password);
-
             //Validate Username
+            if (username.length() > 45) {
+                //To long of username
+                return ResponseUtils.createError("Username is too long.", 400, response);
+            } else if (username.length() <= 4) {
+                //To short of username
+                return ResponseUtils.createError("Username is too short.", 400, response);
+            }
+            //Check for usernames with non letter or number
+            if(FormValidator.isValidUsername(username)) {
+                return ResponseUtils.createError("Username contains invalid characters.", 400, response);
+            }
             PreparedStatement statement = BackendServer.database.getConnection().prepareStatement("CALL CHECK_USERNAME(?);");
             statement.setString(1, username);
             if (statement.executeQuery().next()) {
-                body.put("error", "Username already exists");
-                return body;
+                statement.close();
+                return ResponseUtils.createError("Username already exists", 400, response);
             }
 
             Account acc = new Account(username, password);
-            //WebServer.serverLogger.info("Username is Good");
             //Take in the password and hash it
             byte[] salt = acc.getPasswordSalt();
-            //WebServer.serverLogger.info("Password is Good");
             //Put Permissions
             int userType = Integer.parseInt(request.queryParams("user_type"));
-            //WebServer.serverLogger.info("Permissions is Good");
+            UserType type;
+            if ((type = UserType.isValidType(userType)) == null) {
+                return ResponseUtils.createError("User Type is invalid.", 400, response);
+            }
             try {
                 //Insert new account
                 CallableStatement insertUser = BackendServer.database.getConnection().prepareCall("CALL ADD_USER(?,?,?,?,?,?,?,?,?)");
@@ -68,31 +75,23 @@ public class NewAccountEndpoint implements Route {
                 insertUser.setString(5, firstName);
                 insertUser.setString(6, lastName);
                 insertUser.setInt(7, site);
-                insertUser.setInt(8, userType);
+                insertUser.setInt(8, type.id());
                 insertUser.setString(9, email);
-            if (insertUser.executeUpdate() == 1) {
-                body.put("error", "200");
-                body.put("2fa", mfa.qr_code());
-                System.out.println("User created: " + username + ", " + password + ", salt=" + Arrays.toString(salt));
-                BackendServer.serverLogger.info("Success!");
-                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().add("qr_code", body.get("2fa")).build(), "/frontend/success_create.vm"));
-            } else {
-                body.put("error", "500");
-                body.put("message", "Failed to update database");
-                BackendServer.serverLogger.info("Failed to update");
-            }
-            insertUser.close();
-            BackendServer.serverLogger.info("Successfully put in database");
+                if (insertUser.executeUpdate() == 1) {
+                    BackendServer.serverLogger.info("Success!");
+                    return ResponseUtils.createCreateUserSuccessResponse(mfa.qr_code(), response).toString();
+                } else {
+                    insertUser.close();
+                    BackendServer.serverLogger.error("Failed to update while creating new account");
+                    return ResponseUtils.createError("Failed to update database", 500, response);
+                }
             } catch (QrGenerationException e) {
                 BackendServer.serverLogger.error("Error creating QR");
-                body.put("error", "500");
-                body.put("message", "Failed to Create QR Code for 2FA");
+                return ResponseUtils.createError("Failed to create QR Code for 2fa", 500, response);
             }
-            return body;
         } catch (SQLException e) {
             BackendServer.serverLogger.info("ERROR: " + e.getMessage());
+            return ResponseUtils.createError("Error handling creating a new account", 500, response);
         }
-        return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().add("qr_code", body.get("2fa")).build(), "/frontend/success_create.vm"));
     }
-
 }

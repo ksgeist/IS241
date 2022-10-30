@@ -1,5 +1,8 @@
 package com.turtleshelldevelopment;
 
+import com.turtleshelldevelopment.utils.Issuers;
+import spark.Response;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,8 +13,10 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
-public class JWT {
+public class JWTAuthentication {
     File privateKey = new File("store/private.key");
     File publicKey = new File("store/key.pub");
 
@@ -88,5 +93,48 @@ public class JWT {
             BackendServer.serverLogger.error("RSA Algorithm is not available!");
             return null;
         }
+    }
+
+    public static void generateAuthToken(String username, String[] permissions, Response response) {
+        Instant currTime = Instant.now();
+        Instant inst = currTime.plus(10, ChronoUnit.MINUTES);
+        String jwt = com.auth0.jwt.JWT.create()
+                .withIssuer(Issuers.AUTHENTICATION.getIssuer())
+                .withSubject(username)
+                .withClaim("mfa", true)
+                .withArrayClaim("perms", permissions)
+                .withNotBefore(currTime.minus(1, ChronoUnit.SECONDS))
+                .withIssuedAt(currTime)
+                .withExpiresAt(inst)
+                .sign(BackendServer.JWT_ALGO);
+        response.cookie("/","token", jwt, 180, true, true);
+    }
+
+    /**
+     * Creates a JWT Token specifically for continuing with a 2FA request
+     * This must be given back to the server on request to /api/mfa as
+     * the token.
+     * This method will give append the token cookie directly to the response
+     * object it is given.
+     * @param username Username of the user this will be providing access to
+     * @param response The response that will be given to the client once
+     *                 completed.
+     */
+    public static void generateMultiFactorToken(String username, Response response) {
+        //Get the time now
+        Instant currentTime = Instant.now();
+        //Add three minutes to current time, this being our expiration for the token
+        Instant expiration = currentTime.plus(3, ChronoUnit.MINUTES);
+        //Generate JWT token to be sent to client
+        String jwt = com.auth0.jwt.JWT.create()
+                .withIssuer(Issuers.MFA_LOGIN.getIssuer())
+                .withSubject(username)
+                .withClaim("mfa", true)
+                .withNotBefore(currentTime.minus(1, ChronoUnit.SECONDS))
+                .withIssuedAt(currentTime)
+                .withExpiresAt(expiration)
+                .sign(BackendServer.JWT_ALGO);
+        //Set token cookie in response to client
+        response.cookie("/","token", jwt, 180, true, true);
     }
 }

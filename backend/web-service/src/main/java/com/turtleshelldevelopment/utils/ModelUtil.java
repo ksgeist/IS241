@@ -1,6 +1,7 @@
 package com.turtleshelldevelopment.utils;
 
 import com.turtleshelldevelopment.BackendServer;
+import com.turtleshelldevelopment.utils.db.Counties;
 import com.turtleshelldevelopment.utils.permissions.PermissionType;
 import org.json.JSONObject;
 import spark.utils.IOUtils;
@@ -16,7 +17,7 @@ public class ModelUtil {
 
     static {
         try {
-            headerFile = IOUtils.toString(Objects.requireNonNull(BackendServer.class.getResourceAsStream("/header.html")));
+            headerFile = IOUtils.toString(Objects.requireNonNull(BackendServer.class.getResourceAsStream("/frontend/header.html")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -33,6 +34,10 @@ public class ModelUtil {
         for(Map.Entry<PermissionType, Boolean> permission : perms.entrySet()) {
             modelData.put(permission.getKey().getVal().toLowerCase(), permission.getValue());
         }
+        return this;
+    }
+    public ModelUtil addCounties() {
+        modelData.put("counties", Counties.getCounties());
         return this;
     }
     public ModelUtil add(String key, Object value) {
@@ -53,7 +58,7 @@ public class ModelUtil {
         return this;
     }
 
-    public JSONObject build() {
-        return this.modelData;
+    public Map<String, Object> build() {
+        return this.modelData.toMap();
     }
 }

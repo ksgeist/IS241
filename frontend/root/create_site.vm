@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+    <!-- Missouri COVID-19 Vaccine Tracker Application Filename: index.html Team: Turtle Shell
+    Development Authors: Colin Kinzel Date: 15 October 2022 -->
+
+    <head>
+        <title>Add a New Vaccine Administration Site</title>
+        <link href="/assets/css/create_site/site.css" rel="stylesheet"/>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
+            crossorigin="anonymous">
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/ol@v7.1.0/dist/ol.js" defer="defer"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.8.0/proj4.js"
+            integrity="sha512-ha3Is9IgbEyIInSb+4S6IlEwpimz00N5J/dVLQFKhePkZ/HywIbxLeEu5w+hRjVBpbujTogNyT311tluwemy9w=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.1.0/ol.css">
+        <script src="/assets/js/create_site/map.js" defer="defer"></script>
+        <script>
+            const counties = [];
+            #foreach($county in $counties)
+                counties.push({fips: ${county.FIPS}, name: "${county.name}"});
+            #end
+        </script>
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/dashboard">Dashboard</a>
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+                    <form class="d-flex" role="search">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="help" href="#">Help</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="logout" href="/api/logout">Logout</a>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+            </div>
+        </nav>
+        <div id="body">
+            <aside id="side-info">
+                <h1 class="text-center">New Vaccine Administration Site</h1>
+                <div id="content">
+                    <form id="newSiteForm">
+                        <fieldset class="form-control">
+                            <legend>Address Information</legend>
+                            <label for="address">Street Address</label>
+                            <input
+                                class="form-control"
+                                type="text"
+                                name="address"
+                                id="address"
+                                pattern="\d+(\s{1}\w+)(\s{1}?\w+)+"
+                                maxlength="95"
+                                required="required">
+                            <label for="city">City</label>
+                            <input class="form-control" type="text" id="city" name="city" autocomplete="on" required="required">
+                            <label for="zip">Zip Code</label>
+                            <input
+                                class="form-control"
+                                id="zip"
+                                type="zip"
+                                name="zip"
+                                autocomplete="postal-code"
+                                maxlength="5"
+                                required="required">
+                            <label for="county">County</label>
+                            <input
+                                class="form-control"
+                                type="text"
+                                list="counties-list"
+                                id="county"
+                                placeholder="Select County"
+                                name="county"
+                                autocomplete="on"
+                                required="required">
+                            <datalist id="counties-list">
+                                #foreach($county in $counties)
+                                    <option value="${county.name}">${county.name}</option>
+                                #end
+                            </datalist>
+                            <label for="fips">FIPS Code</label>
+                            <input class="form-control" type="text" name="fips" id="fips" maxlength="5" required="required">
+                        </fieldset>
+                        <br>
+                        <fieldset class="form-control">
+                            <legend>Site Information</legend>
+                            <label for="phoneNumber">Site Phone Number</label>
+                            <input
+                                class="form-control"
+                                id="phoneNumber"
+                                type="tel"
+                                name="phone"
+                                pattern="\([0-9]{3}\) [0-9]{3} - [0-9]{4}"
+                                maxlength="16"
+                                required="required">
+                            <label for="siteName">Site Name</label>
+                            <input
+                                class="form-control"
+                                id="siteName"
+                                type="text"
+                                name="siteName"
+                                maxlength="32"
+                                required="required">
+
+                        </fieldset>
+                        <br/>
+                        <input type="submit" value="Submit" class="form-control" method="POST" id="newSite"/>
+                    </form>
+                </div>
+            </aside>
+            <div id="map-container">
+                <div id="map"></div>
+            </div>
+        </div>
+        <script src="/assets/js/create_site/input_handler.js"></script>
+    </body>
+
+</html>

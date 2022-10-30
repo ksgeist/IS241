@@ -16,7 +16,7 @@ public class Database {
 
 
     public Database(String url, String username, String password) {
-        config.setMaximumPoolSize(20);
+        config.setMaximumPoolSize(50);
         config.setConnectionTimeout(300000);
         config.setConnectionTimeout(120000);
         config.setLeakDetectionThreshold(300000);
@@ -25,6 +25,8 @@ public class Database {
         config.setPassword(password);
         db = new HikariDataSource(config);
 
+        //Checks if there is a user in the database which essentially verifies that there is someone in the database and
+        // if not create a new superuser
         try {
             BackendServer.serverLogger.info("Checking Account...");
             PreparedStatement checkForUser = db.getConnection().prepareStatement("SELECT user_id FROM User LIMIT 1;");

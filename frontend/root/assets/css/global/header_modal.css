@@ -27,18 +27,23 @@
   .header button {
     float: right;
     color: #083569;
+    background-color: #d3dde8;
     text-align: left;
     text-decoration: none;
     font-size: 18px;
-    border-radius: 3px;
+    border: none;
     padding: 5px;
     background-color: #fff;
-    margin: 5px 40px 5px 5px;
+    margin: 5px 10px 5px 5px;
   }
   
   /* Change the background color of buttons on mouse-over */
   .header button:hover {
-    background-color: #d3dde8;
-    color: #083569;
+    background-color: #083569;
+    color: white;
+    transition: all 0.5s;
+  }
+  button.logout {
+    color: red;
   }
   

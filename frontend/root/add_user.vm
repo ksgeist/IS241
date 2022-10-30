@@ -67,7 +67,7 @@
                         <span class="input-group-text">Permissions Level</span>
                         <select id="user-type" name="user_type" class="form-select name-fields">
                             <option value="invalid">Select Permissions Level...</option>
-                            #foreach( $type in $types)
+                            #foreach($type in $types)
                                 <option value="${type.Id}">${type.Name}</option>
                             #end
                         </select>

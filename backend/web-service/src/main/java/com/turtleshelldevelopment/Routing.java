@@ -1,10 +1,7 @@
 package com.turtleshelldevelopment;
 
 import com.turtleshelldevelopment.endpoints.*;
-import com.turtleshelldevelopment.pages.AddRecordPage;
-import com.turtleshelldevelopment.pages.DashboardPage;
-import com.turtleshelldevelopment.pages.SiteCreatePage;
-import com.turtleshelldevelopment.pages.UserCreatePage;
+import com.turtleshelldevelopment.pages.*;
 import com.turtleshelldevelopment.utils.Issuers;
 import com.turtleshelldevelopment.utils.ModelUtil;
 import com.turtleshelldevelopment.utils.TokenUtils;
@@ -35,16 +32,22 @@ public class Routing {
             }
         });
         before("/site/create", (req, res) -> verifyCredentials(req, res, PermissionType.ADD_SITE));
-        before("/addRecord", (req, resp) -> verifyCredentials(req, resp, PermissionType.WRITE_PATIENT));
+        before("/record/add", (req, resp) -> verifyCredentials(req, resp, PermissionType.WRITE_PATIENT));
         path("/", () -> {
             get("/", (req, resp) -> new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().build(), "/frontend/index.vm")));
             get("/dashboard", new DashboardPage());
-            get("/AddRecord", new AddRecordPage());
-            post("/AddRecord", new AddEntryEndpoint());
-            get("/site/create", new SiteCreatePage());
+            path("/site", () -> {
+                get("/create", new SiteCreatePage());
+            });
             path("/user", () -> {
                 get("/add", new UserCreatePage());
                 post("/add", new NewAccountEndpoint());
+            });
+            path("/record", () -> {
+                get("/add", new AddRecordPage());
+                post("/add", new AddEntryEndpoint());
+                get("/edit", new EditRecordPage());
+                patch("/edit", new UpdateRecordEndpoint());
             });
         });
         path("/api", () -> {

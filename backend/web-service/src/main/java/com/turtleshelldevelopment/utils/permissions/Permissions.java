@@ -1,6 +1,7 @@
 package com.turtleshelldevelopment.utils.permissions;
 
 import com.turtleshelldevelopment.BackendServer;
+import com.turtleshelldevelopment.utils.EnvironmentType;
 import org.json.JSONArray;
 
 import java.sql.CallableStatement;
@@ -10,6 +11,16 @@ import java.sql.SQLException;
 public class Permissions {
     JSONArray permissions = new JSONArray();
     public Permissions(String user) throws SQLException {
+        if(BackendServer.environment.equals(EnvironmentType.DEVEL)) {
+            permissions.put("READ_PATIENT");
+            permissions.put("WRITE_PATIENT");
+            permissions.put("EDIT_PATIENT");
+            permissions.put("REPORTS");
+            permissions.put("ADD_USER");
+            permissions.put("EDIT_USER");
+            permissions.put("ADD_SITE");
+            permissions.put("REQUEST_RECORDS");
+        }
         CallableStatement getPermissions = BackendServer.database.getConnection().prepareCall("CALL GET_PERMISSIONS(?)");
         getPermissions.setString(1, user);
         ResultSet set = getPermissions.executeQuery();

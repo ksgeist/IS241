@@ -3,9 +3,11 @@ package com.turtleshelldevelopment.endpoints;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.turtleshelldevelopment.utils.Issuers;
-import com.turtleshelldevelopment.utils.permissions.Permissions;
 import com.turtleshelldevelopment.BackendServer;
+import com.turtleshelldevelopment.JWTAuthentication;
+import com.turtleshelldevelopment.utils.EnvironmentType;
+import com.turtleshelldevelopment.utils.ResponseUtils;
+import com.turtleshelldevelopment.utils.permissions.Permissions;
 import dev.samstevens.totp.code.DefaultCodeGenerator;
 import dev.samstevens.totp.code.DefaultCodeVerifier;
 import dev.samstevens.totp.code.HashingAlgorithm;
@@ -19,8 +21,6 @@ import spark.Route;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 public class MfaEndpoint implements Route {
     @Override
@@ -45,6 +45,13 @@ public class MfaEndpoint implements Route {
             DefaultCodeGenerator codeGenerator = new DefaultCodeGenerator(HashingAlgorithm.SHA1, 6);
             DefaultCodeVerifier verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
             verifier.setAllowedTimePeriodDiscrepancy(2);
+            if(BackendServer.environment.equals(EnvironmentType.DEVEL)) {
+                response.removeCookie("/", "token");
+                Permissions perms = new Permissions(username);
+
+                JWTAuthentication.generateAuthToken(username, perms.getPermissionsAsString(), response);
+                return ResponseUtils.createMFASuccess(response);
+            }
 
             //Get Secret from Database
             PreparedStatement getSecret = BackendServer.database.getConnection().prepareStatement("SELECT 2fa_secret FROM User WHERE username = ?;");
@@ -70,7 +77,7 @@ public class MfaEndpoint implements Route {
                 response.removeCookie("/", "token");
                 Permissions perms = new Permissions(username);
 
-                response.cookie("/","token", generateJWTToken(username, perms.getPermissionsAsString()), 300, true, true);
+                JWTAuthentication.generateAuthToken(username, perms.getPermissionsAsString(), response);
                 return success;
             } else {
                 success.put("success", false);
@@ -104,17 +111,4 @@ public class MfaEndpoint implements Route {
 
     }
 
-    private String generateJWTToken(String username, String[] permissions) {
-        Instant currTime = Instant.now();
-        Instant inst = currTime.plus(10, ChronoUnit.MINUTES);
-        return JWT.create()
-                .withIssuer(Issuers.AUTHENTICATION.getIssuer())
-                .withSubject(username)
-                .withClaim("mfa", true)
-                .withArrayClaim("perms", permissions)
-                .withNotBefore(currTime.minus(1, ChronoUnit.SECONDS))
-                .withIssuedAt(currTime)
-                .withExpiresAt(inst)
-                .sign(BackendServer.JWT_ALGO);
-    }
 }

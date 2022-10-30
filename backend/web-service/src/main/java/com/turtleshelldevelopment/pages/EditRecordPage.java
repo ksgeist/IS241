@@ -9,10 +9,10 @@ import spark.template.velocity.VelocityTemplateEngine;
 
 import java.util.Map;
 
-public class SiteCreatePage implements Route {
+public class EditRecordPage implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-        Map<String, Object> modelInfo = new ModelUtil().addCounties().build();
-        return new VelocityTemplateEngine().render(new ModelAndView(modelInfo, "/frontend/create_site.vm"));
+        Map<String, Object> modelData = new ModelUtil().build();
+        return new VelocityTemplateEngine().render(new ModelAndView(modelData, "/frontend/edit_record.vm"));
     }
 }

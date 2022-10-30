@@ -1,3 +1,4 @@
+"use strict";
 document.getElementById("login").onclick = (event) => {
   event.preventDefault();
   handleLoginCall();
@@ -22,8 +23,12 @@ function handleLoginCall() {
     if (request.target.readyState == 4) {
       try {
         var json_data = JSON.parse(request.target.responseText);
-        if (json_data["success"]) {
+        if (xhr.status == 200) {
           console.log("Success: " + json_data["2faRequired"]);
+          if(!json_data["mfaRequired"]) {
+            window.location.replace(window.location.origin + "/dashboard");
+            return;
+          }
           //let code = prompt("Please input your Multi-factor Code from your phone.", "");
           document.getElementById("pop-up").style.display = "block";
           document.getElementById("pop-up-content").style.display = "block";
@@ -32,7 +37,8 @@ function handleLoginCall() {
         }
         validateLogin();
         document.getElementsByClassName("lds-ring")[0].style.display = "none";
-      } catch (SyntaxError) {
+      } catch (e) {
+        console.error(e);
         document.getElementById("messages").innerText =
           "Server responded with an invalid response. Please try again later.";
         validateLogin();

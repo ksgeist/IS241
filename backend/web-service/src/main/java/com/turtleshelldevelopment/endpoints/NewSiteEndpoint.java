@@ -1,6 +1,7 @@
 package com.turtleshelldevelopment.endpoints;
 
 import com.turtleshelldevelopment.BackendServer;
+import com.turtleshelldevelopment.utils.ResponseUtils;
 import org.json.JSONObject;
 import spark.Request;
 import spark.Response;
@@ -22,6 +23,11 @@ public class NewSiteEndpoint implements Route {
         String phoneNum = request.queryParams("phone");
         String fips = request.queryParams("fips");
         String zip = request.queryParams("zip");
+        String name = request.queryParams("siteName");
+        if(name.length() > 45) {
+            return ResponseUtils.createError("Site Name is too long (max 45 characters)", 400, response);
+        }
+        //Check for county and verify the fips code is the same
 
         Connection conn = BackendServer.database.getConnection();
 

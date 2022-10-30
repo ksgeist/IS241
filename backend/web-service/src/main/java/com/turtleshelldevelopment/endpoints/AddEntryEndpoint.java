@@ -37,7 +37,9 @@ public class AddEntryEndpoint implements Route {
                 Integer.parseInt(patientSSN);
             } catch (NumberFormatException e) {
                 //TODO Return to form with previous fields and display error
-                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().addError(500, "Failed to connect with database").build(), "/frontend/error.vm"));
+                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil()
+                        .addError(500, "Failed to connect with database").build(),
+                        "/frontend/error.vm"));
             }
             String patientBirthDate = request.queryParams("curr-date");
 
@@ -58,15 +60,18 @@ public class AddEntryEndpoint implements Route {
             String siteId = request.queryParams("siteid");
 
             if(!FormValidator.checkValues()) {
-                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().addError(500, "Missing Values").build(), "/frontend/error.vm"));
+                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().addError(500,
+                        "Missing Values").build(), "/frontend/error.vm"));
             }
             LocalDate dateFiled;
             if((dateFiled = FormValidator.parseDateFromForm(date)) == null) {
-                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().addError(500, "Invalid Date").build(), "/frontend/error.vm"));
+                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().addError(500,
+                        "Invalid Date").build(), "/frontend/error.vm"));
             }
             LocalDate dateOfBirth;
             if((dateOfBirth = FormValidator.parseDateFromForm(patientBirthDate)) == null) {
-                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().addError(500, "Invalid Date").build(), "/frontend/error.vm"));
+                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().addError(500,
+                        "Invalid Date").build(), "/frontend/error.vm"));
             }
             //TODO fix this
             try(CallableStatement patientCall = BackendServer.database.getConnection().prepareCall("CALL ADD_PATIENT_INFO(?,?,?,?,?)")) {
