@@ -1,3 +1,4 @@
+"use strict";
 /*
 	Missouri COVID-19 Vaccine Tracker Application 
 	Filename: 	logout.js
