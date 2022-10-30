@@ -27,4 +27,12 @@ public record UserType(String name, int id) {
             return null;
         }
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
 }
