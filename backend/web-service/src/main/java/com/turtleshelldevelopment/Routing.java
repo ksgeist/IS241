@@ -43,6 +43,7 @@ public class Routing {
                 get("/add", new UserCreatePage());
                 post("/add", new NewAccountEndpoint());
             });
+            post("/print_record/print", new PrintInfo());
             path("/record", () -> {
                 get("/add", new AddRecordPage());
                 post("/add", new AddEntryEndpoint());
