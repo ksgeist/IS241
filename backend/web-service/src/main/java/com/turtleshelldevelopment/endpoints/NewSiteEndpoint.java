@@ -1,6 +1,7 @@
 package com.turtleshelldevelopment.endpoints;
 
 import com.turtleshelldevelopment.BackendServer;
+import com.turtleshelldevelopment.utils.FormValidator;
 import com.turtleshelldevelopment.utils.ResponseUtils;
 import org.json.JSONObject;
 import spark.Request;
@@ -18,7 +19,7 @@ public class NewSiteEndpoint implements Route {
     @Override
     public Object handle(Request request, Response response) throws SQLException {
 
-        String location = request.queryParams("location");
+        String location = request.queryParams("address");
         String county = request.queryParams("county");
         String phoneNum = request.queryParams("phone");
         String fips = request.queryParams("fips");
@@ -27,34 +28,32 @@ public class NewSiteEndpoint implements Route {
         if(name.length() > 45) {
             return ResponseUtils.createError("Site Name is too long (max 45 characters)", 400, response);
         }
-        //Check for county and verify the fips code is the same
+        if(zip.length() > 5) {
+            return ResponseUtils.createError("Zip code is invalid (max 5 characters", 400, response);
+        }
 
+        //Check for county and verify the fips code is the same
         Connection conn = BackendServer.database.getConnection();
 
         if(streetAddressPattern.matcher(location).find()) {
             CallableStatement createSite = conn.prepareCall("CALL ADD_SITE(?,?,?,?,?)");
             createSite.setString(1, location);
-            createSite.setString(2, county);
-            createSite.setString(3, phoneNum);
-            createSite.setInt(4, Integer.parseInt(fips));
-            createSite.setInt(5, Integer.parseInt(zip));
-            createSite.registerOutParameter(6, JDBCType.INTEGER);
+            createSite.setString(2, FormValidator.parsePhoneNumberFromForm(phoneNum));
+            createSite.setString(3, fips);
+            createSite.setString(4, zip);
+            createSite.setString(5, name);
             if(createSite.executeUpdate() == 1) {
                 JSONObject success = new JSONObject();
                 success.put("error", 200);
                 success.put("", "");
+                createSite.close();
+                return success;
             } else {
-                JSONObject err = new JSONObject();
-                err.put("error", "500");
-                err.put("message", "Could not add new site to the database!");
-                response.body(err.toString());
+                BackendServer.serverLogger.error("Failed to update database for site");
+                createSite.close();
+                return ResponseUtils.createError("Could not add new site to the database!", 500, response);
             }
-            createSite.close();
-
         }
-
-
-
-        return "";
+        return "???";
     }
 }
