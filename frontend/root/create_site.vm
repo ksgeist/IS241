@@ -64,7 +64,7 @@
             <aside id="side-info">
                 <h1 class="text-center">New Vaccine Administration Site</h1>
                 <div id="content">
-                    <form id="newSiteForm">
+                    <form id="newSiteForm" method="POST" action="/site/add">
                         <fieldset class="form-control">
                             <legend>Address Information</legend>
                             <label for="address">Street Address</label>
