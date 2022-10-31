@@ -187,9 +187,9 @@
 
                 <div class="btn-group" role="group">
                    		<input type="radio" id="english" name="lang" value="english" class="lang btn-check" checked>
-                    	<label for="english" class="print-button btn btn-outline-secondary" >English</label><br>
+                    	<label for="english" class="lang-button btn btn-outline-secondary" >English</label><br>
                     	<input type="radio" id="spanish" name="lang" value="spanish" class="lang btn-check">
-                    	<label for="spanish" class="print-button btn btn-outline-secondary">Espa&ntilde;ol</label>
+                    	<label for="spanish" class="lang-button btn btn-outline-secondary">Espa&ntilde;ol</label>
                 </div>
                 	    <button type="button" class="print-button btn btn-primary">Print Vaccine Information Sheet</button>
                 <!--  Print Vaccine Information Sheet (VIS)	 -->
