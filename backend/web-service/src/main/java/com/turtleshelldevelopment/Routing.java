@@ -37,18 +37,21 @@ public class Routing {
             get("/", (req, resp) -> new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().build(), "/frontend/index.vm")));
             get("/dashboard", new DashboardPage());
             path("/site", () -> {
-                get("/create", new SiteCreatePage());
+                get("/add", new SiteCreatePage());
+                post("/add", new NewSiteEndpoint());
             });
             path("/user", () -> {
                 get("/add", new UserCreatePage());
                 post("/add", new NewAccountEndpoint());
             });
-            post("/print_record/print", new PrintInfo());
+            post("/print_record/print", new PrintInfoPage());
             path("/record", () -> {
                 get("/add", new AddRecordPage());
                 post("/add", new AddEntryEndpoint());
                 get("/edit", new EditRecordPage());
                 patch("/edit", new UpdateRecordEndpoint());
+                get("/search", new SearchRecordPage());
+                post("/search", new SearchPatientsEndpoint());
             });
         });
         path("/api", () -> {
