@@ -136,23 +136,27 @@
                 <br><br>
                 <!-- Vaccine Manufacturer Radio Button -->
                 <div class="input-group" role="group">
-                    <span class="input-group-text" id="basic-addon1">Vaccine Manufacturer</span>
-                    <input type="radio" id="pfizer" name="vaxMan" value="pfizer" class="vaxMan btn-check" aria-describedby="basic-addon1">
-                    <label for="pfizer" class="vaxMan-label btn btn-secondary">Pfizer-BioNTech</label><br>
-                    <input type="radio" id="moderna" name="vaxMan" value="moderna" class="vaxMan btn-check" aria-describedby="basic-addon1">
-                    <label for="moderna" class="vaxMan-label btn btn-secondary">Moderna</label><br>
-                    <input type="radio" id="janssen" name="vaxMan" value="janssen" class="vaxMan btn-check" aria-describedby="basic-addon1">
-                    <label for="janssen" class="vaxMan-label btn btn-secondary">Johnson & Johnson’s Janssen</label><br>
-                    <input type="radio" id="novavax" name="vaxMan" value="novavax" class="vaxMan btn-check" aria-describedby="basic-addon1">
-                    <label for="novavax" class="vaxMan-label btn btn-secondary">Novavax</label>
+					 <label for="vaxMan">Manufacturer:</label>
+                    <div class="field-flex">
+<!--                     <span class="input-group-text" id="basic-addon1">Vaccine Manufacturer</span> -->
+						<input type="radio" id="pfizer" name="vaxMan" value="pfizer" class="vaxMan btn-check" aria-describedby="basic-addon1">
+						<label for="pfizer" class="vaxMan-label btn btn-primary">Pfizer-BioNTech</label><br>
+						<input type="radio" id="moderna" name="vaxMan" value="moderna" class="vaxMan btn-check" aria-describedby="basic-addon1">
+						<label for="moderna" class="vaxMan-label btn btn-primary">Moderna</label><br>
+						<input type="radio" id="janssen" name="vaxMan" value="janssen" class="vaxMan btn-check" aria-describedby="basic-addon1">
+						<label for="janssen" class="vaxMan-label btn btn-primary">Johnson & Johnson’s Janssen</label><br>
+						<input type="radio" id="novavax" name="vaxMan" value="novavax" class="vaxMan btn-check" aria-describedby="basic-addon1">
+						<label for="novavax" class="vaxMan-label btn btn-primary">Novavax</label>
+					</div>
                 </div>
                 <!-- Vaccine Lot Number -->
                 <br>
-                <div class="input-group mb-3">
+                <div class="input-group">
                     <span class="input-group-text" id="lot-num-addon">Lot Number</span>
                     <input type="text" id="lotNumber" name="lotNumber" class="form-control"
                         aria-describedby="lot-num-addon">
                 </div>
+                <br>
                 <!-- Dropdown for Vax Dose -->
                 <div class="input-group" role="group">
                     <span class="input-group-text">Vaccine Series Dose</span>
@@ -180,13 +184,14 @@
                     </select>
             </div>
                 <br>
+
                 <div class="btn-group" role="group">
-                    <input type="radio" id="english" name="lang" value="english" class="lang btn-check" checked>
-                    <label for="english" class="lang-label btn btn-outline-secondary" >English</label><br>
-                    <input type="radio" id="spanish" name="lang" value="spanish" class="lang btn-check">
-                    <label for="spanish" class="lang-label btn btn-outline-secondary">Espa&ntilde;ol</label>
-                    <button type="button" class="print-button btn btn-primary">Print Vaccine Information Sheet</button>
+                   		<input type="radio" id="english" name="lang" value="english" class="lang btn-check" checked>
+                    	<label for="english" class="print-button btn btn-outline-secondary" >English</label><br>
+                    	<input type="radio" id="spanish" name="lang" value="spanish" class="lang btn-check">
+                    	<label for="spanish" class="print-button btn btn-outline-secondary">Espa&ntilde;ol</label>
                 </div>
+                	    <button type="button" class="print-button btn btn-primary">Print Vaccine Information Sheet</button>
                 <!--  Print Vaccine Information Sheet (VIS)	 -->
 
                 <!-- for debugging -->
@@ -200,7 +205,7 @@
             </div>
         </fieldset>
         <br>
-        <input type="submit" value="Submit" class="form-control">
+		<input type="submit" value="Submit" class="submit-button btn btn-dark btn-lg">
         <br>
         <br>
     </form>

@@ -88,16 +88,22 @@ input[type="email"]#email {
 input[type="text"]#phone {
     width: 150px;
 }
-/* 
-input[type="text"]#insProvider, input[type="text"]#insGroup, input[type="text"]#insPolicy, input[type="text"]#lotNumber {
-    width: 50%;
+input[type="submit"]#btn-secondary {
+    margin: 0 auto;
+    width: 100px;
 }
- */
-#Submit {
-    width: 150px;
-        margin: 0 auto;
-
+label.btn-primary {
+	background: ghostwhite;
+	color: #000;    
 }
-input.group-text {
-width: 50%;
+button.btn-primary {
+	background: ghostwhite;
+	color: #000;   
+}
+div.poop{
+	width:100%;
+}
+.submit-button.btn-dark{
+    text-align: center !important;
+    margin: 0 auto;
 }
