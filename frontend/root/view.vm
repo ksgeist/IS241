@@ -61,7 +61,11 @@
                                 id="lname"
                                 name="lname"
                                 class="form-control name-fields"
-                                value="${patient.LastName}">
+                                value="${patient.LastName}" 
+                                #if(!$edit_patient)
+                                    disabled
+                                #end
+                                >
                         </label>
                         <label for="fname">First Name
                             <input
@@ -69,7 +73,11 @@
                                 id="fname"
                                 name="fname"
                                 class="form-control name-fields"
-                                value="${patient.FirstName}">
+                                value="${patient.FirstName}"
+                                #if(!$edit_patient)
+                                    disabled
+                                #end
+                                >
                         </label>
                         <label for="mname">Middle Name
                             <input
@@ -77,13 +85,21 @@
                                 id="mname"
                                 name="mname"
                                 class="form-control name-fields"
-                                value="${patient.MiddleName}">
+                                value="${patient.MiddleName}"
+                                #if(!$edit_patient)
+                                    disabled
+                                #end
+                                >
                         </label>
                     </div>
                     <div class="field-flex">
                         <!-- Dropdown for Sex Identuty -->
                         <label for="sex">Sex Identity
-                            <select id="sex" name="sex" class="form-select" value="${patient.Gender}">
+                            <select id="sex" name="sex" class="form-select" value="${patient.Gender}"
+                                #if(!$edit_patient)
+                                    disabled
+                                #end
+                            >
                                 <option value="Female">Female</option>
                                 <option value="Male">Male</option>
                                 <option value="Non-Binary">Non-Binary</option>
@@ -210,9 +226,6 @@
                                 <th scope="col">Manufacturer</th>
                                 <th scope="col">Administrated On</th>
                                 <th scope="col">Administered By</th>
-                                #if($edit_patient)
-                                    <th scope="col">Delete</th>
-                                #end
                             </tr>
                         </thead>
                         <tbody>
@@ -224,11 +237,6 @@
                                     <td>${vaccine.manufacturer()}</td>
                                     <td>${vaccine.administeredDate()}</td>
                                     <td>${vaccine.givenBy().lastName()}, ${vaccine.givenBy().firstName()}</td>
-                                    #if($edit_patient)
-                                        <td class="delete-button">
-                                            <a href="/insurance/remove/${vaccine.id()}" class="btn btn-danger">Delete</a>
-                                        </td>
-                                    #end
                                 </tr>
                             #end
                             #if($vaccines.isEmpty())
@@ -243,6 +251,7 @@
                     #if($edit_patient || $write_patient)
                         <div class="add-div">
                             <a href="/vaccine/add/${patient.Id}" class="add-button btn btn-danger">Add Vaccine</a>
+                            <a href="/patient/print/${patient.Id}" class="add-button btn btn-primary">Print Last Record</a>
                         </div>
                     #end
                 </div>

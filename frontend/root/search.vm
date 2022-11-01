@@ -12,7 +12,16 @@
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
             crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+        <style>
+            .nav-handler {
+                margin: 0 auto;
+                width: 1024px;
+                padding-top: 5px;
+            }
+        </style>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg bg-light">
@@ -43,6 +52,17 @@
                 </div>
             </div>
         </nav>
+
+        <div class="nav-handler">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Search</li>
+                </ol>
+            </nav>
+        </div>
         <!-- Add Crumb display from bootstrap here to go back-->
         <div class="card-holder">
             <div class="card">
@@ -52,46 +72,51 @@
                         <label for="lastName">Last Name</label>
                         <input type="text" name="lname" class="form-control"/>
                         <label for="SSN">Last 4 of SSN</label>
-                        <input type="text" name="ss4" class="form-control" />
+                        <input type="text" name="ss4" class="form-control"/>
                         <label for="dateOfBirth">Date of Birth</label>
-                        <input type="date" name="dob" class="form-control" />
+                        <input type="date" name="dob" class="form-control"/>
                         <div>
-                            <input type="submit" value="Submit" class="btn btn-secondary" />
+                            <input type="submit" value="Submit" class="btn btn-secondary"/>
                         </div>
                     </form>
                 </div>
             </div>
             <br/>
             #if($results)
-            <div class="card">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th> </th>
-                            <th>First Name</th>
-                            <th>Middle Name</th>
-                            <th>Last Name</th>
-                            <th>Birth Date</th>
-                            <th>Last 4 SSN</th>
-                            <th>Email</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        #foreach($patient in $results)
+                <div class="card">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <!-- TODO add button to go to some like page specific to the patient to see records and print them-->
-                                <th><a href="/patient/view/${patient.Id}"><i class="bi bi-box-arrow-up-right"></i></a></th>
-                                <th>${patient.FirstName}</th>
-                                <th>${patient.MiddleName}</th>
-                                <th>${patient.LastName}</th>
-                                <th>${patient.BirthDate}</th>
-                                <th>${patient.SSNumber}</th>
-                                <th>${patient.Email}</th>
+                                <th></th>
+                                <th>First Name</th>
+                                <th>Middle Name</th>
+                                <th>Last Name</th>
+                                <th>Birth Date</th>
+                                <th>Last 4 SSN</th>
+                                <th>Email</th>
                             </tr>
-                        #end
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            #foreach($patient in $results)
+                                <tr>
+                                    <!-- TODO add button to go to some like page specific to the patient to see records and print
+                                    them-->
+                                    <th>
+                                        <a href="/patient/view/${patient.Id}">
+                                            <i class="bi bi-box-arrow-up-right"></i>
+                                        </a>
+                                    </th>
+                                    <th>${patient.FirstName}</th>
+                                    <th>${patient.MiddleName}</th>
+                                    <th>${patient.LastName}</th>
+                                    <th>${patient.BirthDate}</th>
+                                    <th>${patient.SSNumber}</th>
+                                    <th>${patient.Email}</th>
+                                </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
             #end
         </div>
     </body>

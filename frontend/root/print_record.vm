@@ -1,103 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
-	
-<head>
-	<title>Print Patient Vaccine Record</title>
-		<!--
-		Missouri COVID-19 Vaccine Tracker Application 
-		Filename: index.html
-  
-		Team: Turtle Shell Development
-		Authors: Katherine Geist
-		Date: 24 Oct 2022 
-	 
-	  -->
-	
-	<meta charset="utf-8">
 
-    <!-- ======== EXTERNAL SCRIPTS ========================= -->
-    <link rel="stylesheet" href="/assets/css/patient_records/add.css">
-    <script src="/assets/js/add_record.js" defer></script>
-    <script src="/assets/js/modernizr.custom.40753.js"></script>
+    <head>
+        <title>Print Patient Vaccine Record</title>
+        <!-- Missouri COVID-19 Vaccine Tracker Application Filename: index.html Team: Turtle Shell
+        Development Authors: Katherine Geist Date: 24 Oct 2022 -->
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
-        crossorigin="anonymous"></script>
-</head>
+        <meta charset="utf-8">
 
+        <!-- ======== EXTERNAL SCRIPTS ========================= -->
+        <link rel="stylesheet" href="/assets/css/patient_records/add.css">
+        <script src="/assets/js/add_record.js" defer="defer"></script>
+        <script src="/assets/js/modernizr.custom.40753.js"></script>
 
-<body id="add_record_body">
-	<!-- ======== HEADER	========================= -->
-	<!-- 		Written by KSG -->
-	${header}
-	
-<!-- 
-	<h2 class="pageName">Update Existing Patient Record:</h2>
- -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
+            crossorigin="anonymous">
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+            crossorigin="anonymous"></script>
+        <style>
+            .nav-handler {
+                margin: 0 auto;
+                width: 1024px;
+                padding-top: 5px;
+            }
+        </style>
+    </head>
 
-	<!-- ======== PATIENT QUERY FORM	========================= -->
-	<!-- 		Written by KSG -->
-	<form action="EditRecord" method="POST">
-       <fieldset class="form-control">
-			<legend>SEARCH FOR PATIENT</legend>
-			<div>
-			    <label for="dob">DOB</label>
-                   	<input type="date" id="dob" name="dob" class="form-control">
-			
-				<div>
-                    <label for="lname">Last Name
-                    	<input type="text" id="lname" name="lname" class="form-control name-fields">
-                    </label>
-                    <label for="fname">First Name
-                        <input type="text" id="fname" name="fname" class="form-control name-fields">
-                    </label>
-                    <label for="mname">Middle Name
-                        <input type="text" id="mname" name="mname" class="form-control name-fields">
-                    </label>
-                </div>
-                
-                <div class="field-flex">
-						<label for="ss4">Last 4-digits SSN
-							<input type="text" id="ss4" name="ss4" class="form-control" maxlength="4">
-						</label>
-			
-					<label for="lotNumber">Vaccine Lot Number:
-						<input type="text" id="lotNumber" name="lotNumber" class="form-control">
-					</label>
-					<label for="pnum">Patient Number:
-						<input type="text" id="pnum" name="pnum" class="form-control">
-					</label>
-				</div>
-			<div> 
-		</fieldset>
-		<br>
-		
-        <br>
-        <div class="text-center">
-			<input type="submit" value="Print Record" class="submit-button btn btn-dark btn-lg">
-		<div>
-		<br>
-        <br>
-    </form>
-    <br>
-        <!-- ============================================================================ -->
-        <!-- ======== FOR ALL PAGES ========================= -->
+    <body id="add_record_body">
+        <!-- ======== HEADER ========================= -->
+        <!-- Written by KSG -->
+        ${header}
 
-        <!-- ======== HELP POPUP BUTTON ========================= -->
-<!-- 		Written by JM         -->
-		<div>
-            <div class="modal">
-                <div class="modal-content">
-                    <span class="close-button">&times;</span>
-                    <legend>Please contact the Missouri IIS for assistance!</legend>
-                    <p>Phone: XXX-XXX-XXXX</p>
-                    <p>Email: helpme@missouri.gov</p>
-                </div>
-            </div>
+        <div class="nav-handler">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/record/search">Search</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/patient/view/${patient.Id}">View</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Print Record</li>
+                </ol>
+            </nav>
         </div>
+        <!-- <h2 class="pageName">Update Existing Patient Record:</h2> -->
 
+        <!-- ======== PATIENT QUERY FORM ========================= -->
+        <!-- Written by KSG -->
 
-	
-</body>
+        <form>
+            <fieldset class="form-control">
+                <legend>PATIENT INFORMATION</legend>
+                <div>
+                    <label for="dob">DOB</label>
+                    <input
+                        type="date"
+                        id="dob"
+                        name="dob"
+                        class="form-control"
+                        value="${patient.BirthDate}"
+                        disabled="disabled">
+
+                    <div>
+                        <label for="lname">Last Name
+                            <input
+                                type="text"
+                                id="lname"
+                                name="lname"
+                                class="form-control name-fields"
+                                value="${patient.LastName}"
+                                disabled="disabled">
+                        </label>
+                        <label for="fname">First Name
+                            <input
+                                type="text"
+                                id="fname"
+                                name="fname"
+                                class="form-control name-fields"
+                                value="${patient.FirstName}"
+                                disabled="disabled">
+                        </label>
+                        <label for="mname">Middle Name
+                            <input
+                                type="text"
+                                id="mname"
+                                name="mname"
+                                class="form-control name-fields"
+                                value="${patient.LastName}"
+                                disabled="disabled">
+                        </label>
+                    </div>
+
+                    <div class="field-flex">
+                        <label for="ss4">Last 4-digits SSN
+                            <input
+                                type="text"
+                                id="ss4"
+                                name="ss4"
+                                class="form-control"
+                                maxlength="4"
+                                value="${patient.SSNumber}"
+                                disabled="disabled">
+                        </label>
+                        #set($vaccines = $patient.getVaccines())
+                        #set($index = $vaccines.size() - 1)
+                        #set($lotNum = $vaccines.get($index))
+                        <label for="lotNumber">Vaccine Lot Number:
+                            <input
+                                type="text"
+                                id="lotNumber"
+                                name="lotNumber"
+                                class="form-control"
+                                value="${lotNum.lotNumber()}">
+                        </label>
+                        <label for="pnum">Patient Number:
+                            <input type="text" id="pnum" name="pnum" class="form-control" value="${patient.Id}">
+                        </label>
+                    </div>
+                    <div></fieldset>
+                    <br>
+
+                    <br>
+                    <div class="text-center">
+                        <input
+                            type="button"
+                            value="Print Record"
+                            class="submit-button btn btn-dark btn-lg"
+                            onclick="window.print();">
+                        <div>
+                            <br>
+                            <br>
+                        </form>
+                        <br>
+                        <!-- ============================================================================ -->
+                        <!-- ======== FOR ALL PAGES ========================= -->
+
+                        <!-- ======== HELP POPUP BUTTON ========================= -->
+                        <!-- Written by JM -->
+                        <div>
+                            <div class="modal">
+                                <div class="modal-content">
+                                    <span class="close-button">&times;</span>
+                                    <legend>Please contact the Missouri IIS for assistance!</legend>
+                                    <p>Phone: XXX-XXX-XXXX</p>
+                                    <p>Email: helpme@missouri.gov</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </body>

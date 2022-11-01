@@ -19,6 +19,19 @@ public class ResponseUtils {
         return errorResponse;
     }
 
+
+    public static JSONObject createSuccess(String successMessage, Response resp) {
+        JSONObject success = new JSONObject();
+        success.put("success", true);
+        success.put("message", successMessage);
+
+        resp.status(200);
+        resp.header("Content-Type", "application/json");
+
+        return success;
+
+    }
+
     /**
      * Convenience method to create a success message for Routes for logging in
      * @param needsMfa if the client should

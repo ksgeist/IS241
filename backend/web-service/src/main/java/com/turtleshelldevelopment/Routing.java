@@ -1,11 +1,14 @@
 package com.turtleshelldevelopment;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.turtleshelldevelopment.endpoints.*;
 import com.turtleshelldevelopment.pages.*;
 import com.turtleshelldevelopment.utils.Issuers;
 import com.turtleshelldevelopment.utils.ModelUtil;
 import com.turtleshelldevelopment.utils.TokenUtils;
 import com.turtleshelldevelopment.utils.permissions.PermissionType;
+import com.turtleshelldevelopment.utils.permissions.Permissions;
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 
@@ -33,8 +36,21 @@ public class Routing {
         });
         before("/site/create", (req, res) -> verifyCredentials(req, res, PermissionType.ADD_SITE));
         before("/record/add", (req, resp) -> verifyCredentials(req, resp, PermissionType.WRITE_PATIENT));
+        after((req, resp) -> {
+            //Refresh Token
+            if(resp.status() == 200) {
+                DecodedJWT jwt = JWT.decode(req.cookie("token"));
+                JWTAuthentication.generateAuthToken(jwt.getSubject(), new Permissions(jwt.getSubject()).getPermissionsAsString(), resp);
+            }
+        });
         path("/", () -> {
-            get("/", (req, resp) -> new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().build(), "/frontend/index.vm")));
+            get("/", (req, resp) -> {
+                if(req.cookie("token") != null) {
+                    resp.redirect("/dashboard");
+                    return "";
+                }
+                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().build(), "/frontend/index.vm"));
+            });
             get("/dashboard", new DashboardPage());
             path("/site", () -> {
                 get("/add", new SiteCreatePage());
@@ -46,6 +62,7 @@ public class Routing {
             });
             path("/patient", () -> {
                 get("/view/:id", new ViewPatientPage());
+                get("/print/:id", new PrintRecordPage());
             });
             post("/print_record/print", new PrintInfoPage());
             path("/record", () -> {
@@ -54,6 +71,18 @@ public class Routing {
                 patch("/edit", new UpdateRecordEndpoint());
                 get("/search", new SearchRecordPage());
                 post("/search", new SearchPatientsEndpoint());
+            });
+            path("/vaccine", () -> {
+                get("/add/:id", new NewDosePage());
+                post("/add/:id", new AddVaccineEndpoint());
+            });
+            path("/contact", () -> {
+                //Move to delete later
+                get("/remove/:id", new DeleteContactInformationEndpoint());
+                get("/add/:id", new AddContactPage());
+            });
+            path("/insurance", () -> {
+                get("/remove/:id", new DeleteInsuranceInformationEndpoint());
             });
         });
         path("/api", () -> {

@@ -59,7 +59,7 @@ ${header}
 					<a href="/record/add">Add Vaccine Record</a>
 				#end
 				#if ($edit_patient)
-					<a href="/record/edit">Edit Record</a>
+					<a href="/record/search">Edit Record</a>
 				#end
 				#if ($read_patient)
 					<a href="/record/search">View / Print Record</a>
@@ -67,7 +67,6 @@ ${header}
 				#if ($request_records)
 					<a href="dummy.html">Patient Vaccination Records Request</a>
 				#end
-
 				</div>
 			</div>
 	</div>

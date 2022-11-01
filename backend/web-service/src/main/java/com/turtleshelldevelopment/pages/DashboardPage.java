@@ -13,6 +13,7 @@ import java.util.Map;
 public class DashboardPage implements Route {
     @Override
     public Object handle(Request request, Response response) {
+        //Frontend Development test code
         if(BackendServer.environment.equals(EnvironmentType.FRONT_DEVEL)) {
             Map<String, Object> modelData = new ModelUtil().addPermissions(new DevelopmentTokenUtils().getPermissions()).build();
             return new VelocityTemplateEngine().render(new ModelAndView(modelData, "/frontend/dashboard.vm"));

@@ -8,6 +8,10 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.turtleshelldevelopment.BackendServer;
 import com.turtleshelldevelopment.utils.permissions.PermissionType;
 
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -51,5 +55,41 @@ public class TokenUtils {
 
     public String getErrorReason() {
         return this.errorReason;
+    }
+
+    public DecodedJWT getDecodedJWT() {
+        return decodedJWT;
+    }
+
+    public int getUserId() {
+        try {
+            CallableStatement getUser = BackendServer.database.getConnection().prepareCall("CALL GET_USER(?)");
+            getUser.setString(1, decodedJWT.getSubject());
+            ResultSet set = getUser.executeQuery();
+            if(set.next()) {
+                int id = set.getInt("user_id");
+                getUser.close();
+                return id;
+            }
+        } catch (SQLException e) {
+            return -1;
+        }
+        return -1;
+    }
+
+    public int getSiteId() {
+        try {
+            PreparedStatement getUser = BackendServer.database.getConnection().prepareStatement("SELECT site_id FROM User WHERE username = ?;");
+            getUser.setString(1, decodedJWT.getSubject());
+            ResultSet set = getUser.executeQuery();
+            if(set.next()) {
+                int id = set.getInt("site_id");
+                getUser.close();
+                return id;
+            }
+        } catch (SQLException e) {
+            return -1;
+        }
+        return -1;
     }
 }

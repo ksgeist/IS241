@@ -144,7 +144,7 @@ public class Patient {
                             res.getDate("administered_date"),
                             res.getString("manufacturer"),
                             res.getInt("dose"),
-                            res.getInt("administered_by"),
+                            res.getInt("administrated_by"),
                             new ProvidingUser(
                                 res.getString("first_name"),
                                 res.getString("last_name"),
