@@ -15,6 +15,19 @@ CREATE SCHEMA IF NOT EXISTS `is241_mo_vat` DEFAULT CHARACTER SET utf8 ;
 USE `is241_mo_vat` ;
 
 -- -----------------------------------------------------
+-- Table `is241_mo_vat`.`Counties`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `is241_mo_vat`.`Counties` ;
+
+CREATE TABLE IF NOT EXISTS `is241_mo_vat`.`Counties` (
+  `fip_id` VARCHAR(9) NOT NULL,
+  `county_name` VARCHAR(32) NOT NULL,
+  PRIMARY KEY (`fip_id`),
+  UNIQUE INDEX `fip_id_UNIQUE` (`fip_id` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `is241_mo_vat`.`Site`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `is241_mo_vat`.`Site` ;
@@ -22,12 +35,17 @@ DROP TABLE IF EXISTS `is241_mo_vat`.`Site` ;
 CREATE TABLE IF NOT EXISTS `is241_mo_vat`.`Site` (
   `site_id` INT NOT NULL AUTO_INCREMENT,
   `location` VARCHAR(95) NULL,
-  `county` VARCHAR(32) NULL,
   `phone_number` VARCHAR(15) NULL,
-  `fips` INT(9) NULL,
-  `zip_code` INT(9) NULL,
+  `fips` VARCHAR(9) NULL,
+  `zip_code` VARCHAR(9) NULL,
   `name` VARCHAR(45) NULL,
-  PRIMARY KEY (`site_id`))
+  PRIMARY KEY (`site_id`),
+  INDEX `counties_site_idx` (`fips` ASC) VISIBLE,
+  CONSTRAINT `counties_site`
+    FOREIGN KEY (`fips`)
+    REFERENCES `is241_mo_vat`.`Counties` (`fip_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -37,13 +55,14 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `is241_mo_vat`.`PatientInformation` ;
 
 CREATE TABLE IF NOT EXISTS `is241_mo_vat`.`PatientInformation` (
-  `patient_id` INT NOT NULL,
+  `patient_id` INT NOT NULL AUTO_INCREMENT,
   `first_name` VARCHAR(45) NOT NULL,
   `middle_name` VARCHAR(45) NOT NULL,
   `last_name` VARCHAR(45) NOT NULL,
   `last_ss_num` INT(4) NOT NULL,
-  `dob` DATETIME NOT NULL,
+  `dob` DATE NOT NULL,
   `email` VARCHAR(255) NOT NULL,
+  `gender` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`patient_id`))
 ENGINE = InnoDB;
 
@@ -161,7 +180,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `is241_mo_vat`.`PatientContact` ;
 
 CREATE TABLE IF NOT EXISTS `is241_mo_vat`.`PatientContact` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `patient_id` INT NULL,
   `address` VARCHAR(95) NULL,
   `phone_num` VARCHAR(15) NULL,
@@ -309,9 +328,9 @@ DROP procedure IF EXISTS `is241_mo_vat`.`ADD_SITE`;
 
 DELIMITER $$
 USE `is241_mo_vat`$$
-CREATE PROCEDURE `ADD_SITE` (location_param varchar(95), county_param varchar(32), phone_number_param int(15), fips_param INT(9), zip_code_param INT(9))
+CREATE PROCEDURE `ADD_SITE` (location_param varchar(95), phone_number_param VARCHAR(15), fips_param VARCHAR(9), zip_code_param VARCHAR(9), name_param varchar(45))
 BEGIN
-	INSERT INTO `is241_mo_vat`.`Site`(location, county, phone_number, fips, zip_code) VALUES (location_param, county_param, phone_number_param, fips_param, zip_code_param);
+	INSERT INTO `is241_mo_vat`.`Site`(location, phone_number, fips, zip_code, name) VALUES (location_param, phone_number_param, fips_param, zip_code_param, name_param);
 END$$
 
 DELIMITER ;
@@ -341,9 +360,9 @@ DROP procedure IF EXISTS `is241_mo_vat`.`ADD_PATIENT`;
 
 DELIMITER $$
 USE `is241_mo_vat`$$
-CREATE PROCEDURE `ADD_PATIENT` (first_name_param varchar(45), middle_name_param varchar(45), last_name_param varchar(45), last_ss_num_param int, dob_param datetime, email_param varchar(255))
+CREATE PROCEDURE `ADD_PATIENT` (first_name_param varchar(45), middle_name_param varchar(45), last_name_param varchar(45), last_ss_num_param int, dob_param date, email_param varchar(255), gender_param varchar(255))
 BEGIN
-	INSERT INTO PatientInformation (first_name, middle_name, last_name, last_ss_num, dob, email) VALUES (first_name_param, middle_name_param, last_name_param, last_ss_num_param, dob_param, email_param);
+	INSERT INTO PatientInformation (first_name, middle_name, last_name, last_ss_num, dob, email, gender) VALUES (first_name_param, middle_name_param, last_name_param, last_ss_num_param, dob_param, email_param, gender_param);
 END$$
 
 DELIMITER ;
@@ -357,9 +376,9 @@ DROP procedure IF EXISTS `is241_mo_vat`.`ADD_VACCINE`;
 
 DELIMITER $$
 USE `is241_mo_vat`$$
-CREATE PROCEDURE `ADD_VACCINE` (site_id_param int, patient_id_param int, administered_date_param datetime, manufacturer_param varchar(45), dose_param int, administrated_by_param int)
+CREATE PROCEDURE `ADD_VACCINE` (lot_num_param int, site_id_param int, patient_id_param int, administered_date_param datetime, manufacturer_param varchar(45), dose_param int, administrated_by_param int)
 BEGIN
-	INSERT INTO Vaccine (site_id, patient_id, administered_date, manufacturer, dose, administrated_by) VALUES (site_id_param, patient_id_param, administered_date_param, manufacturer_param, dose_param, administrated_by_param);
+	INSERT INTO Vaccine (lot_num, site_id, patient_id, administered_date, manufacturer, dose, administrated_by) VALUES (lot_num_param, site_id_param, patient_id_param, administered_date_param, manufacturer_param, dose_param, administrated_by_param);
 END$$
 
 DELIMITER ;
@@ -405,9 +424,9 @@ DROP procedure IF EXISTS `is241_mo_vat`.`ADD_PATIENT_INFO`;
 
 DELIMITER $$
 USE `is241_mo_vat`$$
-CREATE PROCEDURE `ADD_PATIENT_INFO` (first_name_param varchar(45), middle_name_param varchar(45), last_name_param varchar(45), last_ss_num_param int, dob_param datetime, email_param varchar(255), address_param varchar(95), phone_num_param varchar(15), phone_type_param varchar(4), provider_id_param varchar(45), group_number_param varchar(45), policy_number_param varchar(45), administered_date_param datetime, manufacturer_param varchar(45), dose_param int, adminstrated_by_param int,  site_id_param int)
+CREATE PROCEDURE `ADD_PATIENT_INFO` (first_name_param varchar(45), middle_name_param varchar(45), last_name_param varchar(45), last_ss_num_param int(4), dob_param date, email_param varchar(255), gender_param varchar(255),  address_param varchar(95), phone_num_param varchar(15), phone_type_param varchar(4), provider_id_param varchar(45), group_number_param varchar(45), policy_number_param varchar(45), administered_date_param datetime, manufacturer_param varchar(45), dose_param int, lot_num_param int,  administrated_by_param int,  site_id_param int)
 BEGIN
-	INSERT INTO PatientInformation (first_name, middle_name, last_name, last_ss_num, dob, email) VALUES (first_name_param, middle_name_param, last_name_param, last_ss_num_param, dob_param, email_param);
+	INSERT INTO PatientInformation (first_name, middle_name, last_name, last_ss_num, dob, email, gender) VALUES (first_name_param, middle_name_param, last_name_param, last_ss_num_param, dob_param, email_param, gender_param);
     SET @patient_id_param = LAST_INSERT_ID();
 	INSERT INTO PatientContact (patient_id, address, phone_num, phone_type) VALUES (@patient_id_param, address_param, phone_num_param, phone_type_param);
     INSERT INTO Insurance (`patient_id`, `provider`, `group_number`, `policy_number`) VALUES (@patient_id_param, provider_id_param, group_number_param, policy_number_param);
@@ -448,6 +467,150 @@ END$$
 
 DELIMITER ;
 
+-- -----------------------------------------------------
+-- procedure SEARCH_PATIENTS
+-- -----------------------------------------------------
+
+USE `is241_mo_vat`;
+DROP procedure IF EXISTS `is241_mo_vat`.`SEARCH_PATIENTS`;
+
+DELIMITER $$
+USE `is241_mo_vat`$$
+CREATE PROCEDURE `SEARCH_PATIENTS` (ssn varchar(4), last_name_param varchar(45), dob date)
+BEGIN
+	SELECT * FROM PatientInformation p WHERE (p.last_ss_num LIKE ssn OR ssn IS NULL) AND (p.last_name LIKE last_name_param OR last_name_param IS NULL) AND (p.dob = dob OR dob IS NULL);
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure GET_COUNTIES
+-- -----------------------------------------------------
+
+USE `is241_mo_vat`;
+DROP procedure IF EXISTS `is241_mo_vat`.`GET_COUNTIES`;
+
+DELIMITER $$
+USE `is241_mo_vat`$$
+CREATE PROCEDURE `GET_COUNTIES` ()
+BEGIN
+	SELECT * FROM Counties;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure GET_PATIENT
+-- -----------------------------------------------------
+
+USE `is241_mo_vat`;
+DROP procedure IF EXISTS `is241_mo_vat`.`GET_PATIENT`;
+
+DELIMITER $$
+USE `is241_mo_vat`$$
+CREATE PROCEDURE `GET_PATIENT` (id_param int)
+BEGIN
+	SELECT * FROM PatientInformation WHERE patient_id = id_param LIMIT 1;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure GET_INSURANCES
+-- -----------------------------------------------------
+
+USE `is241_mo_vat`;
+DROP procedure IF EXISTS `is241_mo_vat`.`GET_INSURANCES`;
+
+DELIMITER $$
+USE `is241_mo_vat`$$
+CREATE PROCEDURE `GET_INSURANCES` (patient_id_param int)
+BEGIN
+	SELECT * FROM Insurance WHERE patient_id = patient_id_param;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure GET_CONTACTS
+-- -----------------------------------------------------
+
+USE `is241_mo_vat`;
+DROP procedure IF EXISTS `is241_mo_vat`.`GET_CONTACTS`;
+
+DELIMITER $$
+USE `is241_mo_vat`$$
+CREATE PROCEDURE `GET_CONTACTS` (patient_id_param int)
+BEGIN
+	SELECT * FROM PatientContact WHERE patient_id = patient_id_param;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure GET_VACCINES
+-- -----------------------------------------------------
+
+USE `is241_mo_vat`;
+DROP procedure IF EXISTS `is241_mo_vat`.`GET_VACCINES`;
+
+DELIMITER $$
+USE `is241_mo_vat`$$
+CREATE PROCEDURE `GET_VACCINES` (id_param int)
+BEGIN
+	SELECT * FROM Vaccine WHERE patient_id = id_param;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure GET_PROVIDING_USER
+-- -----------------------------------------------------
+
+USE `is241_mo_vat`;
+DROP procedure IF EXISTS `is241_mo_vat`.`GET_PROVIDING_USER`;
+
+DELIMITER $$
+USE `is241_mo_vat`$$
+CREATE PROCEDURE `GET_PROVIDING_USER` (id_param int)
+BEGIN
+	SELECT first_name, last_name, email FROM User WHERE user_id = id_param;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure GET_VACCINE_INFO
+-- -----------------------------------------------------
+
+USE `is241_mo_vat`;
+DROP procedure IF EXISTS `is241_mo_vat`.`GET_VACCINE_INFO`;
+
+DELIMITER $$
+USE `is241_mo_vat`$$
+CREATE PROCEDURE `GET_VACCINE_INFO` (patient_id_param int)
+BEGIN
+	SELECT v.lot_num, v.site_id, v.patient_id, s.location, s.phone_number, s.`name`, v.administered_date, v.manufacturer, v.dose, v.administrated_by, u.first_name, u.last_name, u.email, s.fips, s.zip_code FROM Vaccine v, Site s, User u WHERE v.patient_id = patient_id_param AND s.site_id = v.site_id AND v.administrated_by = u.user_id; 
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure GET_SITE
+-- -----------------------------------------------------
+
+USE `is241_mo_vat`;
+DROP procedure IF EXISTS `is241_mo_vat`.`GET_SITE`;
+
+DELIMITER $$
+USE `is241_mo_vat`$$
+CREATE PROCEDURE `GET_SITE` ()
+BEGIN
+
+END$$
+
+DELIMITER ;
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -464,4 +627,121 @@ CALL CREATE_PERMISSIONS(LAST_INSERT_ID(), FALSE,FALSE,FALSE,TRUE,FALSE,FALSE, FA
 INSERT INTO UserType(type_name) VALUES ("IIS Staff");
 CALL CREATE_PERMISSIONS(LAST_INSERT_ID(), TRUE,FALSE,FALSE,TRUE,FALSE,FALSE, FALSE, FALSE);
 INSERT INTO Site(location, phone_number, `name`) VALUES ("912 Wildwood, Jefferson City, MO 65102-0570", "5737516400", "IIS");
+
+INSERT INTO Counties(fip_id, county_name) VALUES 
+(29001, "Adair County"),
+(29003, "Andrew County"),
+(29005, "Atchison County"),
+(29007, "Audrain County"),
+(29009, "Barry County"),
+(29011, "Barton County"),
+(29013, "Bates County"),
+(29015, "Benton County"),
+(29017, "Bollinger County"),
+(29019, "Boone County"),
+(29021, "Buchanan County"),
+(29023, "Butler County"),
+(29025, "Caldwell County"),
+(29027, "Callaway County"),
+(29029, "Camden County"),
+(29031, "Cape Girardeau County"),
+(29033, "Carroll County"),
+(29035, "Carter County"),
+(29037, "Cass County"),
+(29039, "Cedar County"),
+(29041, "Chariton County"),
+(29043, "Christian County"),
+(29045, "Clark County"),
+(29047, "Clay County"),
+(29049, "Clinton County"),
+(29051, "Cole County"),
+(29053, "Cooper County"),
+(29055, "Crawford County"),
+(29057, "Dade County"),
+(29059, "Dallas County"),
+(29061, "Daviess County"),
+(29063, "DeKalb County"),
+(29065, "Dent County"),
+(29067, "Douglas County"),
+(29069, "Dunklin County"),
+(29071, "Franklin County"),
+(29073, "Gasconade County"),
+(29075, "Gentry County"),
+(29077, "Greene County"),
+(29079, "Grundy County"),
+(29081, "Harrison County"),
+(29083, "Henry County"),
+(29085, "Hickory County"),
+(29087, "Holt County"),
+(29089, "Howard County"),
+(29091, "Howell County"),
+(29093, "Iron County"),
+(29095, "Jackson County"),
+(29097, "Jasper County"),
+(29099, "Jefferson County"),
+(29101, "Johnson County"),
+(29103, "Knox County"),
+(29105, "Laclede County"),
+(29107, "Lafayette County"),
+(29109, "Lawrence County"),
+(29111, "Lewis County"),
+(29113, "Lincoln County"),
+(29115, "Linn County"),
+(29117, "Livingston County"),
+(29119, "McDonald County"),
+(29121, "Macon County"),
+(29123, "Madison County"),
+(29125, "Maries County"),
+(29127, "Marion County"),
+(29129, "Mercer County"),
+(29131, "Miller County"),
+(29133, "Mississippi County"),
+(29135, "Moniteau County"),
+(29137, "Monroe County"),
+(29139, "Montgomery County"),
+(29141, "Morgan County"),
+(29143, "New Madrid County"),
+(29145, "Newton County"),
+(29147, "Nodaway County"),
+(29149, "Oregon County"),
+(29151, "Osage County"),
+(29153, "Ozark County"),
+(29155, "Pemiscot County"),
+(29157, "Perry County"),
+(29159, "Pettis County"),
+(29161, "Phelps County"),
+(29163, "Pike County"),
+(29165, "Platte County"),
+(29167, "Polk County"),
+(29169, "Pulaski County"),
+(29171, "Putnam County"),
+(29173, "Ralls County"),
+(29175, "Randolph County"),
+(29177, "Ray County"),
+(29179, "Reynolds County"),
+(29181, "Ripley County"),
+(29183, "St. Charles County"),
+(29185, "St. Clair County"),
+(29186, "Ste. Genevieve County"),
+(29187, "St. Francois County"),
+(29189, "St. Louis County"),
+(29195, "Saline County"),
+(29197, "Schuyler County"),
+(29199, "Scotland County"),
+(29201, "Scott County"),
+(29203, "Shannon County"),
+(29205, "Shelby County"),
+(29207, "Stoddard County"),
+(29209, "Stone County"),
+(29211, "Sullivan County"),
+(29213, "Taney County"),
+(29215, "Texas County"),
+(29217, "Vernon County"),
+(29219, "Warren County"),
+(29221, "Washington County"),
+(29223, "Wayne County"),
+(29225, "Webster County"),
+(29227, "Worth County"),
+(29229, "Wright County"),
+(29510, "St. Louis city");
 -- end attached script 'script'
