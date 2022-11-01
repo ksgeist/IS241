@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Add New Patient Vaccine Record</title>
+    <title>Add Next Dose Vaccine Record</title>
     <!-- Missouri COVID-19 Vaccine Tracker Application Filename: index.html Team: Turtle Shell
         Development Authors: Katherine Geist Date: 13 Oct 2022 -->
 
@@ -28,107 +28,11 @@
     ${header}
 
 	<div class="p-5 text-center">
-		<h2 class="pageName">Enter New Patient Record:</h2>
+		<h2 class="pageName">Enter Patient's Next Dose:</h2>
 	<div/>
-	
     <!-- ======== PATIENT INPUT FORM ========================= -->
     <!-- Written by KSG -->
-    <form action="AddRecord" method="POST">
-        <fieldset class="form-control">
-            <legend>DATE GIVEN</legend>
-            <div class="input-group">
-                <span class="input-group-text" id="basic-addon2">Date</span>
-                <input type="date" class="form-control" aria-describedby="basic-addon2" name="curr-date" id="date-input"
-                    readonly required="required">
-            </div>
-        </fieldset>
-        <fieldset class="form-control">
-            <legend>PATIENT RECEIVING VACCINE</legend>
-            <div>
-                    <label for="dob">DOB</label>
-                    <input type="date" id="dob" name="dob" class="form-control">
-                <div>
-                    <label for="lname">Last Name
-                    <input type="text" id="lname" name="lname" class="form-control name-fields">
-                    </label>
-                    <label for="fname">First Name
-                        <input type="text" id="fname" name="fname" class="form-control name-fields">
-                    </label>
-                    <label for="mname">Middle Name
-                        <input type="text" id="mname" name="mname" class="form-control name-fields">
-                    </label>
-                </div>
-                <div class="field-flex">
-                    <!-- Dropdown for Sex Identuty -->
-					<label for="sex">Sex Identity
-						<select id="sex" name="sex" class="form-select">
-							<option value="Female">Female</option>
-							<option value="Male">Male</option>
-							<option value="Non-Binary">Non-Binary</option>
-						</select>
-					</label>
-                    <label for="ss4">Last 4-digits SSN
-                        <input type="text" id="ss4" name="ss4" class="form-control" maxlength="4">
-                    </label>
-
-				</div>
-            </div>
-        </fieldset>
-        <br>
-        <fieldset class="form-control">
-            <legend>CONTACT INFORMATION</legend>
-            <div>
-                <label for="address">Street Address</label>
-                <input type="text" id="address" name="address" class="form-control">
-                <div>
-					<label for="city">City
-					<input type="text" id="city" name="city" class="form-control address-fields">
-					</label>
-					<label for="zip">Zipcode
-					<input type="text" id="zip" name="zip" class="form-control address-fields">
-					</label>
-                </div>
-                <div class="field-flex">
-                    <!-- Dropdown for Phone Type -->
-                    <label for="phoneType">Phone Type
-                        <select id="phoneType" name="PhoneType" class="form-select">
-                            <option value="Home">Home</option>
-                            <option value="Mobile">Mobile</option>
-                            <option value="Work">Work</option>
-                        </select>
-                    </label>
-                    <label for="phone">Phone Number
-                        <input type="text" id="phone" name="phone" class="form-control">
-                    </label>
-                    <label for="email">Email Address
-                        <input type="email" id="email" name="email" class="form-control">
-                    </label>
-                    <br>
-                </div>
-            </div>
-        </fieldset>
-        <br>
-        <fieldset class="form-control">
-            <legend>INSURANCE INFORMATION</legend>
-            <div>
-                <div class="input-group">
-					<span class="input-group-text" id="insProvider">Provider</span>
-                	<input type="text" id="insProvider" name="insProvider" class="form-control" aria-describedby="insurance">
-				</div>
-				<br>
-				<div class="field-flex">
-					<div class="input-group">
-						<span class="input-group-text" id="insGroup">Group #</span>
-						<input type="text" id="insGroup" name="insGroup" class="form-control" aria-describedby="insurance">
-					</div>
-					<div class="input-group">
-						<span class="input-group-text" id="insPolicy">Policy #</span>
-						<input type="text" id="insPolicy" name="insPolicy" class="form-control" aria-describedby="insurance">
-					</div>
-				</div>
-            </div>
-        </fieldset>
-        <br>
+    <form action="nextDoseRecord" method="POST">
         <fieldset class="form-control">
             <legend>VACCINE ADMINISTERED</legend>
             <div>

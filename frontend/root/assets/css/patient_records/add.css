@@ -1,19 +1,14 @@
-/* WIP styles
-JJM*/
+/* Add New Record & Next Dose Styles
+Written by: JJM, CK, & KSG*/
+
+/* Note: using Bootstrap */
+
 html{
-    /* background-color: blue;  */
-   /* display: inline-block; */
 }
 body#add_record_body {
-    /* border: 8px solid #000; */
     margin: 0 auto;
-    /* max-width: max-content;  */
     background-color: whitesmoke;
-    /* border: 8px solid #000; */
-    /* width: 0px; */
-
 }
-
 fieldset.form-control {
     background-color: #003366;
     color: black;
@@ -29,11 +24,18 @@ fieldset.form-control > div {
     background-color: white;
     border-radius: 0 0 .375rem .375rem;
 }
+body form{    
+}
+h1.pageName{
+/* 
+	font-family: "Arial";
+/* 
+	font-weight: normal;
+ */
+/*   	font-size: 24px !important; */
+/*   	color: #3d434a; */
+/*   	text-align: center !important; */
 
-body form{
-    /* border: 1px solid #003366; */
-/* background-color: blue;     */
-    
 }
 /*########################################*/
 input[type="text"] {
@@ -103,7 +105,7 @@ button.btn-primary {
 div.poop{
 	width:100%;
 }
-.submit-button.btn-dark{
+btn-dark.submit-button{
     text-align: center !important;
     margin: 0 auto;
 }
