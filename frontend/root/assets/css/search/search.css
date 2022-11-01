@@ -1,0 +1,18 @@
+
+#search-form {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    background-color: aqua;
+}
+
+.card {
+    padding-top: 10px;
+    border: 2px black;
+    background-color: whitesmoke;
+    width: 75%;
+    margin: 0 auto;
+}
+.card-holder {
+    width: 100%;
+}

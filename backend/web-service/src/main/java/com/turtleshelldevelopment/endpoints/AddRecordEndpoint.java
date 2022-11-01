@@ -23,7 +23,7 @@ import java.time.*;
 //* Description: Handles Adding a Patient Entry into the database   *
 //*                                                                 *
 //*******************************************************************
-public class AddEntryEndpoint implements Route {
+public class AddRecordEndpoint implements Route {
     @Override
     public Object handle(Request request, Response response) {
         if(request.requestMethod().equalsIgnoreCase("POST")) {
@@ -73,6 +73,7 @@ public class AddEntryEndpoint implements Route {
                 return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().addError(500,
                         "Invalid Date").build(), "/frontend/error.vm"));
             }
+            //TODO check if there are any similar patients in the database and notify of such
             //TODO fix this
             try(CallableStatement patientCall = BackendServer.database.getConnection().prepareCall("CALL ADD_PATIENT_INFO(?,?,?,?,?)")) {
                 patientCall.setString(1, patientFirstName);
