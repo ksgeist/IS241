@@ -44,11 +44,13 @@ public class Routing {
                 get("/add", new UserCreatePage());
                 post("/add", new NewAccountEndpoint());
             });
+            path("/patient", () -> {
+                get("/view/:id", new ViewPatientPage());
+            });
             post("/print_record/print", new PrintInfoPage());
             path("/record", () -> {
                 get("/add", new AddRecordPage());
-                post("/add", new AddEntryEndpoint());
-                get("/edit", new EditRecordPage());
+                post("/add", new AddRecordEndpoint());
                 patch("/edit", new UpdateRecordEndpoint());
                 get("/search", new SearchRecordPage());
                 post("/search", new SearchPatientsEndpoint());
