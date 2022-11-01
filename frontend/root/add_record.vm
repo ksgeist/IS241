@@ -27,7 +27,7 @@
     <!-- Written by KSG -->
     ${header}
 
-		<h2 class="pageName">Enter New Patient Record:</h2>
+	<h2 class="pageName">Enter New Patient Record:</h2>
 	
     <!-- ======== PATIENT INPUT FORM ========================= -->
     <!-- Written by KSG -->

@@ -28,7 +28,7 @@
 </head>
 
 
-<body>	
+<body id="add_record_body">
 	<!-- ======== HEADER	========================= -->
 	<!-- 		Written by KSG -->
 	${header}
@@ -245,9 +245,24 @@
     	<div class="text-center">
 			<input type="submit" value="Submit" class="submit-button btn btn-dark btn-lg">
 	    </div>
+	    <br>
         <br>
-        <br>
-    </form> 
+    </form>
     <br>
+        <!-- ============================================================================ -->
+        <!-- ======== FOR ALL PAGES ========================= -->
+
+        <!-- ======== HELP POPUP BUTTON ========================= -->
+<!-- 		Written by JM         -->
+		<div>
+            <div class="modal">
+                <div class="modal-content">
+                    <span class="close-button">&times;</span>
+                    <legend>Please contact the Missouri IIS for assistance!</legend>
+                    <p>Phone: XXX-XXX-XXXX</p>
+                    <p>Email: helpme@missouri.gov</p>
+                </div>
+            </div>
+        </div>
  
 </body>

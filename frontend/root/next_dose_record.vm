@@ -27,9 +27,8 @@
     <!-- Written by KSG -->
     ${header}
 
-	<div class="p-5 text-center">
-		<h2 class="pageName">Enter Patient's Next Dose:</h2>
-	<div/>
+	<h2 class="pageName">Enter Patient's Next Dose:</h2>
+		
     <!-- ======== PATIENT INPUT FORM ========================= -->
     <!-- Written by KSG -->
     <form action="nextDoseRecord" method="POST">
@@ -113,8 +112,9 @@
             </div>
         </fieldset>
         <br>
-		<input type="submit" value="Submit" class="submit-button btn btn-dark btn-lg">
-        <br>
+        <div class="text-center">
+			<input type="submit" value="Submit" class="submit-button btn btn-dark btn-lg">
+		<div>
         <br>
     </form>
     <br>
