@@ -26,16 +26,9 @@ fieldset.form-control > div {
 }
 body form{    
 }
-h1.pageName{
-/* 
-	font-family: "Arial";
-/* 
-	font-weight: normal;
- */
-/*   	font-size: 24px !important; */
-/*   	color: #3d434a; */
-/*   	text-align: center !important; */
-
+h2.pageName{
+  	color: #3d434a;
+  	text-align: center !important;
 }
 /*########################################*/
 input[type="text"] {
@@ -79,7 +72,7 @@ input[type="text"]#ss4 {
     width: 95px;
 }
 input[type="text"]#lotNumber {
-    width: 50;
+    width: 500;
 }
 input[type="text"]#address {
     width: 712px;
@@ -90,10 +83,6 @@ input[type="email"]#email {
 input[type="text"]#phone {
     width: 150px;
 }
-input[type="submit"]#btn-secondary {
-    margin: 0 auto;
-    width: 100px;
-}
 label.btn-primary {
 	background: ghostwhite;
 	color: #000;    
@@ -101,11 +90,4 @@ label.btn-primary {
 button.btn-primary {
 	background: ghostwhite;
 	color: #000;   
-}
-div.poop{
-	width:100%;
-}
-btn-dark.submit-button{
-    text-align: center !important;
-    margin: 0 auto;
 }
