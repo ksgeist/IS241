@@ -33,11 +33,13 @@
 	<!-- 		Written by KSG -->
 	${header}
 	
+	<h2 class="pageName">Update Existing Patient Record:</h2>
+
 	<!-- ======== PATIENT QUERY FORM	========================= -->
 	<!-- 		Written by KSG -->
 	<form action="EditRecord" method="POST">
        <fieldset class="form-control">
-			<legend>PATIENT</legend>
+			<legend>SEARCH FOR PATIENT</legend>
 			<div>
 			    <label for="dob">DOB</label>
                    	<input type="date" id="dob" name="dob" class="form-control">
@@ -69,66 +71,98 @@
 			<div> 
 		</fieldset>
 		<br>
-		
-
-		<h1>UPDATE PATIENT INFORMATION</h1>
-		
+				
        <fieldset class="form-control">
-			<legend>PATIENT NAME & CONTACT</legend>
-
+			<legend>UPDATE PATIENT BASIC INFORMATION</legend>
+			<div>
 <!-- 			We want these to autofill if possible but for now they are blank -->
-			<label for="fname_update">First Name:</label>
-			<input type="text" id="fname_update" name="fname_update"><br> 
 
-			<label for="mname_update">Middle Name:</label>
-			<input type="text" id="mname_update" name="mname_update"><br> 
 
-			<label for="lname_update">Last Name:</label>
-			<input type="text" id="lname_update" name="lname_update"><br> 
-            <div>
-                <label for="address_update">Street Address</label>
-                <input type="text" id="address_update" name="address_update" class="form-control">
+ <div>
+                    <label for="dob">DOB</label>
+                   		<input type="date" id="dob" name="dob" class="form-control">
                 <div>
-					<label for="city_update">City
-					<input type="text" id="city_update" name="city_update" class="form-control address-fields">
+                    <label for="lname">Last Name
+                    	<input type="text" id="lname" name="lname" class="form-control name-fields">
+                    </label>
+                    <label for="fname">First Name
+                        <input type="text" id="fname" name="fname" class="form-control name-fields">
+                    </label>
+                    <label for="mname">Middle Name
+                        <input type="text" id="mname" name="mname" class="form-control name-fields">
+                    </label>
+                </div>
+                <div class="field-flex">
+                    <!-- Dropdown for Sex Identuty -->
+					<label for="sex">Sex Identity
+						<select id="sex" name="sex" class="form-select">
+							<option value="Female">Female</option>
+							<option value="Male">Male</option>
+							<option value="Non-Binary">Non-Binary</option>
+						</select>
 					</label>
-					<label for="zip_update">Zipcode
-					<input type="text" id="zip_update" name="zip_update" class="form-control address-fields">
-					</label>
-            </div>
-
-			<label for="phone_update">Phone Number:</label>
-			<input type="text" id="phone_update" name="phone_update"><br> 
-
-			<!-- Dropdown for Phone Type -->
-			<label for="phoneType">Please select the Phone Type:</label>
-				<select id="phoneType" name="PhoneType">
-					<option value="Home">Home</option>
-					<option value="Mobile">Mobile</option>
-					<option value="Work">Work</option>
-				</select>
-				<br>
-			<label for="email">Email Address:</label>
-			<input type="text" id="email" name="email"><br> 
+                    <label for="ss4">Last 4-digits SSN
+                        <input type="text" id="ss4" name="ss4" class="form-control" maxlength="4">
+                    </label>
+		    </div>
 		</fieldset>
 		<br>
-    
-       <fieldset class="form-control">
-			<legend>PATIENT INSURANCE INFORMATION</legend>
-
-			<label for="insProvider">Insurance Provider:</label>
-			<input type="text" id="insProvider" name="insProvider"><br> 
-
-			<label for="insGroup">Group Number:</label>
-			<input type="text" id="insGroup" name="insGroup"><br> 
-
-			<label for="insPolicy">Policy Number:</label>
-			<input type="text" id="insPolicy" name="insPolicy"><br> 
-		</fieldset>
-		<br>
-       
         <fieldset class="form-control">
-            <legend>VACCINE ADMINISTERED</legend>
+            <legend>UPDATE CONTACT INFORMATION</legend>
+            <div>
+                <label for="address">Street Address</label>
+                <input type="text" id="address" name="address" class="form-control">
+                <div>
+					<label for="city">City
+					<input type="text" id="city" name="city" class="form-control address-fields">
+					</label>
+					<label for="zip">Zipcode
+					<input type="text" id="zip" name="zip" class="form-control address-fields">
+					</label>
+                </div>
+                <div class="field-flex">
+                    <!-- Dropdown for Phone Type -->
+                    <label for="phoneType">Phone Type
+                        <select id="phoneType" name="PhoneType" class="form-select">
+                            <option value="Home">Home</option>
+                            <option value="Mobile">Mobile</option>
+                            <option value="Work">Work</option>
+                        </select>
+                    </label>
+                    <label for="phone">Phone Number
+                        <input type="text" id="phone" name="phone" class="form-control">
+                    </label>
+                    <label for="email">Email Address
+                        <input type="email" id="email" name="email" class="form-control">
+                    </label>
+                    <br>
+                </div>
+            </div>
+        </fieldset>
+        <br>
+        <fieldset class="form-control">
+            <legend>UPDATE INSURANCE INFORMATION</legend>
+            <div>
+                <div class="input-group">
+					<span class="input-group-text" id="insProvider">Provider</span>
+                	<input type="text" id="insProvider" name="insProvider" class="form-control" aria-describedby="insurance">
+				</div>
+				<br>
+				<div class="field-flex">
+					<div class="input-group">
+						<span class="input-group-text" id="insGroup">Group #</span>
+						<input type="text" id="insGroup" name="insGroup" class="form-control" aria-describedby="insurance">
+					</div>
+					<div class="input-group">
+						<span class="input-group-text" id="insPolicy">Policy #</span>
+						<input type="text" id="insPolicy" name="insPolicy" class="form-control" aria-describedby="insurance">
+					</div>
+				</div>
+            </div>
+        </fieldset>
+        <br>
+        <fieldset class="form-control">
+            <legend>UPDATE VACCINE ADMINISTERED</legend>
             <div>
                 <p>Current COVID-19 Vaccine Dosing Schedule (All Manufacturers)</p>
                 <iframe id="dose_schedule" title="COVID-19 Dose Schedule as of Oct 2022" height="300" width="720"
