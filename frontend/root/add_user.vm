@@ -2,9 +2,9 @@
 <html lang="en">
 
     <head>
-        <title>Add Patient Vaccine Record</title>
+        <title>Add Application User</title>
         <!-- Missouri COVID-19 Vaccine Tracker Application Filename: index.html Team: Turtle Shell
-        Development Authors: Katherine Geist Date: 13 Oct 2022 -->
+        Development Authors: Colin Kinzel 24 Oct 2022 -->
 
         <meta charset="utf-8">
 
@@ -22,7 +22,7 @@
             crossorigin="anonymous"></script>
     </head>
 
-    <body>
+	<body id="add_record_body">
         <!-- ======== HEADER ========================= -->
         <!-- Written by KSG -->
         ${header}
@@ -103,8 +103,4 @@
             </div>
 
         </div>
-
-        <!-- ============================================================================ -->
-        <!-- ======== FOR ALL PAGES ========================= -->
-
     </body>
