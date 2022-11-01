@@ -1,11 +1,13 @@
 package com.turtleshelldevelopment.utils;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
 
 public class FormValidator {
     private static final Pattern phoneNumberPattern = Pattern.compile("^\\([0-9]{3}\\) [0-9]{3} - [0-9]{4}$");
+
 
     public static boolean checkValues(String... params) {
         for (String param: params) {
@@ -19,7 +21,8 @@ public class FormValidator {
 
     public static LocalDate parseDateFromForm(String date) {
         try {
-            return LocalDate.parse(date);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
+            return LocalDate.parse(date, formatter);
         } catch(DateTimeParseException e) {
             return null;
         }
