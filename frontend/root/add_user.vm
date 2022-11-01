@@ -74,8 +74,10 @@
                     </div>
                 </fieldset>
                 <br>
-                <input type="submit" value="Submit" class="form-control">
-                <br>
+				<div class="text-center">
+					<input type="submit" value="Submit" class="submit-button btn btn-dark btn-lg">
+				<div>                
+				<br>
                 <br>
             </form>
             <div
