@@ -71,6 +71,7 @@ public class BackendServer implements Runnable {
         //Create shutdown hook to make sure spark server is actually stopped before closing
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Shutting Down Backend!");
+            database.shutDownDatabase();
             stop();
             awaitStop();
         }));

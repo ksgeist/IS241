@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.turtleshelldevelopment.endpoints.*;
 import com.turtleshelldevelopment.pages.*;
+import com.turtleshelldevelopment.endpoints.AddInsuranceInformationEndpoint;
 import com.turtleshelldevelopment.utils.Issuers;
 import com.turtleshelldevelopment.utils.ModelUtil;
 import com.turtleshelldevelopment.utils.TokenUtils;
@@ -15,6 +16,7 @@ import spark.template.velocity.VelocityTemplateEngine;
 import static com.turtleshelldevelopment.EndpointFilters.verifyCredentials;
 import static spark.Service.ignite;
 import static spark.Spark.*;
+
 
 public class Routing {
 
@@ -82,6 +84,8 @@ public class Routing {
                 get("/add/:id", new AddContactPage());
             });
             path("/insurance", () -> {
+                post("/add/:user_id", new AddInsuranceInformationEndpoint());
+                get("/add/:user_id", new AddInsuranceInformationPage());
                 get("/remove/:id", new DeleteInsuranceInformationEndpoint());
             });
         });

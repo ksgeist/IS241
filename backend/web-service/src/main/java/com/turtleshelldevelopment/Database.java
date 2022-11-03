@@ -29,7 +29,8 @@ public class Database {
         // if not create a new superuser
         try {
             BackendServer.serverLogger.info("Checking Account...");
-            PreparedStatement checkForUser = db.getConnection().prepareStatement("SELECT user_id FROM User LIMIT 1;");
+            Connection connection = db.getConnection();
+            PreparedStatement checkForUser = connection.prepareStatement("SELECT user_id FROM User LIMIT 1;");
             ResultSet set = checkForUser.executeQuery();
             if(set.next()) {
                 System.out.println("Found account: " + set.getInt("user_id") + " on database " + url);
@@ -59,6 +60,7 @@ public class Database {
                 statement.close();
             }
             checkForUser.close();
+            connection.close();
         } catch (SQLException | QrGenerationException e) {
             throw new RuntimeException(e);
         }
@@ -71,6 +73,10 @@ public class Database {
 
     public Connection getConnection() throws SQLException {
         return db.getConnection();
+    }
+
+    public void shutDownDatabase() {
+        db.close();
     }
 
 }

@@ -107,7 +107,7 @@ public class JWTAuthentication {
                 .withIssuedAt(currTime)
                 .withExpiresAt(inst)
                 .sign(BackendServer.JWT_ALGO);
-        response.cookie("/","token", jwt, 180, true, true);
+        response.cookie("/","token", jwt, Config.AUTHENTICATION_EXPIRE, true, true);
     }
 
     /**
@@ -135,6 +135,6 @@ public class JWTAuthentication {
                 .withExpiresAt(expiration)
                 .sign(BackendServer.JWT_ALGO);
         //Set token cookie in response to client
-        response.cookie("/","token", jwt, 180, true, true);
+        response.cookie("/","token", jwt, Config.MFA_TOKEN_TIMEOUT, true, true);
     }
 }

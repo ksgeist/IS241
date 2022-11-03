@@ -17,8 +17,7 @@ import java.net.http.HttpResponse;
 
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static spark.Spark.awaitInitialization;
-import static spark.Spark.stop;
+import static spark.Spark.*;
 
 
 public class TestLogin {
@@ -28,13 +27,15 @@ public class TestLogin {
     @Before
     public void setup() {
         //System.setProperty("user.dir", Path.of(System.getProperty("user.dir")).getParent().toString());
-        BackendServer.main(new String[]{"use-test-db"});
+        //Setup backend to Production
+        BackendServer.main(new String[]{"-ePROD"});
         client = HttpClient.newHttpClient();
         awaitInitialization();
     }
     @After
     public void tearDown() {
         stop();
+        awaitStop();
     }
 
     @DisplayName("Create Account")
