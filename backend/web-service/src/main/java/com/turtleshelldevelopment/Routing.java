@@ -20,24 +20,14 @@ import static spark.Spark.*;
 
 public class Routing {
 
+    /**
+     * Sets up routing for system REST API
+     */
     public Routing() {
         port(8091);
         exception(Exception.class, (exception, request, response) -> BackendServer.serverLogger.error(exception.getMessage()));
-        BackendServer.serverLogger.info("Routing /login");
         staticFileLocation("/frontend");
-        before("/dashboard", EndpointFilters::verifyCredentials);
-        before("/api/logout", EndpointFilters::verifyCredentials);
-        before("/user/add", (req, resp) -> verifyCredentials(req, resp, PermissionType.ADD_USER));
-        before("/api/login/mfa", (req, res) -> {
-            TokenUtils tokenUtils = new TokenUtils(req.cookie("token"), Issuers.MFA_LOGIN.getIssuer());
-            if (tokenUtils.isInvalid()) {
-                //Invalid token, Remove it
-                res.cookie("/", "token", null, 0, true, true);
-                halt(401, new ModelUtil().addMFAError(false, "Invalid Token", false).build().toString());
-            }
-        });
-        before("/site/create", (req, res) -> verifyCredentials(req, res, PermissionType.ADD_SITE));
-        before("/record/add", (req, resp) -> verifyCredentials(req, resp, PermissionType.WRITE_PATIENT));
+        BackendServer.serverLogger.info("Setting up API Server routes...");
         after((req, resp) -> {
             //Refresh Token
             if(resp.status() == 200) {
@@ -53,6 +43,7 @@ public class Routing {
                 }
                 return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().build(), "/frontend/index.vm"));
             });
+            before("/dashboard", EndpointFilters::verifyCredentials);
             get("/dashboard", new DashboardPage());
             post("/print_record/print", new PrintInfoPage());
             createAPIRoutes();
@@ -72,6 +63,7 @@ public class Routing {
 
     public void createSiteRoutes() {
         path("/site", () -> {
+            before("/add", (req, res) -> verifyCredentials(req, res, PermissionType.ADD_SITE));
             get("/add", new SiteCreatePage());
             post("/add", new NewSiteEndpoint());
         });
@@ -87,10 +79,22 @@ public class Routing {
 
     public void createUserRoutes() {
         path("/user", () -> {
+            before("/add", (req, resp) -> verifyCredentials(req, resp, PermissionType.ADD_USER));
             get("/add", new UserCreatePage());
             post("/add", new NewAccountEndpoint());
-            path("/login", () -> post("/mfa", new MfaEndpoint()));
+            path("/login", () -> {
+                before("/mfa", (req, res) -> {
+                    TokenUtils tokenUtils = new TokenUtils(req.cookie("token"), Issuers.MFA_LOGIN.getIssuer());
+                    if (tokenUtils.isInvalid()) {
+                        //Invalid token, Remove it
+                        res.cookie("/", "token", null, 0, true, true);
+                        halt(401, new ModelUtil().addMFAError(false, "Invalid Token", false).build().toString());
+                    }
+                });
+                post("/mfa", new MfaEndpoint());
+            });
             post("/login", new LoginEndpoint());
+            before("/logout", EndpointFilters::verifyCredentials);
             get("/logout", new LogoutEndpoint());
         });
     }
@@ -112,6 +116,7 @@ public class Routing {
 
     public void createRecordRoutes() {
         path("/record", () -> {
+            before("/add", (req, resp) -> verifyCredentials(req, resp, PermissionType.WRITE_PATIENT));
             get("/add", new AddRecordPage());
             post("/add", new AddRecordEndpoint());
             patch("/edit", new UpdateRecordEndpoint());
