@@ -54,55 +54,72 @@ public class Routing {
                 return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().build(), "/frontend/index.vm"));
             });
             get("/dashboard", new DashboardPage());
-            path("/site", () -> {
-                get("/add", new SiteCreatePage());
-                post("/add", new NewSiteEndpoint());
-            });
-            path("/user", () -> {
-                get("/add", new UserCreatePage());
-                post("/add", new NewAccountEndpoint());
-            });
-            path("/patient", () -> {
-                get("/view/:id", new ViewPatientPage());
-                get("/print/:id", new PrintRecordPage());
-            });
             post("/print_record/print", new PrintInfoPage());
-            path("/record", () -> {
-                get("/add", new AddRecordPage());
-                post("/add", new AddRecordEndpoint());
-                patch("/edit", new UpdateRecordEndpoint());
-                get("/search", new SearchRecordPage());
-                post("/search", new SearchPatientsEndpoint());
-            });
-            path("/vaccine", () -> {
-                get("/add/:id", new NewDosePage());
-                post("/add/:id", new AddVaccineEndpoint());
-            });
-            path("/contact", () -> {
-                //Move to delete later
-                get("/remove/:id", new DeleteContactInformationEndpoint());
-                get("/add/:id", new AddContactPage());
-            });
-            path("/insurance", () -> {
-                post("/add/:user_id", new AddInsuranceInformationEndpoint());
-                get("/add/:user_id", new AddInsuranceInformationPage());
-                get("/remove/:id", new DeleteInsuranceInformationEndpoint());
-            });
-        });
-        path("/api", () -> {
-            path("/login", () -> post("/mfa", new MfaEndpoint()));
-            post("/login", new LoginEndpoint());
-            get("/logout", new LogoutEndpoint());
-            BackendServer.serverLogger.info("Routing /account");
-            path("/account", () -> {
-                BackendServer.serverLogger.info("Routing /account/new");
-                post("/new", new NewAccountEndpoint());
-            });
-            post("/site/add", new NewSiteEndpoint());
-            get("/lookupAddress", new GeocodingEndpoint());
+            createAPIRoutes();
+            createContactRoutes();
+            createInsuranceRoutes();
+            createRecordRoutes();
+            createVaccineRoutes();
+            createSiteRoutes();
+            createUserRoutes();
         });
         BackendServer.serverLogger.info("Ready to Fire");
     }
+
+    public void createAPIRoutes() {
+        path("/api", () -> get("/lookupAddress", new GeocodingEndpoint()));
+    }
+
+    public void createSiteRoutes() {
+        path("/site", () -> {
+            get("/add", new SiteCreatePage());
+            post("/add", new NewSiteEndpoint());
+        });
+    }
+
+    public void createInsuranceRoutes() {
+        path("/insurance", () -> {
+            post("/add/:user_id", new AddInsuranceInformationEndpoint());
+            get("/add/:user_id", new AddInsuranceInformationPage());
+            get("/remove/:id", new DeleteInsuranceInformationEndpoint());
+        });
+    }
+
+    public void createUserRoutes() {
+        path("/user", () -> {
+            get("/add", new UserCreatePage());
+            post("/add", new NewAccountEndpoint());
+            path("/login", () -> post("/mfa", new MfaEndpoint()));
+            post("/login", new LoginEndpoint());
+            get("/logout", new LogoutEndpoint());
+        });
+    }
+
+    public void createVaccineRoutes() {
+        path("/patient", () -> {
+            get("/view/:id", new ViewPatientPage());
+            get("/print/:id", new PrintRecordPage());
+        });
+    }
+
+    public void createContactRoutes() {
+        path("/contact", () -> {
+            //Move to delete later
+            get("/remove/:id", new DeleteContactInformationEndpoint());
+            get("/add/:id", new AddContactPage());
+        });
+    }
+
+    public void createRecordRoutes() {
+        path("/record", () -> {
+            get("/add", new AddRecordPage());
+            post("/add", new AddRecordEndpoint());
+            patch("/edit", new UpdateRecordEndpoint());
+            get("/search", new SearchRecordPage());
+            post("/search", new SearchPatientsEndpoint());
+        });
+    }
+
     public void fire() {
         ignite();
         BackendServer.serverLogger.info("We have Lift off!");
