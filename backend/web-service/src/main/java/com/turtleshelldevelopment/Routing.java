@@ -50,9 +50,10 @@ public class Routing {
             createContactRoutes();
             createInsuranceRoutes();
             createRecordRoutes();
-            createVaccineRoutes();
+            createPatientRoutes();
             createSiteRoutes();
             createUserRoutes();
+            createVaccineRoutes();
         });
         BackendServer.serverLogger.info("Ready to Fire");
     }
@@ -99,10 +100,17 @@ public class Routing {
         });
     }
 
-    public void createVaccineRoutes() {
+    public void createPatientRoutes() {
         path("/patient", () -> {
             get("/view/:id", new ViewPatientPage());
             get("/print/:id", new PrintRecordPage());
+        });
+    }
+
+    public void createVaccineRoutes() {
+        path("/vaccine", () -> {
+           get("/add/:id", new NewDosePage());
+           post("/add/:id", new AddVaccineEndpoint());
         });
     }
 
