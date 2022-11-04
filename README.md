@@ -8,12 +8,39 @@ This is the README for STLCC IS 241 Systems Analysis and Design class, Fall 2022
 # DEVELOPMENT
 
 ## Current Endpoints
-- /api
-    - /login
-    - /login/mfa
-    - /logout
-    - /account/new
-
+* /
+    * api/
+        * GET lookupAddress/
+    * dashboard/
+    * site/
+        * GET  add/
+        * POST add/
+    * user/
+        * GET  add/
+        * POST add/
+        * login/
+            * POST mfa/
+        * POST login/
+        * GET logout/
+    * patient/
+        * GET view/:id/
+        * GET print/:id/
+    * record/
+        * GET   add/
+        * POST  add/
+        * PATCH edit/
+        * GET   search/
+        * POST  search/
+    * vaccine/
+        * GET  add/:id/
+        * POST add/:id/
+    * contact/
+        * GET remove/:id/
+        * GET add/:id/
+    * insurance/
+        * POST add/:user_id/
+        * GET  add/:user_id/
+        * GET  remove/:id/
 
 # PROJECT PLANNING
 
