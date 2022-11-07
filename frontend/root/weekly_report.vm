@@ -117,24 +117,17 @@
                                 <option value="Non-Binary">Non-Binary</option>
                             </select>
                     	</div>
-                        <br>
-                        <div class="input-group" role="group">
-                        <span class="input-group-text">Choose an age range:</span>
-                            <select id="age" name="age" class="form-select">
-                                <option disabled selected value> -- </option>
-                                <option value="All">All Doses</option>
-                                <option value="6mos_to_4y">6 months to 4 years</option>
-                                <option value="5y_to_12y">5 years to 12 years</option>
-                                <option value="13y_to_19y">13 years to 19 years</option>
-                                <option value="20y_to_29y">20 years to 29 years</option>
-                                <option value="30y_to_39y">30 years to 39 years</option>
-                                <option value="40y_to_49y">40 years to 49 years</option>
-                                <option value="50y_to_59y">50 years to 59 years</option>
-                                <option value="60y_to_69y">60 years to 69 years</option>
-                                <option value="70y_to_79y">70 years to 79 years</option>
-                                <option value="80y_plus">80+ years</option>
-                            </select>                       
-                        </div>
+                        <br> 
+                        <div>
+                    		<span class="input-group-text">Choose an age range in years (1-99):</span>
+                    		<br>
+                    	</div>
+                    	<div class="field-flex">
+                    		<label for="start_age">From:</label>
+								<input type="text" id="start_age" name="start_age" class="form-control address-fields">
+                    		<label for="end_age">To:</label>
+								<input type="text" id="end_age" name="end_age" class="form-control address-fields">
+						</div>    			
                         <br>
                         <div class="input-group" role="group">
                         	<span class="input-group-text">FIPS</span>
