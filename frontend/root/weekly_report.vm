@@ -122,6 +122,7 @@
                         <span class="input-group-text">Choose an age range:</span>
                             <select id="age" name="age" class="form-select">
                                 <option disabled selected value> -- </option>
+                                <option value="All">All Doses</option>
                                 <option value="6mos_to_4y">6 months to 4 years</option>
                                 <option value="5y_to_12y">5 years to 12 years</option>
                                 <option value="13y_to_19y">13 years to 19 years</option>
