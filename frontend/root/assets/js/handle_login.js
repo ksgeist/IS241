@@ -12,7 +12,7 @@ function handleLoginCall() {
   var password = document.getElementById("password");
   var xhr = new XMLHttpRequest();
 
-  xhr.open("POST", window.location.origin + "/api/login");
+  xhr.open("POST", window.location.origin + "/user/login");
 
   var data = {
     username: username.value,
@@ -60,7 +60,7 @@ document.getElementById("twofasubmit").onclick = (event) => {
     document.getElementById("twofainput-6").value;
 
   var mfa = new XMLHttpRequest();
-  mfa.open("POST", window.location.origin + "/api/login/mfa");
+  mfa.open("POST", window.location.origin + "/user/login/mfa");
   var data = {
     code: code,
   };

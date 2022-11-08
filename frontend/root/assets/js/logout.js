@@ -11,6 +11,6 @@
 const logout = document.querySelector(".logout");
 
 function gohome() {
-	window.location.replace(window.location.origin + "/api/logout");
+	window.location.replace(window.location.origin + "/user/logout");
 } 
 logout.onclick = gohome;
