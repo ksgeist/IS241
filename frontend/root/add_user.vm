@@ -57,6 +57,18 @@
                         <span class="input-group-text">Password</span>
                         <input type="password" id="password" name="password" class="form-control name-fields">
                         <input type="button" id="auto-generate" name="" class="form-control" value="Generate Password">
+                        <script type="text/javascript" defer>
+                            document.getElementById("auto-generate").onclick = () => {
+                                var chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                                var passwordLength = 12;
+                                var password = "";
+                                for (var i = 0; i <= passwordLength; i++) {
+                                    var randomNumber = Math.floor(Math.random() * chars.length);
+                                    password += chars.substring(randomNumber, randomNumber +1);
+                                }
+                                document.getElementById("password").value = password;
+                            }
+                        </script>
                     </div>
                     <br>
                     <div class="input-group">
