@@ -21,21 +21,8 @@ public class Routing {
     public Routing() {
         port(8091);
         exception(Exception.class, (exception, request, response) -> BackendServer.serverLogger.error(exception.getMessage()));
-        BackendServer.serverLogger.info("Routing /login");
         staticFileLocation("/frontend");
-        before("/dashboard", EndpointFilters::verifyCredentials);
-        before("/api/logout", EndpointFilters::verifyCredentials);
-        before("/user/add", (req, resp) -> verifyCredentials(req, resp, PermissionType.ADD_USER));
-        before("/api/login/mfa", (req, res) -> {
-            TokenUtils tokenUtils = new TokenUtils(req.cookie("token"), Issuers.MFA_LOGIN.getIssuer());
-            if (tokenUtils.isInvalid()) {
-                //Invalid token, Remove it
-                res.cookie("/", "token", null, 0, true, true);
-                halt(401, new ModelUtil().addMFAError(false, "Invalid Token", false).build().toString());
-            }
-        });
-        before("/site/create", (req, res) -> verifyCredentials(req, res, PermissionType.ADD_SITE));
-        before("/record/add", (req, resp) -> verifyCredentials(req, resp, PermissionType.WRITE_PATIENT));
+        BackendServer.serverLogger.info("Setting up API Server routes...");
         after((req, resp) -> {
             //Refresh Token
             if(resp.status() == 200) {
@@ -51,53 +38,94 @@ public class Routing {
                 }
                 return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().build(), "/frontend/index.vm"));
             });
+            before("/dashboard", EndpointFilters::verifyCredentials);
             get("/dashboard", new DashboardPage());
-            path("/site", () -> {
-                get("/add", new SiteCreatePage());
-                post("/add", new NewSiteEndpoint());
-            });
-            path("/user", () -> {
-                get("/add", new UserCreatePage());
-                post("/add", new NewAccountEndpoint());
-            });
-            path("/patient", () -> {
-                get("/view/:id", new ViewPatientPage());
-                get("/print/:id", new PrintRecordPage());
-            });
             post("/print_record/print", new PrintInfoPage());
-            path("/record", () -> {
-                get("/add", new AddRecordPage());
-                post("/add", new AddRecordEndpoint());
-                patch("/edit", new UpdateRecordEndpoint());
-                get("/search", new SearchRecordPage());
-                post("/search", new SearchPatientsEndpoint());
-            });
-            path("/vaccine", () -> {
-                get("/add/:id", new NewDosePage());
-                post("/add/:id", new AddVaccineEndpoint());
-            });
-            path("/contact", () -> {
-                //Move to delete later
-                get("/remove/:id", new DeleteContactInformationEndpoint());
-                get("/add/:id", new AddContactPage());
-            });
-            path("/insurance", () -> {
-                get("/remove/:id", new DeleteInsuranceInformationEndpoint());
-            });
-        });
-        path("/api", () -> {
-            path("/login", () -> post("/mfa", new MfaEndpoint()));
-            post("/login", new LoginEndpoint());
-            get("/logout", new LogoutEndpoint());
-            BackendServer.serverLogger.info("Routing /account");
-            path("/account", () -> {
-                BackendServer.serverLogger.info("Routing /account/new");
-                post("/new", new NewAccountEndpoint());
-            });
-            post("/site/add", new NewSiteEndpoint());
-            get("/lookupAddress", new GeocodingEndpoint());
+            createAPIRoutes();
+            createContactRoutes();
+            createInsuranceRoutes();
+            createRecordRoutes();
+            createPatientRoutes();
+            createSiteRoutes();
+            createUserRoutes();
+            createVaccineRoutes();
         });
         BackendServer.serverLogger.info("Ready to Fire");
+    }
+
+    public void createAPIRoutes() {
+        path("/api", () -> get("/lookupAddress", new GeocodingEndpoint()));
+    }
+
+    public void createSiteRoutes() {
+        path("/site", () -> {
+            before("/add", (req, res) -> verifyCredentials(req, res, PermissionType.ADD_SITE));
+            get("/add", new SiteCreatePage());
+            post("/add", new NewSiteEndpoint());
+        });
+    }
+
+    public void createInsuranceRoutes() {
+        path("/insurance", () -> {
+            post("/add/:user_id", new AddInsuranceInformationEndpoint());
+            get("/add/:user_id", new AddInsuranceInformationPage());
+            delete("/remove/:id", new DeleteInsuranceInformationEndpoint());
+        });
+    }
+
+    public void createUserRoutes() {
+        path("/user", () -> {
+            before("/add", (req, resp) -> verifyCredentials(req, resp, PermissionType.ADD_USER));
+            get("/add", new UserCreatePage());
+            post("/add", new NewAccountEndpoint());
+            path("/login", () -> {
+                before("/mfa", (req, res) -> {
+                    TokenUtils tokenUtils = new TokenUtils(req.cookie("token"), Issuers.MFA_LOGIN.getIssuer());
+                    if (tokenUtils.isInvalid()) {
+                        //Invalid token, Remove it
+                        res.cookie("/", "token", null, 0, true, true);
+                        halt(401, new ModelUtil().addMFAError(false, "Invalid Token", false).build().toString());
+                    }
+                });
+                post("/mfa", new MfaEndpoint());
+            });
+            post("/login", new LoginEndpoint());
+            before("/logout", EndpointFilters::verifyCredentials);
+            get("/logout", new LogoutEndpoint());
+        });
+    }
+
+    public void createPatientRoutes() {
+        path("/patient", () -> {
+            get("/view/:id", new ViewPatientPage());
+            get("/print/:id", new PrintRecordPage());
+        });
+    }
+
+    public void createVaccineRoutes() {
+        path("/vaccine", () -> {
+           get("/add/:id", new NewDosePage());
+           post("/add/:id", new AddVaccineEndpoint());
+        });
+    }
+
+    public void createContactRoutes() {
+        path("/contact", () -> {
+            //Move to delete later
+            get("/remove/:id", new DeleteContactInformationEndpoint());
+            get("/add/:id", new AddContactPage());
+        });
+    }
+
+    public void createRecordRoutes() {
+        path("/record", () -> {
+            before("/add", (req, resp) -> verifyCredentials(req, resp, PermissionType.WRITE_PATIENT));
+            get("/add", new AddRecordPage());
+            post("/add", new AddRecordEndpoint());
+            patch("/edit", new UpdateRecordEndpoint());
+            get("/search", new SearchRecordPage());
+            post("/search", new SearchPatientsEndpoint());
+        });
     }
     public void fire() {
         ignite();
