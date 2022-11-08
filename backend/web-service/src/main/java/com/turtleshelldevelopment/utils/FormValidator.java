@@ -49,6 +49,23 @@ public class FormValidator {
         return true;
     }
 
+    public RequiredFormDataResponse checkRequired(String requiredField, Pattern validationPattern, String validationMessage) {
+        if(requiredField != null) {
+            if(requiredField.isEmpty()) return new RequiredFormDataResponse(false, "%s is a required field");
+            if(validationPattern != null) {
+                boolean validated = validationPattern.matcher(requiredField).find();
+                return new RequiredFormDataResponse(validated, validated ? "" : "Invalid %s: %s");
+            } else {
+                return new RequiredFormDataResponse(true, "");
+            }
+        }
+        return new RequiredFormDataResponse(false, "Invalid %s");
+    }
 
+
+
+}
+
+record RequiredFormDataResponse (boolean valid, String error) {
 
 }
