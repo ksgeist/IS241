@@ -45,7 +45,7 @@ public class LoginEndpoint implements Route {
             //Check if were in development and just accept it
             if(BackendServer.environment.equals(EnvironmentType.DEVEL)) {
                 JWTAuthentication.generateAuthToken(username, new Permissions(username).getPermissionsAsString(), response);
-                return ResponseUtils.createLoginSuccess(true, response).toString();
+                return ResponseUtils.createLoginSuccess(false, response).toString();
             }
             //Validate that the credentials are valid in our database
             if(validate(username, password)) {

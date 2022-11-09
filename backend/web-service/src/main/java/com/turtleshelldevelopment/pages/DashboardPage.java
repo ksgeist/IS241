@@ -24,6 +24,7 @@ public class DashboardPage implements Route {
             return new VelocityTemplateEngine().render(new ModelAndView(modelData, "/frontend/dashboard.vm"));
         } else {
             System.out.println("Token is invalid: " + tokenVerifier.getErrorReason());
+            response.cookie("/", "token", null, 0, true, true);
             response.redirect("/");
         }
         return "";

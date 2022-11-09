@@ -25,6 +25,8 @@ public class EndpointFilters {
                 halt(401, new VelocityTemplateEngine().render(new ModelAndView(error.build(), "/frontend/error.vm")));
             }
         } else {
+            System.out.println("Token is invalid with auth: " + tokenUtils.getErrorReason());
+            resp.cookie("/", "token", null, 0, true, true);
             resp.redirect("/");
             ModelUtil error = new ModelUtil()
                     .addError(401, tokenUtils.getErrorReason());

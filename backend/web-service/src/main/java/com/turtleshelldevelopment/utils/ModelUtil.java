@@ -53,12 +53,16 @@ public class ModelUtil {
 
     public ModelUtil addMFAError(boolean success, String message, boolean shouldRetry) {
         modelData.put("success", success);
-        modelData.put("messager", message);
+        modelData.put("message", message);
         modelData.put("retry", shouldRetry);
         return this;
     }
 
     public Map<String, Object> build() {
         return this.modelData.toMap();
+    }
+
+    public String toJSONString() {
+        return this.modelData.toString();
     }
 }

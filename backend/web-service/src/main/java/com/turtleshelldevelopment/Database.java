@@ -1,5 +1,6 @@
 package com.turtleshelldevelopment;
 
+import com.turtleshelldevelopment.utils.EnvironmentType;
 import com.turtleshelldevelopment.utils.TextQR;
 import com.turtleshelldevelopment.utils.db.Account;
 import com.turtleshelldevelopment.utils.mfa.MultiFactorResponse;
@@ -66,7 +67,7 @@ public class Database {
     }
 
     public Database() {
-        this(BackendServer.env.get("DB_URL"), BackendServer.env.get("DB_USERNAME", "db_team"), BackendServer.env.get("DB_PASSWORD", ""));
+        this(BackendServer.env.get("PROD_URL"), BackendServer.env.get("PROD_USERNAME", "db_team"), BackendServer.env.get("PROD_PASSWORD", ""));
     }
 
     public Connection getConnection() throws SQLException {

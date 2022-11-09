@@ -24,8 +24,8 @@ function handleLoginCall() {
       try {
         var json_data = JSON.parse(request.target.responseText);
         if (xhr.status == 200) {
-          console.log("Success: " + json_data["2faRequired"]);
-          if(!json_data["mfaRequired"]) {
+          console.log("Success: " + json_data["request_2fa"]);
+          if(!json_data["request_2fa"]) {
             window.location.replace(window.location.origin + "/dashboard");
             return;
           }

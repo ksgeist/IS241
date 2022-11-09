@@ -45,7 +45,7 @@ public class NewAccountEndpoint implements Route {
                 return ResponseUtils.createError("Username is too short.", 400, response);
             }
             //Check for usernames with non letter or number
-            if(FormValidator.isValidUsername(username)) {
+            if(!FormValidator.isValidUsername(username)) {
                 return ResponseUtils.createError("Username contains invalid characters.", 400, response);
             }
             PreparedStatement statement = BackendServer.database.getConnection().prepareStatement("CALL CHECK_USERNAME(?);");

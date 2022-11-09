@@ -57,17 +57,21 @@
                         <span class="input-group-text">Password</span>
                         <input type="password" id="password" name="password" class="form-control name-fields">
                         <input type="button" id="auto-generate" name="" class="form-control" value="Generate Password">
-                        <script type="text/javascript" defer>
-                            document.getElementById("auto-generate").onclick = () => {
-                                var chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                                var passwordLength = 12;
-                                var password = "";
-                                for (var i = 0; i <= passwordLength; i++) {
-                                    var randomNumber = Math.floor(Math.random() * chars.length);
-                                    password += chars.substring(randomNumber, randomNumber +1);
+                        <script type="text/javascript" defer="defer">
+                            document
+                                .getElementById("auto-generate")
+                                .onclick = () => {
+                                    var chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                                    var passwordLength = 12;
+                                    var password = "";
+                                    for (var i = 0; i <= passwordLength; i++) {
+                                        var randomNumber = Math.floor(Math.random() * chars.length);
+                                        password += chars.substring(randomNumber, randomNumber + 1);
+                                    }
+                                    document
+                                        .getElementById("password")
+                                        .value = password;
                                 }
-                                document.getElementById("password").value = password;
-                            }
                         </script>
                     </div>
                     <br>
@@ -103,35 +107,35 @@
                         </select>
                     </div>
                 </fieldset>
-            </form>
-            <br>
-            <div class="text-center">
-                <input type="submit" value="Submit" class="submit-button btn btn-dark btn-lg">
-                <div>
-                    <br>
-                    <br>
-                    <div
-                        class="modal fade"
-                        id="successModal"
-                        tabindex="-1"
-                        aria-labelledby="success-modal-label"
-                        aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="success-modal-label">Success!</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    ...
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                <br/>
+                <div class="text-center">
+                    <input type="submit" value="Submit" class="submit-button btn btn-dark btn-lg">
+                    <div>
+                        <br>
+                        <br>
+                        <div
+                            class="modal fade"
+                            id="successModal"
+                            tabindex="-1"
+                            aria-labelledby="success-modal-label"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="success-modal-label">Success!</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        ...
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </body>
-</html>
+    </html>

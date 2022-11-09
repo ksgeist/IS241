@@ -23,18 +23,24 @@ public class Routing {
         exception(Exception.class, (exception, request, response) -> BackendServer.serverLogger.error(exception.getMessage()));
         staticFileLocation("/frontend");
         BackendServer.serverLogger.info("Setting up API Server routes...");
-        after((req, resp) -> {
-            //Refresh Token
-            if(resp.status() == 200) {
-                DecodedJWT jwt = JWT.decode(req.cookie("token"));
-                JWTAuthentication.generateAuthToken(jwt.getSubject(), new Permissions(jwt.getSubject()).getPermissionsAsString(), resp);
-            }
-        });
+//        after((req, resp) -> {
+//            //Refresh Token
+//            if(resp.status() == 200) {
+//                DecodedJWT jwt = JWT.decode(req.cookie("token"));
+//                JWTAuthentication.generateAuthToken(jwt.getSubject(), new Permissions(jwt.getSubject()).getPermissionsAsString(), resp);
+//            }
+//        });
         path("/", () -> {
             get("/", (req, resp) -> {
                 if(req.cookie("token") != null) {
-                    resp.redirect("/dashboard");
-                    return "";
+                    DecodedJWT jwt = JWT.decode(req.cookie("token"));
+                    if(jwt.getIssuer().equals(Issuers.AUTHENTICATION.getIssuer())) {
+                        System.out.println("Token exists with auth, proceeding to dashboard");
+                        resp.redirect("/dashboard");
+                        return null;
+                    } else {
+                        return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().build(), "/frontend/index.vm"));
+                    }
                 }
                 return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().build(), "/frontend/index.vm"));
             });
@@ -84,7 +90,7 @@ public class Routing {
                     if (tokenUtils.isInvalid()) {
                         //Invalid token, Remove it
                         res.cookie("/", "token", null, 0, true, true);
-                        halt(401, new ModelUtil().addMFAError(false, "Invalid Token", false).build().toString());
+                        halt(401, new ModelUtil().addMFAError(false, "Invalid Token", false).toJSONString());
                     }
                 });
                 post("/mfa", new MfaEndpoint());

@@ -42,7 +42,7 @@ application {
 
 run {
     systemProperties System.properties
-    args("-eDEVEL")
+    args("-ePROD")
 }
 
 jar {
@@ -60,5 +60,4 @@ jar {
     }
 }
 test {
-    useJUnit()
 }
