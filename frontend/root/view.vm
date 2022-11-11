@@ -115,7 +115,6 @@
                                 name="ss4"
                                 class="form-control"
                                 maxlength="4"
-                                pattern = "^\d{4}$"
                                 value="${patient.SSNumber}" disabled>
                         </label>
 
