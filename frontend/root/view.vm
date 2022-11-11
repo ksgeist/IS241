@@ -62,6 +62,7 @@
                                 name="lname"
                                 class="form-control name-fields"
                                 value="${patient.LastName}" 
+                                maxlength = "45"
                                 #if(!$edit_patient)
                                     disabled
                                 #end
@@ -74,6 +75,7 @@
                                 name="fname"
                                 class="form-control name-fields"
                                 value="${patient.FirstName}"
+                                maxlength = "45"
                                 #if(!$edit_patient)
                                     disabled
                                 #end
@@ -86,6 +88,7 @@
                                 name="mname"
                                 class="form-control name-fields"
                                 value="${patient.MiddleName}"
+                                maxlength = "45"
                                 #if(!$edit_patient)
                                     disabled
                                 #end
@@ -112,6 +115,7 @@
                                 name="ss4"
                                 class="form-control"
                                 maxlength="4"
+                                pattern = "^\d{4}$"
                                 value="${patient.SSNumber}" disabled>
                         </label>
 

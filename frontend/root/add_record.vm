@@ -74,13 +74,13 @@
                     <input type="date" id="dob" name="dob" class="form-control">
                     <div>
                         <label for="lname">Last Name
-                            <input type="text" id="lname" name="lname" class="form-control name-fields">
+                            <input type="text" id="lname" name="lname" class="form-control name-fields" maxlength="45">
                         </label>
                         <label for="fname">First Name
-                            <input type="text" id="fname" name="fname" class="form-control name-fields">
+                            <input type="text" id="fname" name="fname" class="form-control name-fields" maxlength="45">
                         </label>
                         <label for="mname">Middle Name
-                            <input type="text" id="mname" name="mname" class="form-control name-fields">
+                            <input type="text" id="mname" name="mname" class="form-control name-fields" maxlength="45">
                         </label>
                     </div>
                     <div class="field-flex">
@@ -93,7 +93,7 @@
                             </select>
                         </label>
                         <label for="ss4">Last 4-digits SSN
-                            <input type="text" id="ss4" name="ss4" class="form-control" maxlength="4">
+                            <input type="text" id="ss4" name="ss4" class="form-control"  maxlength = "4" pattern="^\d{4}$" required>
                         </label>
 
                     </div>
@@ -104,13 +104,13 @@
                 <legend>CONTACT INFORMATION</legend>
                 <div>
                     <label for="address">Street Address</label>
-                    <input type="text" id="address" name="address" class="form-control">
+                    <input type="text" id="address" name="address" class="form-control" pattern="^\d+(\s{1}\w+)(\s{1}?\w+)+$" maxlength="95">
                     <div>
                         <label for="city">City
                             <input type="text" id="city" name="city" class="form-control address-fields">
                         </label>
                         <label for="zip">Zipcode
-                            <input type="text" id="zip" name="zip" class="form-control address-fields">
+                            <input type="text" id="zip" name="zip" class="form-control address-fields" maxlength = "9">
                         </label>
                     </div>
                     <div class="field-flex">
@@ -123,10 +123,10 @@
                             </select>
                         </label>
                         <label for="phone">Phone Number
-                            <input type="text" id="phone" name="phone" class="form-control">
+                            <input type="text" id="phone" name="phone" class="form-control" pattern="^\([0-9]{3}\) [0-9]{3} - [0-9]{4}$" maxlength ="15">
                         </label>
                         <label for="email">Email Address
-                            <input type="email" id="email" name="email" class="form-control">
+                            <input type="email" id="email" name="email" class="form-control" pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" maxlength = "255">
                         </label>
                         <br>
                     </div>
@@ -143,13 +143,14 @@
                             id="insProvider"
                             name="insProvider"
                             class="form-control"
-                            aria-describedby="insurance">
+                            aria-describedby="insurance"
+                            maxlength="45">
                     </div>
                     <br>
                     <div class="field-flex">
                         <div class="input-group">
                             <span class="input-group-text" id="insGroup">Group #</span>
-                            <input type="text" id="insGroup" name="insGroup" class="form-control" aria-describedby="insurance">
+                            <input type="text" id="insGroup" name="insGroup" class="form-control" aria-describedby="insurance" maxlength="45">
                         </div>
                         <div class="input-group">
                             <span class="input-group-text" id="insPolicy">Policy #</span>
@@ -158,7 +159,8 @@
                                 id="insPolicy"
                                 name="insPolicy"
                                 class="form-control"
-                                aria-describedby="insurance">
+                                aria-describedby="insurance"
+                                maxlength="45">
                         </div>
                     </div>
                 </div>
@@ -220,7 +222,7 @@
                     <div class="input-group">
                         <span class="input-group-text" id="lot-num-addon">Lot Number</span>
                         <input
-                            type="text"
+                            type="number"
                             id="lotNumber"
                             name="lotNumber"
                             class="form-control"
