@@ -124,9 +124,9 @@
                     	</div>
                     	<div class="field-flex">
                     		<label for="start_age">From:</label>
-								<input type="text" id="start_age" name="start_age" class="form-control address-fields">
+								<input type="text" id="start_age" name="start_age" class="form-control address-fields" pattern="^\d{1,2}">
                     		<label for="end_age">To:</label>
-								<input type="text" id="end_age" name="end_age" class="form-control address-fields">
+								<input type="text" id="end_age" name="end_age" class="form-control address-fields" pattern="^\d{1,2}">
 						</div>    			
                         <br>
                         <div class="input-group" role="group">

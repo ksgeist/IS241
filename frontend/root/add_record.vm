@@ -110,7 +110,7 @@
                             <input type="text" id="city" name="city" class="form-control address-fields">
                         </label>
                         <label for="zip">Zipcode
-                            <input type="text" id="zip" name="zip" class="form-control address-fields" maxlength = "9">
+                            <input type="text" id="zip" name="zip" class="form-control address-fields" maxlength = "5" pattern="^\d{5}$">
                         </label>
                     </div>
                     <div class="field-flex">
