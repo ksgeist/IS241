@@ -17,11 +17,11 @@ button {
 }
  */
 
- #modal-parent::before {
+ #help-modal-parent::before {
     box-sizing: content-box;
   }
   
-  .modal {
+  .help-modal {
     display: block;
     position: fixed;
     right: 40%;
@@ -39,7 +39,7 @@ button {
     overflow: visible;
   }
   
-  .modal-content {
+  .help-modal-content {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -71,7 +71,7 @@ button {
     color: darkgray;
   }
   
-  .show-modal {
+  .show-help-modal {
     opacity: 1;
     visibility: visible;
     transform: scale(1);
