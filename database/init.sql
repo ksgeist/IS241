@@ -89,12 +89,14 @@ CREATE TABLE IF NOT EXISTS `is241_mo_vat`.`User` (
   `username` VARCHAR(36) NOT NULL,
   `password_hash` BLOB(64) NOT NULL,
   `salt` VARBINARY(32) NOT NULL,
-  `2fa_secret` VARCHAR(64) NOT NULL,
+  `2fa_secret` VARCHAR(64) NULL,
+  `mfa_validated` TINYINT NULL,
   `first_name` VARCHAR(45) NOT NULL,
   `last_name` VARCHAR(45) NOT NULL,
   `site_id` INT NOT NULL,
   `user_type` INT NOT NULL,
   `email` VARCHAR(255) NOT NULL,
+  `onboarding` TINYINT NOT NULL DEFAULT 1,
   PRIMARY KEY (`user_id`),
   UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE,
   INDEX `site_user_idx` (`site_id` ASC) VISIBLE,
@@ -118,10 +120,10 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `is241_mo_vat`.`Vaccine` ;
 
 CREATE TABLE IF NOT EXISTS `is241_mo_vat`.`Vaccine` (
-  `lot_num` INT NOT NULL,
+  `lot_num` VARCHAR(45) NOT NULL,
   `site_id` INT NULL,
   `patient_id` INT NULL,
-  `administered_date` DATETIME NULL,
+  `administered_date` DATE NULL,
   `manufacturer` VARCHAR(45) NULL,
   `dose` INT NULL,
   `administrated_by` INT NULL,
@@ -185,6 +187,7 @@ CREATE TABLE IF NOT EXISTS `is241_mo_vat`.`PatientContact` (
   `address` VARCHAR(95) NULL,
   `phone_num` VARCHAR(15) NULL,
   `phone_type` VARCHAR(4) NULL,
+  `inactive` TINYINT NULL,
   PRIMARY KEY (`id`),
   INDEX `patient_contact_idx` (`patient_id` ASC) VISIBLE,
   CONSTRAINT `patient_contact`
@@ -206,6 +209,7 @@ CREATE TABLE IF NOT EXISTS `is241_mo_vat`.`Insurance` (
   `provider` VARCHAR(45) NOT NULL,
   `group_number` VARCHAR(45) NOT NULL,
   `policy_number` VARCHAR(45) NOT NULL,
+  `inactive` TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY (`insurance_id`),
   INDEX `insurance_patient_idx` (`patient_id` ASC) VISIBLE,
   CONSTRAINT `insurance_patient`
@@ -264,9 +268,9 @@ DROP procedure IF EXISTS `is241_mo_vat`.`ADD_USER`;
 
 DELIMITER $$
 USE `is241_mo_vat`$$
-CREATE PROCEDURE `ADD_USER` (username_param char(36), password_hash_param blob(64), salt_param varbinary(32), 2fa_secret_param char(64), firstname_param VARCHAR(45), lastname_param VARCHAR(45), site_id_param INT, user_type_param INT, email_param varchar(255))
+CREATE PROCEDURE `ADD_USER` (username_param char(36), password_hash_param blob(64), salt_param varbinary(32), firstname_param VARCHAR(45), lastname_param VARCHAR(45), site_id_param INT, user_type_param INT, email_param varchar(255))
 BEGIN
-	INSERT INTO User (username, password_hash, salt, 2fa_secret, first_name, last_name, site_id, user_type, email) VALUES (username_param, password_hash_param, salt_param, 2fa_secret_param, firstname_param, lastname_param, site_id_param, user_type_param, email_param);
+	INSERT INTO User (username, password_hash, salt, first_name, last_name, site_id, user_type, email, onboarding) VALUES (username_param, password_hash_param, salt_param, firstname_param, lastname_param, site_id_param, user_type_param, email_param, 1);
 END$$
 
 DELIMITER ;
@@ -626,7 +630,6 @@ INSERT INTO UserType(type_name) VALUES ("CDC Staff");
 CALL CREATE_PERMISSIONS(LAST_INSERT_ID(), FALSE,FALSE,FALSE,TRUE,FALSE,FALSE, FALSE, FALSE);
 INSERT INTO UserType(type_name) VALUES ("IIS Staff");
 CALL CREATE_PERMISSIONS(LAST_INSERT_ID(), TRUE,FALSE,FALSE,TRUE,FALSE,FALSE, FALSE, FALSE);
-INSERT INTO Site(location, phone_number, `name`) VALUES ("912 Wildwood, Jefferson City, MO 65102-0570", "5737516400", "IIS");
 
 INSERT INTO Counties(fip_id, county_name) VALUES 
 (29001, "Adair County"),
@@ -744,4 +747,7 @@ INSERT INTO Counties(fip_id, county_name) VALUES
 (29227, "Worth County"),
 (29229, "Wright County"),
 (29510, "St. Louis city");
+
+INSERT INTO Site(location, phone_number, `name`, zip_code, fips) VALUES ("912 Wildwood, Jefferson City, MO 65102-0570", "5737516400", "IIS", "65111", "29099");
+INSERT INTO Site(location, phone_number, `name`, zip_code, fips) VALUES ("4333 Butler Hill Rd", "3148942484", "CVS Pharmacy @ Butler Hill", "63128", "29189");
 -- end attached script 'script'
