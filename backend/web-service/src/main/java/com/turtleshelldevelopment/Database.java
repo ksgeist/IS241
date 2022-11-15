@@ -1,12 +1,8 @@
 package com.turtleshelldevelopment;
 
-import com.turtleshelldevelopment.utils.EnvironmentType;
-import com.turtleshelldevelopment.utils.TextQR;
 import com.turtleshelldevelopment.utils.db.Account;
-import com.turtleshelldevelopment.utils.mfa.MultiFactorResponse;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import dev.samstevens.totp.exceptions.QrGenerationException;
 import org.apache.commons.lang.RandomStringUtils;
 
 import java.sql.*;
@@ -17,10 +13,10 @@ public class Database {
 
 
     public Database(String url, String username, String password) {
-        config.setMaximumPoolSize(50);
-        config.setConnectionTimeout(300000);
-        config.setConnectionTimeout(120000);
-        config.setLeakDetectionThreshold(300000);
+        config.setMaximumPoolSize(25);
+        config.setConnectionTimeout(30000);
+        config.setLeakDetectionThreshold(15000);
+        config.setIdleTimeout(30000);
         config.setJdbcUrl("jdbc:mariadb://" + url + "/is241_mo_vat");
         config.setUsername(username);
         config.setPassword(password);
@@ -39,20 +35,17 @@ public class Database {
                 String adminPassword = RandomStringUtils.random(16, true, true);
                 String systemAdminUsername = "admin";
                 Account admin = new Account(systemAdminUsername, adminPassword);
-                CallableStatement statement = db.getConnection().prepareCall("CALL ADD_USER(?,?,?,?,?,?,?,?,?)");
+                CallableStatement statement = db.getConnection().prepareCall("CALL ADD_USER(?,?,?,?,?,?,?,?)");
                 statement.setString(1, systemAdminUsername);
                 statement.setBytes(2, admin.getPasswordHash());
                 statement.setBytes(3, admin.getPasswordSalt());
-                MultiFactorResponse tfa = admin.generateTOTPMultiFactor();
-                statement.setString(4, tfa.secret());
+                statement.setString(4, "admin");
                 statement.setString(5, "admin");
-                statement.setString(6, "admin");
+                statement.setInt(6, 1);
                 statement.setInt(7, 1);
-                statement.setInt(8, 1);
-                statement.setString(9, "unconfigured@example.com");
+                statement.setString(8, "unconfigured@example.com");
                 if(statement.executeUpdate() == 1) {
                     BackendServer.serverLogger.info("Two-Factor Authentication for Admin: ");
-                    BackendServer.serverLogger.info("\n" + TextQR.getQrStringFromURI(tfa.qr_data()));
                     BackendServer.serverLogger.info("Password: " + adminPassword);
                     BackendServer.serverLogger.info("Remember this Information, This information will not show on next startup!");
                 }
@@ -60,7 +53,7 @@ public class Database {
                 statement.close();
             }
             checkForUser.close();
-        } catch (SQLException | QrGenerationException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -70,8 +63,9 @@ public class Database {
         this(BackendServer.env.get("PROD_URL"), BackendServer.env.get("PROD_USERNAME", "db_team"), BackendServer.env.get("PROD_PASSWORD", ""));
     }
 
-    public Connection getConnection() throws SQLException {
-        return db.getConnection();
+    public HikariDataSource getDatabase() {
+        BackendServer.serverLogger.info("Hikari (Active: " + db.getHikariPoolMXBean().getActiveConnections() + ", Idle: " + db.getHikariPoolMXBean().getIdleConnections() + ", Total: " + db.getHikariPoolMXBean().getTotalConnections() + ")");
+        return db;
     }
 
 }
