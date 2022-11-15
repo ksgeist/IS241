@@ -123,7 +123,7 @@
                             </select>
                         </label>
                         <label for="phone">Phone Number
-                            <input type="text" id="phone" name="phone" class="form-control" pattern="^\([0-9]{3}\) [0-9]{3} - [0-9]{4}$" maxlength ="15">
+                            <input type="text" id="phone" name="phone" class="form-control" pattern="^\([0-9]{3}\) [0-9]{3} - [0-9]{4}$" maxlength ="16">
                         </label>
                         <label for="email">Email Address
                             <input type="email" id="email" name="email" class="form-control" pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" maxlength = "255">
