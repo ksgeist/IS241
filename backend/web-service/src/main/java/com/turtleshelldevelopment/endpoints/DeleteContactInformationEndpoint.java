@@ -6,6 +6,7 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -19,7 +20,8 @@ public class DeleteContactInformationEndpoint implements Route {
             return ResponseUtils.createError("Invalid id", 400, response);
         }
 
-        try (PreparedStatement deleteContact = BackendServer.database.getConnection().prepareStatement("DELETE FROM PatientContact WHERE id = ?")) {
+        try (Connection databaseConnection = BackendServer.database.getDatabase().getConnection();
+             PreparedStatement deleteContact = databaseConnection.prepareStatement("DELETE FROM PatientContact WHERE id = ?")) {
             deleteContact.setInt(1, Integer.parseInt(id));
             if(deleteContact.executeUpdate() == 1) {
                 response.redirect("/patient/view/" + id);

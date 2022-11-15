@@ -18,9 +18,7 @@ public class Patient {
     private final Date birthDate;
 
     public static Patient getPatient(String id) {
-        try {
-            Connection dbConn = BackendServer.database.getConnection();
-            CallableStatement getPatients = dbConn.prepareCall("CALL GET_PATIENT(?)");
+        try(Connection databaseConnection = BackendServer.database.getDatabase().getConnection(); CallableStatement getPatients = databaseConnection.prepareCall("CALL GET_PATIENT(?)");) {
             getPatients.setInt(1, Integer.parseInt(id));
             ResultSet res = getPatients.executeQuery();
             if(res.next()) {
@@ -29,12 +27,10 @@ public class Patient {
                         res.getInt("last_ss_num"), res.getDate("dob"),
                         res.getString("email"), res.getString("gender"));
                 getPatients.close();
-                dbConn.close();
 
                 return pat;
             } else {
                 getPatients.close();
-                dbConn.close();
                 System.out.println("Result set is empty");
                 return null;
             }
@@ -90,17 +86,13 @@ public class Patient {
 
     public List<Insurance> getInsurances() {
         List<Insurance> insurances = new ArrayList<>();
-        try {
-            Connection dbConn = BackendServer.database.getConnection();
-            CallableStatement getInsurances = dbConn.prepareCall("CALL GET_INSURANCES(?)");
+        try(Connection databaseConnection = BackendServer.database.getDatabase().getConnection(); CallableStatement getInsurances = databaseConnection.prepareCall("CALL GET_INSURANCES(?)")) {
             getInsurances.setInt(1, this.id);
             ResultSet res = getInsurances.executeQuery();
             while(res.next()) {
                 insurances.add(new Insurance(res.getString("provider"), res.getString("group_number"),
                         res.getString("policy_number")));
             }
-            getInsurances.close();
-            dbConn.close();
         } catch (SQLException e) {
             e.printStackTrace();
             return insurances;
@@ -110,9 +102,7 @@ public class Patient {
 
     public List<Contact> getContacts() {
         List<Contact> insurances = new ArrayList<>();
-        try {
-            Connection dbConn = BackendServer.database.getConnection();
-            CallableStatement getInsurances = dbConn.prepareCall("CALL GET_CONTACTS(?)");
+        try(Connection databaseConnection = BackendServer.database.getDatabase().getConnection(); CallableStatement getInsurances = databaseConnection.prepareCall("CALL GET_CONTACTS(?)");) {
             getInsurances.setInt(1, this.id);
             ResultSet res = getInsurances.executeQuery();
             while(res.next()) {
@@ -120,7 +110,6 @@ public class Patient {
                         res.getString("address"), res.getString("phone_num"), res.getString("phone_type")));
             }
             getInsurances.close();
-            dbConn.close();
         } catch (SQLException e) {
             e.printStackTrace();
             return insurances;
@@ -130,9 +119,7 @@ public class Patient {
 
     public List<Vaccine> getVaccines() {
         List<Vaccine> vaccines = new ArrayList<>();
-        try {
-            Connection dbConn = BackendServer.database.getConnection();
-            CallableStatement getInsurances = dbConn.prepareCall("CALL GET_VACCINE_INFO(?)");
+        try (Connection databaseConnection = BackendServer.database.getDatabase().getConnection(); CallableStatement getInsurances = databaseConnection.prepareCall("CALL GET_VACCINE_INFO(?)")) {
             getInsurances.setInt(1, this.id);
             ResultSet res = getInsurances.executeQuery();
             while(res.next()) {
@@ -162,7 +149,6 @@ public class Patient {
                 );
             }
             getInsurances.close();
-            dbConn.close();
         } catch (SQLException e) {
             e.printStackTrace();
             return vaccines;

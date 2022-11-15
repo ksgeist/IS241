@@ -4,6 +4,7 @@ import com.turtleshelldevelopment.BackendServer;
 import com.turtleshelldevelopment.JWTAuthentication;
 import com.turtleshelldevelopment.utils.EnvironmentType;
 import com.turtleshelldevelopment.utils.ResponseUtils;
+import com.turtleshelldevelopment.utils.db.Account;
 import com.turtleshelldevelopment.utils.permissions.Permissions;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -51,7 +53,18 @@ public class LoginEndpoint implements Route {
             if(validate(username, password)) {
                 JWTAuthentication.generateMultiFactorToken(username, response);
                 //Return successful login response
-                return ResponseUtils.createLoginSuccess(true, response).toString();
+                try {
+                    Account acc = Account.getAccountInfo(username);
+                    if(acc == null) {
+                        return ResponseUtils.createError("Invalid Username or Password", 401, response).toString();
+                    }
+                    if(!acc.accountRequiresMFA()) JWTAuthentication.generateAuthToken(username, new Permissions(username).getPermissionsAsString(), response);
+                    return ResponseUtils.createLoginSuccess(acc.accountRequiresMFA(), response).toString();
+                } catch (SQLException e) {
+                    //Log error
+                    BackendServer.serverLogger.warn("Error on handling login after validation: {}", e.getMessage());
+                    return ResponseUtils.createError("Server was unable to handle this request, Try again later.", 500, response).toString();
+                }
             } else {
                 //Invalid login, return error
                 return ResponseUtils.createError("Invalid Username or Password", 401, response);
@@ -92,7 +105,8 @@ public class LoginEndpoint implements Route {
     private boolean validate(String username, String password) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
         if(username == null || password == null || username.equals("") || password.equals("")) return false;
         //Check database if the user exists with Stored procedure
-        CallableStatement getUser = BackendServer.database.getConnection().prepareCall("CALL GET_USER(?)");
+        Connection databaseConnection = BackendServer.database.getDatabase().getConnection();
+        CallableStatement getUser = databaseConnection.prepareCall("CALL GET_USER(?)");
         getUser.setString(1, username);
         ResultSet rs;
         //Execute Stored procedure call
@@ -113,6 +127,7 @@ public class LoginEndpoint implements Route {
             }
             //Close callable statement
             getUser.close();
+            databaseConnection.close();
             //return if the difference is 0
             return diff == 0;
         } else {

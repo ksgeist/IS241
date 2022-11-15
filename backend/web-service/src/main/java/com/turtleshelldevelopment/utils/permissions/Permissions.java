@@ -5,6 +5,7 @@ import com.turtleshelldevelopment.utils.EnvironmentType;
 import org.json.JSONArray;
 
 import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -21,21 +22,22 @@ public class Permissions {
             permissions.put("ADD_SITE");
             permissions.put("REQUEST_RECORDS");
         }
-        CallableStatement getPermissions = BackendServer.database.getConnection().prepareCall("CALL GET_PERMISSIONS(?)");
-        getPermissions.setString(1, user);
-        ResultSet set = getPermissions.executeQuery();
-        if(set.next()) {
-            if(set.getBoolean("read_patient")) permissions.put("READ_PATIENT");
-            if(set.getBoolean("write_patient")) permissions.put("WRITE_PATIENT");
-            if(set.getBoolean("edit_patient")) permissions.put("EDIT_PATIENT");
-            if(set.getBoolean("reports")) permissions.put("REPORTS");
-            if(set.getBoolean("add_user")) permissions.put("ADD_USER");
-            if(set.getBoolean("edit_user")) permissions.put("EDIT_USER");
-            if(set.getBoolean("add_site")) permissions.put("ADD_SITE");
-            if(set.getBoolean("request_records")) permissions.put("REQUEST_RECORDS");
+        try (Connection databaseConnection = BackendServer.database.getDatabase().getConnection();
+             CallableStatement getPermissions = databaseConnection.prepareCall("CALL GET_PERMISSIONS(?)")) {
+            getPermissions.setString(1, user);
+            ResultSet set = getPermissions.executeQuery();
+            if (set.next()) {
+                if (set.getBoolean("read_patient")) permissions.put("READ_PATIENT");
+                if (set.getBoolean("write_patient")) permissions.put("WRITE_PATIENT");
+                if (set.getBoolean("edit_patient")) permissions.put("EDIT_PATIENT");
+                if (set.getBoolean("reports")) permissions.put("REPORTS");
+                if (set.getBoolean("add_user")) permissions.put("ADD_USER");
+                if (set.getBoolean("edit_user")) permissions.put("EDIT_USER");
+                if (set.getBoolean("add_site")) permissions.put("ADD_SITE");
+                if (set.getBoolean("request_records")) permissions.put("REQUEST_RECORDS");
+            }
+            set.close();
         }
-        set.close();
-        getPermissions.close();
     }
 
     public String[] getPermissionsAsString() {

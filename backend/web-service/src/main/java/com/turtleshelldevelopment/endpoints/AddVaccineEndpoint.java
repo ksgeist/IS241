@@ -10,6 +10,7 @@ import spark.Response;
 import spark.Route;
 
 import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -44,7 +45,9 @@ public class AddVaccineEndpoint implements Route {
             return ResponseUtils.createError("Invalid Vaccine Series", 400, response);
         }
 
-        try(CallableStatement addVaccine = BackendServer.database.getConnection().prepareCall("CALL ADD_VACCINE(?,?,?,?,?,?,?)")) {
+        try(Connection databaseConnection = BackendServer.database.getDatabase().getConnection();
+            CallableStatement addVaccine = databaseConnection.prepareCall("CALL ADD_VACCINE(?,?,?,?,?,?,?)")
+        ) {
             addVaccine.setInt(1, Integer.parseInt(lotNumber));
             addVaccine.setInt(2, tokenVerifier.getSiteId()); //Site Id
             addVaccine.setInt(3, Integer.parseInt(patientId));// patient Id

@@ -16,10 +16,7 @@ import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 import static dev.samstevens.totp.util.Utils.getDataUriForImage;
 
@@ -36,12 +33,12 @@ public class Account {
     private boolean needsMFA;
     private String mfaSecret;
 
-    public static Account getAccountInfo(String username) {
-        try(PreparedStatement accountCall = BackendServer.database.getConnection().prepareStatement("SELECT user_id, username, first_name, last_name, site_id, user_type, email FROM User WHERE username = ?;")) {
+    public static Account getAccountInfo(String username) throws SQLException {
+        try (Connection databaseConnection = BackendServer.database.getDatabase().getConnection(); PreparedStatement accountCall = databaseConnection.prepareStatement("SELECT user_id, username, first_name, last_name, site_id, user_type, email, onboarding, 2fa_secret FROM User WHERE username = ?;")) {
             accountCall.setString(1, username);
             ResultSet set = accountCall.executeQuery();
-            if(set.next()) {
-                return new Account(set.getInt("user_id"), set.getString("username"),
+            if (set.next()) {
+                Account acc = new Account(set.getInt("user_id"), set.getString("username"),
                         set.getString("first_name"), set.getString("last_name"),
                         set.getInt("site_id"), set.getInt("user_type"),
                         set.getString("email"), set.getBoolean("onboarding"),
@@ -50,6 +47,8 @@ public class Account {
                 set.close();
                 return acc;
             } else {
+                accountCall.close();
+                set.close();
                 return null;
             }
         } catch (SQLException e) {
@@ -93,13 +92,14 @@ public class Account {
 
     /**
      * Updates this Account instance with user information from the database
+     *
      * @return This Account Instance with Account Information
      */
     public Account getAccountInfo() {
-        try(CallableStatement accountCall = BackendServer.database.getConnection().prepareCall("CALL GET_USER(?)")) {
+        try (Connection databaseConnection = BackendServer.database.getDatabase().getConnection(); CallableStatement accountCall = databaseConnection.prepareCall("CALL GET_USER(?)")) {
             accountCall.setString(1, username);
             ResultSet set = accountCall.executeQuery();
-            if(set.next()) {
+            if (set.next()) {
                 setUserId(set.getInt("user_id"));
                 setFirstName(set.getString("first_name"));
                 setLastName(set.getString("last_name"));

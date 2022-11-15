@@ -10,9 +10,11 @@ import spark.Route;
 import spark.template.velocity.VelocityTemplateEngine;
 
 import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.*;
+import java.util.regex.Pattern;
 
 //*******************************************************************
 //*                                                                 *
@@ -67,6 +69,13 @@ public class AddRecordEndpoint implements Route {
             if(!FormValidator.checkValues()) {
                 return ResponseUtils.createError("Missing Values", 400, response);
             }
+            Pattern phoneNum = Pattern.compile("^\\([0-9]{3}\\) [0-9]{3} - [0-9]{4}$");
+            if(!phoneNum.matcher(contactPhone).matches()) {
+                return ResponseUtils.createError("Phone number not properly formatted", 400, response);
+            } else {
+                contactPhone = Pattern.compile("[0-9]+").matcher(contactPhone).group();
+                System.out.println("phone is: " + contactPhone);
+            }
             LocalDate dateFiled;
             if((dateFiled = FormValidator.parseDateFromForm(date)) == null) {
                 return ResponseUtils.createError("Invalid Date Filed", 400, response);
@@ -88,7 +97,9 @@ public class AddRecordEndpoint implements Route {
                 return ResponseUtils.createError("Invalid Site", 400, response);
             }
             //TODO check if there are any similar patients in the database and notify of such
-            try(CallableStatement patientCall = BackendServer.database.getConnection().prepareCall("CALL ADD_PATIENT_INFO(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
+            try(Connection databaseConnection = BackendServer.database.getDatabase().getConnection();
+                CallableStatement patientCall = databaseConnection.prepareCall("CALL ADD_PATIENT_INFO(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
+            ) {
                 patientCall.setString(1, patientFirstName);
                 patientCall.setString(2, patientMiddleName);
                 patientCall.setString(3, patientLastName);
@@ -113,10 +124,11 @@ public class AddRecordEndpoint implements Route {
                 if(patientCall.executeUpdate() == 1) {
                     System.out.println("Successfully wrote patient to database");
                 }
+                databaseConnection.close();
                 return ResponseUtils.createSuccess("Added new patient", response);
             } catch (SQLException e) {
                 e.printStackTrace();
-                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().addError(500, "Failed to connect with database").build(), "/frontend/error.vm"));
+                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil(request).addError(500, "Failed to connect with database").build(), "/frontend/error.vm"));
             }
         }
         return ResponseUtils.createError("Failed to create patient", 500, response);

@@ -2,6 +2,7 @@ package com.turtleshelldevelopment.utils;
 
 import com.turtleshelldevelopment.BackendServer;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,8 +10,9 @@ import java.sql.SQLException;
 public record UserType(String name, int id) {
 
     public static UserType isValidType(int id) {
-        try {
-            PreparedStatement preparedStatement = BackendServer.database.getConnection().prepareStatement("SELECT type_name, user_type_id FROM UserType WHERE user_type_id = ? LIMIT 1;");
+        try(Connection databaseConnection = BackendServer.database.getDatabase().getConnection();
+            PreparedStatement preparedStatement = databaseConnection.prepareStatement("SELECT type_name, user_type_id FROM UserType WHERE user_type_id = ? LIMIT 1;");
+        ) {
             preparedStatement.setInt(1, id);
             ResultSet rs;
             if((rs = preparedStatement.executeQuery()).next()) {

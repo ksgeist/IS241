@@ -18,6 +18,7 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,7 +28,7 @@ public class MfaEndpoint implements Route {
     public Object handle(Request request, Response response) throws JSONException {
         String jwtQuery = request.cookie("token");
         JSONObject bodyJSON = new JSONObject(request.body());
-        if(!bodyJSON.has("code")) {
+        if (!bodyJSON.has("code")) {
             JSONObject failure = new JSONObject();
             failure.put("success", false);
             failure.put("message", "Missing code in Body");
@@ -45,7 +46,7 @@ public class MfaEndpoint implements Route {
             DefaultCodeGenerator codeGenerator = new DefaultCodeGenerator(HashingAlgorithm.SHA1, 6);
             DefaultCodeVerifier verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
             verifier.setAllowedTimePeriodDiscrepancy(2);
-            if(BackendServer.environment.equals(EnvironmentType.DEVEL)) {
+            if (BackendServer.environment.equals(EnvironmentType.DEVEL)) {
                 response.removeCookie("/", "token");
                 Permissions perms = new Permissions(username);
 
@@ -54,37 +55,43 @@ public class MfaEndpoint implements Route {
             }
 
             //Get Secret from Database
-            PreparedStatement getSecret = BackendServer.database.getConnection().prepareStatement("SELECT 2fa_secret FROM User WHERE username = ?;");
-            getSecret.setString(1, username);
-            ResultSet set;
-            if(!(set = getSecret.executeQuery()).next()) {
-                JSONObject error = new JSONObject();
-                error.put("success", false);
-                error.put("message", "Nonexistent user");
-                error.put("retry", false);
-                response.status(401);
-                return error;
-            }
-            String secret = set.getString("2fa_secret");
+            try (
+                    Connection databaseConnection = BackendServer.database.getDatabase().getConnection();
+                    PreparedStatement getSecret = databaseConnection.prepareStatement("SELECT 2fa_secret FROM User WHERE username = ?;")
+            ) {
+                getSecret.setString(1, username);
+                ResultSet set;
+                if (!(set = getSecret.executeQuery()).next()) {
+                    JSONObject error = new JSONObject();
+                    error.put("success", false);
+                    error.put("message", "Nonexistent user");
+                    error.put("retry", false);
+                    response.status(401);
+                    return error;
+                }
+                String secret = set.getString("2fa_secret");
 
-            BackendServer.serverLogger.info("Secret is: " + secret);
-            BackendServer.serverLogger.info("Is Code (" + code + ") valid: " + verifier.isValidCode(secret, code));
+                BackendServer.serverLogger.info("Secret is: " + secret);
+                BackendServer.serverLogger.info("Is Code (" + code + ") valid: " + verifier.isValidCode(secret, code));
 
-            set.close();
-            getSecret.close();
-            if(verifier.isValidCode(secret, code)) {
-                success.put("success", true);
-                response.removeCookie("/", "token");
-                Permissions perms = new Permissions(username);
+                set.close();
+                getSecret.close();
+                if (verifier.isValidCode(secret, code)) {
+                    success.put("success", true);
+                    response.removeCookie("/", "token");
+                    Permissions perms = new Permissions(username);
 
-                JWTAuthentication.generateAuthToken(username, perms.getPermissionsAsString(), response);
+                    JWTAuthentication.generateAuthToken(username, perms.getPermissionsAsString(), response);
+                    return success;
+                } else {
+                    success.put("success", false);
+                    success.put("message", "Invalid Two Factor Code");
+                    success.put("retry", true);
+                }
                 return success;
-            } else {
-                success.put("success", false);
-                success.put("message", "Invalid Two Factor Code");
-                success.put("retry", true);
+            } catch (SQLException e) {
+                return ResponseUtils.createError("Information could not be loaded for the user", 500, response);
             }
-            return success;
         } catch (SignatureVerificationException e) {
             JSONObject error = new JSONObject();
             error.put("success", false);

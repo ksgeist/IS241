@@ -33,27 +33,29 @@ public class NewSiteEndpoint implements Route {
         }
 
         //Check for county and verify the fips code is the same
-        Connection conn = BackendServer.database.getConnection();
+        try(Connection conn = BackendServer.database.getDatabase().getConnection(); CallableStatement createSite = conn.prepareCall("CALL ADD_SITE(?,?,?,?,?)")) {
 
-        if(streetAddressPattern.matcher(location).find()) {
-            CallableStatement createSite = conn.prepareCall("CALL ADD_SITE(?,?,?,?,?)");
-            createSite.setString(1, location);
-            createSite.setString(2, FormValidator.parsePhoneNumberFromForm(phoneNum));
-            createSite.setString(3, fips);
-            createSite.setString(4, zip);
-            createSite.setString(5, name);
-            if(createSite.executeUpdate() == 1) {
-                JSONObject success = new JSONObject();
-                success.put("error", 200);
-                success.put("", "");
-                createSite.close();
-                return success;
-            } else {
-                BackendServer.serverLogger.error("Failed to update database for site");
-                createSite.close();
-                return ResponseUtils.createError("Could not add new site to the database!", 500, response);
+            if (streetAddressPattern.matcher(location).find()) {
+                createSite.setString(1, location);
+                createSite.setString(2, FormValidator.parsePhoneNumberFromForm(phoneNum));
+                createSite.setString(3, fips);
+                createSite.setString(4, zip);
+                createSite.setString(5, name);
+                if (createSite.executeUpdate() == 1) {
+                    JSONObject success = new JSONObject();
+                    success.put("error", 200);
+                    success.put("", "");
+                    createSite.close();
+                    return success;
+                } else {
+                    BackendServer.serverLogger.error("Failed to update database for site");
+                    createSite.close();
+                    return ResponseUtils.createError("Could not add new site to the database!", 500, response);
+                }
             }
+            return ResponseUtils.createError("No Street address give", 400, response);
+        } catch (SQLException e) {
+            return ResponseUtils.createError("Failed to create new site", 500, response);
         }
-        return "???";
     }
 }

@@ -20,7 +20,7 @@ import java.util.Map;
 public class SearchPatientsEndpoint implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-        Map<String, Object> modelData = new ModelUtil().build();
+        Map<String, Object> modelData = new ModelUtil(request).build();
         if(request.queryParams("ss4") == null || request.queryParams("lname") == null || request.queryParams("dob") == null) {
             return new VelocityTemplateEngine().render(new ModelAndView(modelData, "/frontend/search.vm"));
         }
@@ -29,7 +29,8 @@ public class SearchPatientsEndpoint implements Route {
         }
         LocalDate dateOfBirth = null;
         if(!request.queryParams("dob").isEmpty() && (dateOfBirth = FormValidator.parseDateFromForm(request.queryParams("dob"))) == null) return ResponseUtils.createError("Invalid Date Format.", 400, response);
-        try(PreparedStatement patientSearch = BackendServer.database.getConnection().prepareCall("CALL SEARCH_PATIENTS(?, ?, ?)")) {
+        try(Connection databaseConnection = BackendServer.database.getDatabase().getConnection();
+            PreparedStatement patientSearch = databaseConnection.prepareCall("CALL SEARCH_PATIENTS(?, ?, ?)")) {
             System.out.println("applying params");
             if(!request.queryParams("ss4").isEmpty()) patientSearch.setString(1, request.queryParams("ss4"));
             else patientSearch.setNull(1, Types.VARCHAR);
