@@ -24,16 +24,27 @@ function handleLoginCall() {
       try {
         var json_data = JSON.parse(request.target.responseText);
         if (xhr.status == 200) {
-          console.log("Success: " + json_data["request_2fa"]);
-          if(!json_data["request_2fa"]) {
+          if (!json_data["request_2fa"]) {
             window.location.replace(window.location.origin + "/dashboard");
             return;
           }
           //let code = prompt("Please input your Multi-factor Code from your phone.", "");
           document.getElementById("pop-up").style.display = "block";
           document.getElementById("pop-up-content").style.display = "block";
+          $('<div class="modal-backdrop mfa-backdrop"></div>').appendTo(
+            document.body
+          );
+          setTimeout(() => {
+            document.getElementById("pop-up-content").classList.add("remove-show");
+          }, 550);
         } else {
+          document
+            .getElementById("login-form-wrap")
+            .classList.add("shake");
           document.getElementById("messages").innerText = json_data["message"];
+          setTimeout(() => {
+            document.getElementById("login-form-wrap").classList.remove("shake");
+          }, 500);
         }
         validateLogin();
         document.getElementsByClassName("lds-ring")[0].style.display = "none";
@@ -64,6 +75,9 @@ document.getElementById("twofasubmit").onclick = (event) => {
   var data = {
     code: code,
   };
+  for (var elem = 0; elem < tfaElements.length; elem++) {
+    tfaElements[elem].value = "";
+  }
   mfa.onreadystatechange = (request, event) => {
     if (request.target.readyState == 4) {
       try {
@@ -78,14 +92,30 @@ document.getElementById("twofasubmit").onclick = (event) => {
             document.getElementById("pop-up-content").style.display = "none";
             document.getElementById("messages").innerText =
               json_data["message"];
+            $(".modal-backdrop").remove();
+            document.getElementById("pop-up-content").classList.remove("remove-show");
           } else if (json_data["retry"]) {
+            document
+              .getElementById("pop-up-content")
+              .classList.add("shake");
             document.getElementById("twofa-messages").innerText =
               json_data["message"];
+            setTimeout(() => {
+              document
+                .getElementById("pop-up-content")
+                .classList.remove("shake");
+            }, 500);
           }
         }
       } catch (SyntaxError) {
+        document
+          .getElementById("pop-up-content")
+          .classList.add("shake");
         document.getElementById("twofa-messages").innerText =
           "Server responded with an invalid response. Please try again later.";
+        setTimeout(() => {
+          document.getElementById("pop-up-content").classList.remove("shake");
+        }, 500);
       }
     }
   };
