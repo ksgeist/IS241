@@ -32,6 +32,9 @@ public class Account {
     private String firstName;
     private String lastName;
     private String email;
+    private boolean firstLogin;
+    private boolean needsMFA;
+    private String mfaSecret;
 
     public static Account getAccountInfo(String username) {
         try(PreparedStatement accountCall = BackendServer.database.getConnection().prepareStatement("SELECT user_id, username, first_name, last_name, site_id, user_type, email FROM User WHERE username = ?;")) {
@@ -41,7 +44,11 @@ public class Account {
                 return new Account(set.getInt("user_id"), set.getString("username"),
                         set.getString("first_name"), set.getString("last_name"),
                         set.getInt("site_id"), set.getInt("user_type"),
-                        set.getString("email"));
+                        set.getString("email"), set.getBoolean("onboarding"),
+                        set.getString("2fa_secret"));
+                accountCall.close();
+                set.close();
+                return acc;
             } else {
                 return null;
             }
@@ -58,6 +65,10 @@ public class Account {
         this.siteId = siteId;
         this.userType = userType;
         this.email = email;
+        this.firstLogin = onboarding;
+        //TODO Handle if mfa is not validated yet
+        this.needsMFA = !(onboarding || (mfaSecret != null && mfaSecret.isEmpty()) || mfaSecret == null);
+        this.mfaSecret = mfaSecret;
     }
 
     public Account(String username, String password) {
@@ -110,8 +121,15 @@ public class Account {
         return this.passwordHash;
     }
 
-    private static byte[] getSalt() throws NoSuchAlgorithmException
-    {
+    public boolean isOnboarding() {
+        return this.firstLogin;
+    }
+
+    public boolean accountRequiresMFA() {
+        return this.needsMFA;
+    }
+
+    private static byte[] getSalt() throws NoSuchAlgorithmException {
         SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
         byte[] salt = new byte[16];
         sr.nextBytes(salt);
@@ -183,6 +201,10 @@ public class Account {
 
     private void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getMFASecret() {
+        return mfaSecret;
     }
 
 }
