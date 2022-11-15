@@ -122,10 +122,10 @@ DROP TABLE IF EXISTS `is241_mo_vat`.`Vaccine` ;
 CREATE TABLE IF NOT EXISTS `is241_mo_vat`.`Vaccine` (
   `lot_num` VARCHAR(45) NOT NULL,
   `site_id` INT NULL,
-  `patient_id` INT NULL,
+  `patient_id` INT NOT NULL,
   `administered_date` DATE NULL,
   `manufacturer` VARCHAR(45) NULL,
-  `dose` INT NULL,
+  `dose` VARCHAR(16) NULL,
   `administrated_by` INT NULL,
   PRIMARY KEY (`lot_num`),
   UNIQUE INDEX `LOT_NUM_UNIQUE` (`lot_num` ASC) VISIBLE,

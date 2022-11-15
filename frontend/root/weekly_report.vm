@@ -140,7 +140,7 @@
 				<br>
 				<div class="text-center">
 					<input
-						type="button"
+						type="submit"
 						value="Download CSV"
 						class="submit-button btn btn-dark btn-lg">
 <!-- 						onclick="window.print();"> -->

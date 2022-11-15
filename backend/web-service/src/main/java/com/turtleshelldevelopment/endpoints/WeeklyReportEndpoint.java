@@ -33,20 +33,17 @@ public class WeeklyReportEndpoint implements Route {
         if(ld.isAfter(LocalDate.now())) {
             return ResponseUtils.createError("Can't generate report of date in the future", 400, response);
         }
-        if(ld.isBefore(LocalDate.now().minusWeeks(1))) {
-            return ResponseUtils.createError("Can't generate report of date older than one week", 400, response);
-        }
 
         try(Connection databaseConnection = BackendServer.database.getDatabase().getConnection();
             PreparedStatement statement = databaseConnection.prepareStatement("SELECT vax.lot_num, vax.administered_date, vax.manufacturer, vax.dose, site.location, site.phone_number, site.name, site.zip_code, patient.dob, patient.gender, user.first_name, user.last_name FROM is241_mo_vat.Vaccine vax, is241_mo_vat.Site site, is241_mo_vat.PatientInformation patient, is241_mo_vat.User user WHERE site.site_id = vax.site_id AND patient.patient_id = vax.patient_id AND user.user_id = vax.administrated_by AND vax.administered_date >= ? AND vax.administered_date <= ? AND vax.dose = ? AND patient.gender = ? AND patient.dob >= ? AND patient.dob <= ? AND site.fips = ?;");
         ) {
             statement.setDate(1, Date.valueOf(ld));
             statement.setDate(2, Date.valueOf(ld.plusWeeks(1)));
-            statement.setString(3, dose != null && !dose.equals("All") ? dose : "%");
-            statement.setString(4, sex != null  && !sex.equals("All") ? sex : "%");
-            statement.setDate(5, endAge != null ? Date.valueOf(LocalDate.now().minusYears(Long.parseLong(endAge))) : Date.valueOf(LocalDate.now().minusYears(50)));
-            statement.setDate(6, startAge != null ? Date.valueOf(LocalDate.now().minusYears(Long.parseLong(startAge))) : Date.valueOf(LocalDate.now()));
-            statement.setString(7, fips != null ? fips : "%");
+            statement.setString(3, dose != null && !dose.equals("All") && !dose.isEmpty() ? dose : "%");
+            statement.setString(4, sex != null  && !sex.equals("All") && !sex.isEmpty() ? sex : "%");
+            statement.setDate(5, endAge != null && !endAge.isEmpty() ? Date.valueOf(LocalDate.now().minusYears(Long.parseLong(endAge))) : Date.valueOf(LocalDate.now().minusYears(50)));
+            statement.setDate(6, startAge != null && !startAge.isEmpty() ? Date.valueOf(LocalDate.now().minusYears(Long.parseLong(startAge))) : Date.valueOf(LocalDate.now()));
+            statement.setString(7, fips != null && !fips.isEmpty() ? fips : "%");
             ResultSet set = statement.executeQuery();
             StringBuilder output = new StringBuilder();
             output.append("Lot Number,Administered Date,Manufacturer,Dose,Location,Location Phone Number,Location Name,Location Zip Code,Patient Date of Birth,Patient Gender,Administered By\n");
