@@ -45,9 +45,8 @@ public class ResponseUtils {
         return success;
     }
 
-    public static JSONObject createCreateUserSuccessResponse(String qrCode, Response response) {
+    public static JSONObject createCreateUserSuccessResponse(Response response) {
         JSONObject json = new JSONObject();
-        json.put("2fa", qrCode);
         response.status(200);
         response.header("Content-Type", "application/json");
         return json;
@@ -56,6 +55,15 @@ public class ResponseUtils {
     public static JSONObject createMFASuccess(Response response) {
         JSONObject json = new JSONObject();
         json.put("success", true);
+        response.status(200);
+        response.header("Content-Type", "application/json");
+        return json;
+    }
+
+    public static JSONObject createMFACreationSuccess(String qrCode, String mfaCode, Response response) {
+        JSONObject json = new JSONObject();
+        json.put("mfaQR", qrCode);
+        json.put("mfaCode", mfaCode);
         response.status(200);
         response.header("Content-Type", "application/json");
         return json;
