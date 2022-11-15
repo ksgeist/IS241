@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
 #twofasubmit {
     background-color: white;
     font-family: "Arial", Impact, Charcoal, sans-serif;
@@ -54,7 +56,6 @@
   
   #twofa-information {
     text-align: center;
-    padding-bottom: 30px;
   }
   
   #twofa-icon {
@@ -65,7 +66,7 @@
   
   #popup-text {
     font-size: 14px;
-    font-family: "Roboto", serif;
+    font-family: 'Open Sans', sans-serif;
     text-align: center;
     margin: auto 10px;
   }
@@ -76,4 +77,8 @@
   }
   #twofa-inputs .twofainput:nth-child(3) {
     margin-right: 40px;
+  }
+  div.mfa-backdrop {
+    --bs-backdrop-zindex: 0;
+    opacity: 0.65;
   }
