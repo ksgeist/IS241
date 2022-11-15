@@ -52,3 +52,7 @@
   .row {
   	margin: 0px;
   }
+
+  div:focus {
+    color: black;
+  }
