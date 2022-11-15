@@ -8,7 +8,7 @@
 */
 
 $(document).ready(function(){
- $('#datepicker').datepicker({
+ $('#daily-report-date').datepicker({
   "format": "mm/dd/yyyy",
   "startDate": "-8d",
   "endDate": "-1d",
@@ -17,4 +17,4 @@ $(document).ready(function(){
 });
 
 // If you need to extract the date using date picker
-myDate = $('#datepicker').datepicker('getDate');
+myDate = $('#daily-report-date').datepicker('getDate');
