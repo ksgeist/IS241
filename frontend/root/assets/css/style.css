@@ -9,6 +9,23 @@
 	Supporting files: scripts.js, index.html
 	
  */
+ .transition-fade {
+	transition: 0.4s;
+	opacity: 1;
+  }
+  
+  html.is-animating .transition-fade {
+	opacity: 0;
+  }
+  
+  #logged-in-user {
+	float: right;
+	display: block;
+	margin: 0;
+	padding-right: 3em;
+	font-weight: bold;
+  }
+
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 @import url("../css/global/colors.css");
 @import url("../css/global/header_modal.css");
