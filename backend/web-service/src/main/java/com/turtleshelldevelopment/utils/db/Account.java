@@ -51,12 +51,10 @@ public class Account {
                 set.close();
                 return null;
             }
-        } catch (SQLException e) {
-            return null;
         }
     }
 
-    private Account(int userID, String username, String firstName, String lastName, int siteId, int userType, String email) {
+    private Account(int userID, String username, String firstName, String lastName, int siteId, int userType, String email, boolean onboarding, String mfaSecret) {
         this.userId = userID;
         this.username = username;
         this.firstName = firstName;
