@@ -8,7 +8,6 @@ import com.turtleshelldevelopment.utils.Issuers;
 import com.turtleshelldevelopment.utils.ModelUtil;
 import com.turtleshelldevelopment.utils.TokenUtils;
 import com.turtleshelldevelopment.utils.permissions.PermissionType;
-import com.turtleshelldevelopment.utils.permissions.Permissions;
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 
@@ -23,13 +22,6 @@ public class Routing {
         exception(Exception.class, (exception, request, response) -> BackendServer.serverLogger.error(exception.getMessage()));
         staticFileLocation("/frontend");
         BackendServer.serverLogger.info("Setting up API Server routes...");
-//        after((req, resp) -> {
-//            //Refresh Token
-//            if(resp.status() == 200) {
-//                DecodedJWT jwt = JWT.decode(req.cookie("token"));
-//                JWTAuthentication.generateAuthToken(jwt.getSubject(), new Permissions(jwt.getSubject()).getPermissionsAsString(), resp);
-//            }
-//        });
         path("/", () -> {
             get("/", (req, resp) -> {
                 if(req.cookie("token") != null) {
@@ -46,6 +38,7 @@ public class Routing {
             });
             before("/dashboard", EndpointFilters::verifyCredentials);
             get("/dashboard", new DashboardPage());
+            before("/print_record/print", EndpointFilters::verifyCredentials);
             post("/print_record/print", new PrintInfoPage());
             createAPIRoutes();
             createContactRoutes();
@@ -55,11 +48,13 @@ public class Routing {
             createSiteRoutes();
             createUserRoutes();
             createVaccineRoutes();
+            createReportRoutes();
         });
         BackendServer.serverLogger.info("Ready to Fire");
     }
 
     public void createAPIRoutes() {
+        before("/api/*", EndpointFilters::verifyCredentials);
         path("/api", () -> get("/lookupAddress", new GeocodingEndpoint()));
     }
 
@@ -72,6 +67,7 @@ public class Routing {
     }
 
     public void createInsuranceRoutes() {
+        before("/insurance/*", EndpointFilters::verifyCredentials);
         path("/insurance", () -> {
             post("/add/:user_id", new AddInsuranceInformationEndpoint());
             get("/add/:user_id", new AddInsuranceInformationPage());
@@ -95,6 +91,11 @@ public class Routing {
                 });
                 post("/mfa", new MfaEndpoint());
             });
+            path("/mfa", () -> {
+                post("/generate", new GenerateMFAEndpoint());
+                post("/validate", new ValidateGeneratedMFAEndpoint());
+            });
+            get("/refresh", new RefreshTokenEndpoint());
             post("/login", new LoginEndpoint());
             before("/logout", EndpointFilters::verifyCredentials);
             get("/logout", new LogoutEndpoint());
@@ -102,6 +103,7 @@ public class Routing {
     }
 
     public void createPatientRoutes() {
+        before("/patient", (req, resp) -> EndpointFilters.verifyCredentials(req, resp, PermissionType.READ_PATIENT));
         path("/patient", () -> {
             get("/view/:id", new ViewPatientPage());
             get("/print/:id", new PrintRecordPage());
@@ -128,9 +130,20 @@ public class Routing {
             before("/add", (req, resp) -> verifyCredentials(req, resp, PermissionType.WRITE_PATIENT));
             get("/add", new AddRecordPage());
             post("/add", new AddRecordEndpoint());
+            before("/edit", (req, resp) -> EndpointFilters.verifyCredentials(req, resp, PermissionType.EDIT_PATIENT));
             patch("/edit", new UpdateRecordEndpoint());
+            before("/search", (req, resp) -> EndpointFilters.verifyCredentials(req, resp, PermissionType.READ_PATIENT));
             get("/search", new SearchRecordPage());
             post("/search", new SearchPatientsEndpoint());
+        });
+    }
+
+    public void createReportRoutes() {
+        path("/report", () -> {
+            get("/daily", new DailyReportPage());
+            post("/daily/generate", new DailyReportEndpoint());
+            get("/weekly", new WeeklyReportPage());
+            post("/weekly/generate", new WeeklyReportEndpoint());
         });
     }
     public void fire() {
