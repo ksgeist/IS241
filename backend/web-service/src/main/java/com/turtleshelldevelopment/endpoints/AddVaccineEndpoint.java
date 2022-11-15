@@ -53,7 +53,7 @@ public class AddVaccineEndpoint implements Route {
             addVaccine.setInt(3, Integer.parseInt(patientId));// patient Id
             addVaccine.setDate(4, Date.valueOf(LocalDate.now()));// administered date
             addVaccine.setString(5, manufacturer);// manufacturer
-            addVaccine.setInt(6, Constants.VACCINE_SERIES.get(dose));// dose
+            addVaccine.setString(6, dose);// dose
             addVaccine.setInt(7, tokenVerifier.getUserId());// administrated by
             if(addVaccine.executeUpdate() == 1) {
                 response.redirect("/patient/view/" + patientId);

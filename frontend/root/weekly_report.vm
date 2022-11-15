@@ -59,9 +59,9 @@
         <!-- ======== PATIENT QUERY FORM ========================= -->
         <!-- Written by KSG -->
 
-        <form>
+        <form method="POST" action="/report/weekly/generate">
             <fieldset class="form-control">
-                <legend>DAILY REPORT</legend>
+                <legend>WEEKLY REPORT</legend>
                 	<div>
                    		<label for="date">Choose week of report:</label>
  							<input 
@@ -149,20 +149,5 @@
 					<br>
 				</form>
 				<br>
-                        <!-- ============================================================================ -->
-                        <!-- ======== FOR ALL PAGES ========================= -->
-
-                        <!-- ======== HELP POPUP BUTTON ========================= -->
-                        <!-- Written by JM -->
-                        <div>
-                            <div class="modal">
-                                <div class="modal-content">
-                                    <span class="close-button">&times;</span>
-                                    <legend>Please contact the Missouri IIS for assistance!</legend>
-                                    <p>Phone: XXX-XXX-XXXX</p>
-                                    <p>Email: helpme@missouri.gov</p>
-                                </div>
-                            </div>
-                        </div>
 
             </body>
