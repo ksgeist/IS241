@@ -12,7 +12,7 @@ public class PrintRecordPage implements Route {
     @Override
     public Object handle(Request request, Response response) {
         String id = request.params("id");
-        ModelUtil model = new ModelUtil().add("patient", Patient.getPatient(id));
+        ModelUtil model = new ModelUtil(request).add("patient", Patient.getPatient(id));
 
         return new VelocityTemplateEngine().render(new ModelAndView(model.build(), "/frontend/print_record.vm"));
     }

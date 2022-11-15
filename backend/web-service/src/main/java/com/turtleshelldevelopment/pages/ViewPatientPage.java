@@ -18,7 +18,7 @@ public class ViewPatientPage implements Route {
     public Object handle(Request request, Response response) throws Exception {
         TokenUtils tokenVerifier = new TokenUtils(request.cookie("token"), Issuers.AUTHENTICATION.getIssuer());
         if(!tokenVerifier.isInvalid()) {
-            Map<String, Object> modelData = new ModelUtil().addPermissions(tokenVerifier.getPermissions()).build();
+            Map<String, Object> modelData = new ModelUtil(request).addPermissions(tokenVerifier.getPermissions()).build();
             String id = request.params("id");
             modelData.put("patient", Patient.getPatient(id));
             return new VelocityTemplateEngine().render(new ModelAndView(modelData, "/frontend/view.vm"));

@@ -13,7 +13,7 @@ import java.util.Map;
 public class NewDosePage implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-        Map<String, Object> modelMap = new ModelUtil().build();
+        Map<String, Object> modelMap = new ModelUtil(request).build();
         String id = request.params("id");
 
         modelMap.put("patient", Patient.getPatient(id));

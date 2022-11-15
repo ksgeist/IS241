@@ -20,7 +20,7 @@ public class EndpointFilters {
         if(!tokenUtils.isInvalid()) {
             if(requiredEntitlement == null) return;
             if(!tokenUtils.getPermissions().get(requiredEntitlement)) {
-                ModelUtil error = new ModelUtil()
+                ModelUtil error = new ModelUtil(req)
                         .addError(401, "You do not have permission to view this page");
                 halt(401, new VelocityTemplateEngine().render(new ModelAndView(error.build(), "/frontend/error.vm")));
             }
@@ -28,7 +28,7 @@ public class EndpointFilters {
             System.out.println("Token is invalid with auth: " + tokenUtils.getErrorReason());
             resp.cookie("/", "token", null, 0, true, true);
             resp.redirect("/");
-            ModelUtil error = new ModelUtil()
+            ModelUtil error = new ModelUtil(req)
                     .addError(401, tokenUtils.getErrorReason());
             halt(401, new VelocityTemplateEngine().render(new ModelAndView(error.build(), "/frontend/error.vm")));
         }

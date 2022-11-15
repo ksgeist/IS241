@@ -10,6 +10,6 @@ import spark.template.velocity.VelocityTemplateEngine;
 public class AddRecordPage implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-        return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().build(), "/frontend/add_record.vm"));
+        return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil(request).build(), "/frontend/add_record.vm"));
     }
 }

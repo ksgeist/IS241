@@ -39,10 +39,10 @@ public class Routing {
                         resp.redirect("/dashboard");
                         return null;
                     } else {
-                        return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().build(), "/frontend/index.vm"));
+                        return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil(req).build(), "/frontend/index.vm"));
                     }
                 }
-                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil().build(), "/frontend/index.vm"));
+                return new VelocityTemplateEngine().render(new ModelAndView(new ModelUtil(req).build(), "/frontend/index.vm"));
             });
             before("/dashboard", EndpointFilters::verifyCredentials);
             get("/dashboard", new DashboardPage());
@@ -90,7 +90,7 @@ public class Routing {
                     if (tokenUtils.isInvalid()) {
                         //Invalid token, Remove it
                         res.cookie("/", "token", null, 0, true, true);
-                        halt(401, new ModelUtil().addMFAError(false, "Invalid Token", false).toJSONString());
+                        halt(401, new ModelUtil(req).addMFAError(false, "Invalid Token", false).toJSONString());
                     }
                 });
                 post("/mfa", new MfaEndpoint());

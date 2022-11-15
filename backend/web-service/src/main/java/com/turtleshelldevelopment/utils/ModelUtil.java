@@ -1,9 +1,15 @@
 package com.turtleshelldevelopment.utils;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.turtleshelldevelopment.BackendServer;
+import com.turtleshelldevelopment.JWTAuthentication;
 import com.turtleshelldevelopment.utils.db.Counties;
 import com.turtleshelldevelopment.utils.permissions.PermissionType;
 import org.json.JSONObject;
+import spark.ModelAndView;
+import spark.Request;
+import spark.template.velocity.VelocityTemplateEngine;
 import spark.utils.IOUtils;
 
 import java.io.IOException;
@@ -13,20 +19,21 @@ import java.util.Objects;
 
 public class ModelUtil {
 
-    private static final String headerFile;
-
-    static {
-        try {
-            headerFile = IOUtils.toString(Objects.requireNonNull(BackendServer.class.getResourceAsStream("/frontend/header.html")));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private final JSONObject modelData = new JSONObject();
 
-    public ModelUtil() {
-        modelData.put("header", headerFile);
+    public ModelUtil(Request request) {
+        JSONObject headerInfo = new JSONObject();
+        if(request.cookie("token") != null) {
+            TokenUtils token = new TokenUtils(request.cookie("token"), Issuers.AUTHENTICATION.getIssuer());
+            if(!token.isInvalid()) {
+                headerInfo.put("logged_in", true);
+                headerInfo.put("user", token.getDecodedJWT().getSubject());
+            } else {
+                headerInfo.put("logged_in", false);
+            }
+        }
+        modelData.put("header", new VelocityTemplateEngine().render(new ModelAndView(headerInfo.toMap(), "frontend/header.vm")));
     }
 
     public ModelUtil addPermissions(HashMap<PermissionType, Boolean> perms) {

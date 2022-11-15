@@ -12,7 +12,7 @@ import java.util.Map;
 public class SearchRecordPage implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-        Map<String, Object> modelData = new ModelUtil().build();
+        Map<String, Object> modelData = new ModelUtil(request).build();
 
         return new VelocityTemplateEngine().render(new ModelAndView(modelData, "/frontend/search.vm"));
     }
