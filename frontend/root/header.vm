@@ -25,13 +25,14 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="help-modal-title">Help</h5>
+                <h5 class="modal-title" id="help-modal-title"><i class="bi bi-question-circle-fill"></i> Help</h5>
             </div>
             <div class="modal-body">
                 <p>
-                <h4>Please contact the Missouri IIS for assistance!</h4>
-                <h5>By Phone: 573-IIS-HELP<br>
-                    By Email: helpme@missouri.gov</h5>
+                <h4>You can contact the Missouri IIS via</h4>
+                <h5>Phone: 573-IIS-HELP<br>
+                    Email: helpme@missouri.gov</h5>
+                <br />
                 <h6>Need an account? Send an email to the above email address with your site information.</h6>
                 </p>
             </div>

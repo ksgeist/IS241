@@ -52,6 +52,7 @@
                     placeholder="Username"
                     oninput="validateLogin()"
                     onblur="validateLogin()"
+                    autocomplete="off"
                     required="required">
                 <i class="validation"></i>
 
@@ -62,6 +63,7 @@
                     placeholder="Password"
                     oninput="validateLogin()"
                     onblur="validateLogin()"
+                    autocomplete="off"
                     required="required">
                 <i class="validation"></i>
                 <p id="messages"></p>

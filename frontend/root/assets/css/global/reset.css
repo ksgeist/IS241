@@ -59,7 +59,6 @@ a:active {
   transition: all 0.2s ease;
 }
 
-:focus,
 a:hover,
 a:link:focus,
 a:link:hover,
