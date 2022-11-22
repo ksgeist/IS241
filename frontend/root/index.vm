@@ -173,8 +173,26 @@
         <div class="spacer"></div>
         <!-- ======== FOOTER ========================= -->
         <!-- Written by KSG -->
-        <footer>
-            <h1>HIPAA Policy</h1>
+        <footer class="login-footer">
+            <script>
+                "use strict";
+                var policyShown = false;
+                function togglePolicy() {
+                    if(!policyShown) {
+                        $("footer").animate({paddingTop: "0"});
+                        document.getElementById("policy-show").classList.remove("bi-caret-up-fill");
+                        document.getElementById("policy-show").classList.add("bi-caret-down-fill");
+                        policyShown = true;
+                    } else {
+                        $("footer").animate({paddingTop: "188px"});
+                        document.getElementById("policy-show").classList.remove("bi-caret-down-fill");
+                        document.getElementById("policy-show").classList.add("bi-caret-up-fill");
+                        policyShown = false;
+                    }
+
+                }
+            </script>
+            <h1><a onclick="togglePolicy()">HIPAA Policy <i class="bi bi-caret-up-fill" id="policy-show"></i></a></h1>
             <p>The Missouri COVID-19 Vaccine Tracker complies with
                 <a href="https://www.cdc.gov/phlp/publications/topic/hipaa.html">HIPAA</a>
                 guidelines, including restricting access only to authorized users. This site is routinely monitored

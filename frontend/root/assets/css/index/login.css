@@ -9,7 +9,7 @@
     text-align: center;
     padding: 20px 20px 20px 20px;
     border-radius: 4px;
-    box-shadow: 0px 30px 50px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 30px 50px 0 rgba(0, 0, 0, 0.2);
   }
   
   #login-form {
@@ -64,13 +64,11 @@
   
   input[type="submit"] {
     border: none;
-    display: block;
     margin: 10px auto 10px auto;
     background-color: #d3dde8;
     color: #083569;
     font-weight: bold;
     text-transform: uppercase;
-    cursor: pointer;
     -webkit-transition: all 0.2s ease;
     transition: all 0.2s ease;
     font-size: 18px;
@@ -84,3 +82,8 @@
     color: rgba(122, 122, 122, 1);
   }
   
+footer.login-footer {
+  background-clip: content-box;
+  padding-top: 188px;
+  overflow: hidden;
+}
