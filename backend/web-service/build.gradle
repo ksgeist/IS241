@@ -61,3 +61,10 @@ jar {
 }
 test {
 }
+
+task copyFiles(type: Copy) {
+    from '../../frontend/root'
+    into 'src/main/resources/frontend'
+}
+
+processResources.dependsOn(copyFiles)
