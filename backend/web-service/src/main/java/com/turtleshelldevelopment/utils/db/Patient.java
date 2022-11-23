@@ -125,12 +125,12 @@ public class Patient {
             while(res.next()) {
                 vaccines.add(
                         new Vaccine(
-                            res.getInt("lot_num"),
+                            res.getString("lot_num"),
                             res.getInt("site_id"),
                             res.getInt("patient_id"),
                             res.getDate("administered_date"),
                             res.getString("manufacturer"),
-                            res.getInt("dose"),
+                            res.getString("dose"),
                             res.getInt("administrated_by"),
                             new ProvidingUser(
                                 res.getString("first_name"),
@@ -148,7 +148,6 @@ public class Patient {
                         )
                 );
             }
-            getInsurances.close();
         } catch (SQLException e) {
             e.printStackTrace();
             return vaccines;

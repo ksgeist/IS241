@@ -45,7 +45,6 @@ public class Database {
                 statement.setInt(7, 1);
                 statement.setString(8, "unconfigured@example.com");
                 if(statement.executeUpdate() == 1) {
-                    BackendServer.serverLogger.info("Two-Factor Authentication for Admin: ");
                     BackendServer.serverLogger.info("Password: " + adminPassword);
                     BackendServer.serverLogger.info("Remember this Information, This information will not show on next startup!");
                 }

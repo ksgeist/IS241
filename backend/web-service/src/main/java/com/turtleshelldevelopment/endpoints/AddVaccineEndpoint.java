@@ -9,10 +9,7 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.SQLException;
+ import java.sql.*;
 import java.time.LocalDate;
 
 public class AddVaccineEndpoint implements Route {
@@ -36,19 +33,14 @@ public class AddVaccineEndpoint implements Route {
         if(patientId.isEmpty() || manufacturer.isEmpty() || lotNumber.isEmpty() || dose.isEmpty()) {
             return ResponseUtils.createError("Missing Parameters", 400, response);
         }
-        try {
-            Integer.parseInt(lotNumber);
-        } catch (NumberFormatException e) {
-            return ResponseUtils.createError("Invalid Lot Number", 400, response);
-        }
         if(Constants.VACCINE_SERIES.get(dose) == null) {
             return ResponseUtils.createError("Invalid Vaccine Series", 400, response);
         }
 
         try(Connection databaseConnection = BackendServer.database.getDatabase().getConnection();
-            CallableStatement addVaccine = databaseConnection.prepareCall("CALL ADD_VACCINE(?,?,?,?,?,?,?)")
+            PreparedStatement addVaccine = databaseConnection.prepareStatement("INSERT INTO Vaccine (lot_num, site_id, patient_id, administered_date, manufacturer, dose, administrated_by) VALUES (?,?,?,?,?,?,?);")
         ) {
-            addVaccine.setInt(1, Integer.parseInt(lotNumber));
+            addVaccine.setString(1, lotNumber);
             addVaccine.setInt(2, tokenVerifier.getSiteId()); //Site Id
             addVaccine.setInt(3, Integer.parseInt(patientId));// patient Id
             addVaccine.setDate(4, Date.valueOf(LocalDate.now()));// administered date

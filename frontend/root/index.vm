@@ -194,7 +194,7 @@
 
                 }
             </script>
-            <h1><a onclick="togglePolicy()">HIPAA Policy <i class="bi bi-caret-up-fill" id="policy-show"></i></a></h1>
+            <a onclick="togglePolicy()"><h1>HIPAA Policy <i class="bi bi-caret-up-fill" id="policy-show"></i></h1></a>
             <p>The Missouri COVID-19 Vaccine Tracker complies with
                 <a href="https://www.cdc.gov/phlp/publications/topic/hipaa.html">HIPAA</a>
                 guidelines, including restricting access only to authorized users. This site is routinely monitored
