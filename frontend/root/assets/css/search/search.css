@@ -1,18 +1,23 @@
 
 #search-form {
-    width: 100%;
+    border: none;
+    width: 95%;
     margin: 0 auto;
     text-align: center;
     background-color: aqua;
 }
 
-.card {
+div.card {
     padding-top: 10px;
     border: 2px black;
     background-color: whitesmoke;
-    width: 75%;
+    width: 1020px;
     margin: 0 auto;
+    text-align: center;
 }
-.card-holder {
+label.form-control {
+    text-align: left;
+}
+div.card-holder {
     width: 100%;
 }

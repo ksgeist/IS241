@@ -10,7 +10,7 @@
         #if($logged_in)
             <button class="logout">Logout</button>
         #end
-        <button data-bs-toggle="modal" data-bs-target="#help-modal">Help</button>
+        <button data-bs-toggle="modal" data-bs-target="#help-modal"><i class="bi bi-question-circle-fill"></i></button>
         <img src="/assets/images/header/logo-banner.png"
             alt="Missouri DHSS Logo: COVID-19 Vaccine Tracker, Authorized users only" />
     </div>

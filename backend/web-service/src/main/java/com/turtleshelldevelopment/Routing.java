@@ -21,6 +21,7 @@ public class Routing {
         port(8091);
         exception(Exception.class, (exception, request, response) -> BackendServer.serverLogger.error(exception.getMessage()));
         staticFileLocation("/frontend");
+        notFound(new NotFoundPage());
         BackendServer.serverLogger.info("Setting up API Server routes...");
         path("/", () -> {
             get("/", (req, resp) -> {

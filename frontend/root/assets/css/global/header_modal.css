@@ -26,11 +26,10 @@
   /* Header buttons */
   .header button {
     float: right;
-    color: #083569;
-    background-color: #d3dde8;
+    color: #666666;
     text-align: left;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 14pt;
     border: none;
     padding: 5px;
     background-color: #fff;
@@ -39,8 +38,7 @@
   
   /* Change the background color of buttons on mouse-over */
   .header button:hover {
-    background-color: #083569;
-    color: white;
+    color: #083569;
     transition: all 0.5s;
   }
   button.logout {

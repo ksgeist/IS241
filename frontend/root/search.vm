@@ -24,35 +24,7 @@
         </style>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/dashboard">Dashboard</a>
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
-                    <form class="d-flex" role="search">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a class="nav-link" aria-current="help" href="#">Help</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" aria-current="logout" href="/api/logout">Logout</a>
-                            </li>
-                        </ul>
-                    </form>
-                </div>
-            </div>
-        </nav>
-
+        ${header}
         <div class="nav-handler">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -69,12 +41,15 @@
                 <h1>Search for Patient</h1>
                 <div>
                     <form action="/record/search" method="POST" class="form-control">
-                        <label for="lastName">Last Name</label>
+                        <label for="lastName">Last Name
                         <input type="text" name="lname" class="form-control"/>
-                        <label for="SSN">Last 4 of SSN</label>
-                        <input type="text" name="ss4" class="form-control"/>
-                        <label for="dateOfBirth">Date of Birth</label>
-                        <input type="date" name="dob" class="form-control"/>
+                        </label>
+                        <label for="SSN">Last 4 of SSN
+                        <input type="text" name="ss4" class="form-control"/></label>
+                        <label for="dateOfBirth">Date of Birth
+                        <input type="date" name="dob" class="form-control"/></label>
+                        <br />
+                        <br />
                         <div>
                             <input type="submit" value="Submit" class="btn btn-secondary"/>
                         </div>
