@@ -157,3 +157,4 @@ backend/web-service/src/main/resources/frontend
 .idea/vcs.xml
 .idea/.gitignore
 backend/web-service/bin
+/.idea/jsLibraryMappings.xml
