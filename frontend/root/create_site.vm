@@ -50,7 +50,11 @@
                                 id="address"
                                 pattern="\d+(\s{1}\w+)(\s{1}?\w+)+"
                                 maxlength="95"
-                                required="required">
+                                required="required"
+                                
+                                oninput="this.setCustomValidity('')"
+                                oninvalid="this.setCustomValidity('Must be number (0-9) followed by the street name (a-Z) and street type (a-Z)')"
+                                >
                             <label for="city">City</label>
                             <input class="form-control" type="text" id="city" name="city" autocomplete="on" required="required">
                             <label for="zip">Zip Code</label>
@@ -91,7 +95,11 @@
                                 name="phone"
                                 pattern="\([0-9]{3}\) [0-9]{3} - [0-9]{4}"
                                 maxlength="16"
-                                required="required">
+                                required="required"
+                                
+                                oninput="this.setCustomValidity('')"                                        
+                                oninvalid="this.setCustomValidity('Must be in format Must be in format &#92;&#147;(&#35;&#35;&#35;) &#35;&#35;&#35; - &#35;&#35;&#35; &#92;&#147;')"
+                            >
                             <label for="siteName">Site Name</label>
                             <input
                                 class="form-control"
