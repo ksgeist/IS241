@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Edit user account</title>
+        <!-- Missouri COVID-19 Vaccine Tracker Application Filename: index.html Team: Turtle Shell
+        Development Authors: Katherine Geist Date: 13 Oct 2022 -->
+
+        <meta charset="utf-8">
+
+        <!-- ======== EXTERNAL SCRIPTS ========================= -->
+        <link rel="stylesheet" href="/assets/css/users/edit.css">
+        <script src="/assets/js/add_record.js" defer="defer"></script>
+        <script src="/assets/js/patient_records/print_VIS.js" defer="defer"></script>
+        <script src="/assets/js/modernizr.custom.40753.js"></script>
+        <script src = "phoneValidity.js" defer="defer"></script>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
+            crossorigin="anonymous">
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+            crossorigin="anonymous"></script>
+        <style>
+            .nav-handler {
+                margin: 0 auto;
+                width: 1024px;
+                padding-top: 5px;
+            }
+        </style>
+
+    <!-- ======== COLLAPSE SCRIPT========================= -->  
+    <script defer="defer">
+        var usersArray = document.getElementsByClassName("user_entry_elements");
+        console.log(usersArray);
+        console.log(usersArray[0]);
+        console.log(usersArray.length);
+        console.log("End test");
+
+        for (var i = 0; i<usersArray.length; i++){
+            var button = usersArray[i].children;
+            console.log(usersArray[i].children);
+
+
+            button.addEventListener("click", function(){
+             var expand = this.nextElementSibling;
+             if(expand.style.display === "block"){
+                expand.style.display = "none";
+             }else{
+             expand.style.display = "block";}
+            });
+
+        }
+    </script>
+    </head>
+<body id="add_record_body">
+    <!-- ======== HEADER ========================= -->
+    <!-- Written by KSG -->
+    ${header}
+
+    <!-- ======== SITE SEARCH ========================= -->  
+    <form action="" method="POST">
+    <fieldset class="form-control">
+        <legend>Site Search</legend>
+        <div class="input-group">
+         <select id="site" name="site" class="form-select"  required>
+                            <option value="" disabled="disabled" selected="selected">Select site</option>
+                            <option value="site1" >sample site</option>
+            </select>
+        </div>
+    </fieldset>
+    </form>
+
+
+
+    <!-- ======== RESULTS (templates, not actual data) ========================= -->  
+    <form >
+    <fieldset class="form-control">
+        <div class = "user_entry_elements">
+            <button type="button" class="user_entry"> "sample display name/info" </button>
+            
+            <form action="" method="POST" class = "user_entry_expand">
+                <span class="input-group-text">Name</span>
+                        <input
+                            type="text"
+                            class = "inline-text"
+                            value= "pull from data base"
+                        />
+                        <span class="input-group-text"> test </span>
+                        <input/>
+
+            </form>
+        </div>
+    </fieldset>
+    </form>
+</body>
