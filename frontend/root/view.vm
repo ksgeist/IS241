@@ -48,7 +48,8 @@
             </nav>
         </div>
 
-        <form action="/record/edit" method="POST">
+        <form action="/record/edit/${patient.Id}" method="POST" id="update-patient">
+            <!--- TODO: update patient using JQuery to handle request and response to a notification on the bottom right with toasts from bootstrap -->
             <fieldset class="form-control">
                 <legend>PATIENT INFORMATION</legend>
                 <div>
@@ -117,7 +118,18 @@
                                 maxlength="4"
                                 value="${patient.SSNumber}" disabled>
                         </label>
-
+                        <label for="email">Email
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="form-control"
+                                maxlength="255"
+                                value="${patient.Email}"
+                                #if(!$edit_patient)
+                                    disabled
+                                #end>
+                        </label>
                     </div>
                 </div>
             </fieldset>
