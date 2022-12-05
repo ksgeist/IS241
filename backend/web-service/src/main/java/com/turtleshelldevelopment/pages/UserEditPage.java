@@ -13,6 +13,6 @@ public class UserEditPage implements Route {
     public Object handle(Request request, Response response) throws Exception {
         ModelUtil model = new ModelUtil(request);
         model.add("user", Account.getAccountInfo(request.params("requested_user")));
-        return new VelocityTemplateEngine().render(new ModelAndView(model ,""));
+        return new VelocityTemplateEngine().render(new ModelAndView(model ,"/frontend/edit_user.vm"));
     }
 }

@@ -98,14 +98,14 @@
                     <div class="field-flex">
                         <!-- Dropdown for Sex Identuty -->
                         <label for="sex">Sex Identity
-                            <select id="sex" name="sex" class="form-select" value="${patient.Gender}"
+                            <select id="sex" name="sex" class="form-select"
                                 #if(!$edit_patient)
                                     disabled
                                 #end
                             >
-                                <option value="Female">Female</option>
-                                <option value="Male">Male</option>
-                                <option value="Non-Binary">Non-Binary</option>
+                                <option value="Female" #if($patient.Gender == "Female") selected #end>Female</option>
+                                <option value="Male"  #if($patient.Gender == "Male") selected #end>Male</option>
+                                <option value="Non-Binary"  #if($patient.Gender != "Female" && $patient.Gender != "Male") selected #end>Non-Binary</option>
                             </select>
                         </label>
                         <label for="ss4">Last 4-digits SSN

@@ -10,6 +10,7 @@
     left: 0%;
     right: 1%;
     top: 0%;
+    flex-shrink: 0;
   }
   #inner-header {
     padding: 2em;

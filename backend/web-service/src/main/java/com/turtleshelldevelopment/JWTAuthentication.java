@@ -97,7 +97,7 @@ public class JWTAuthentication {
 
     public static void generateAuthToken(String username, String[] permissions, Response response) {
         Instant currTime = Instant.now();
-        Instant inst = currTime.plus(10, ChronoUnit.MINUTES);
+        Instant inst = currTime.plus(50, ChronoUnit.MINUTES);
         String jwt = com.auth0.jwt.JWT.create()
                 .withIssuer(Issuers.AUTHENTICATION.getIssuer())
                 .withSubject(username)
@@ -135,6 +135,6 @@ public class JWTAuthentication {
                 .withExpiresAt(expiration)
                 .sign(BackendServer.JWT_ALGO);
         //Set token cookie in response to client
-        response.cookie("/","token", jwt, 180, true, true);
+        response.cookie("/","token", jwt, 1200, true, true);
     }
 }

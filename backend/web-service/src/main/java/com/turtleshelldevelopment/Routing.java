@@ -81,6 +81,8 @@ public class Routing {
             before("/add", (req, resp) -> verifyCredentials(req, resp, PermissionType.ADD_USER));
             get("/add", new UserCreatePage());
             post("/add", new NewAccountEndpoint());
+            get("/edit/:id", new UserEditPage());
+            patch("/edit/:id", new UserAccountEditEndpoint());
             path("/login", () -> {
                 before("/mfa", (req, res) -> {
                     TokenUtils tokenUtils = new TokenUtils(req.cookie("token"), Issuers.MFA_LOGIN.getIssuer());
@@ -132,7 +134,7 @@ public class Routing {
             get("/add", new AddRecordPage());
             post("/add", new AddRecordEndpoint());
             before("/edit", (req, resp) -> EndpointFilters.verifyCredentials(req, resp, PermissionType.EDIT_PATIENT));
-            patch("/edit", new UpdateRecordEndpoint());
+            put("/edit", new UpdateRecordEndpoint());
             before("/search", (req, resp) -> EndpointFilters.verifyCredentials(req, resp, PermissionType.READ_PATIENT));
             get("/search", new SearchRecordPage());
             post("/search", new SearchPatientsEndpoint());

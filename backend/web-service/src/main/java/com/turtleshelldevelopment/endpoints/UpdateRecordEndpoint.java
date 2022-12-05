@@ -9,10 +9,14 @@ import spark.Route;
 public class UpdateRecordEndpoint implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
+        System.out.println("Update Record has been called");
         String lastName = request.params("lname");
         String firstName = request.params("fname");
         String middleName = request.params("mname");
         String sexIdentity = request.params("sex");
+        if(lastName == null) {
+            return ResponseUtils.createError("No Last Name", 400, response);
+        }
         if(lastName.length() > 45) {
             return ResponseUtils.createError("Last Name too long (max 45 characters)", 400, response);
         }

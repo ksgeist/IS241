@@ -29,6 +29,7 @@ public class ModelUtil {
             if(!token.isInvalid()) {
                 headerInfo.put("logged_in", true);
                 headerInfo.put("user", token.getDecodedJWT().getSubject());
+                modelData.put("username", token.getDecodedJWT().getSubject().substring(0,1).toUpperCase() + token.getDecodedJWT().getSubject().substring(1));
             } else {
                 headerInfo.put("logged_in", false);
             }

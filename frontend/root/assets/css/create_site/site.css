@@ -23,7 +23,8 @@
     height: calc(100% - 56px);
     align-items: stretch;
     min-width: 0;
-    background-color: #a9bccf;
+    background-color: whitesmoke;
+    box-shadow: 10px 5px 5px rgba(0,0,0,0.45);
 }
 
 #map {

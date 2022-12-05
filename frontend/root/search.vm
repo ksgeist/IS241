@@ -45,7 +45,7 @@
                         <input type="text" name="lname" class="form-control"/>
                         </label>
                         <label for="SSN">Last 4 of SSN
-                        <input type="text" name="ss4" class="form-control"/></label>
+                        <input type="text" name="ss4" class="form-control" maxlength="4" /></label>
                         <label for="dateOfBirth">Date of Birth
                         <input type="date" name="dob" class="form-control"/></label>
                         <br />
