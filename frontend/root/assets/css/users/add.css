@@ -5,3 +5,9 @@
     margin: 0 auto;
     width: 750px;
 }
+
+#inputs-bg {
+    background-color: white;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
