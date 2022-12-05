@@ -1,0 +1,23 @@
+@import url("/assets/css/patient_records/add.css");
+
+
+fieldset.form-control > div.user_entry_elements {
+   padding: 10px;
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 0 0 0 0;
+   width: 100%;
+}
+
+
+fieldset.form-control > div.user_entry_elements > button.user_entry{
+    width: 100%;
+}
+
+fieldset.form-control > div.user_entry_elements > form.user_entry_expand{
+
+}
+
+input.inline-text{
+    display: inline;
+}
