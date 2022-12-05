@@ -36,7 +36,7 @@
         <div id="body">
             <aside id="side-info">
                 <br />
-                <button type="button" class="btn btn-primary" onclick="history.back()">Go Back</button>
+                <button type="button" class="btn btn-primary" id="back-button" onclick="history.back()">Go Back</button>
                 <h1 class="text-center">New Vaccine Administration Site</h1>
                 <div id="content">
                     <form id="newSiteForm" method="POST" action="/site/add">
