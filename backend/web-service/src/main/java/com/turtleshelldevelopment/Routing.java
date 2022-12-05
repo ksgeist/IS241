@@ -133,8 +133,8 @@ public class Routing {
             before("/add", (req, resp) -> verifyCredentials(req, resp, PermissionType.WRITE_PATIENT));
             get("/add", new AddRecordPage());
             post("/add", new AddRecordEndpoint());
-            before("/edit", (req, resp) -> EndpointFilters.verifyCredentials(req, resp, PermissionType.EDIT_PATIENT));
-            put("/edit", new UpdateRecordEndpoint());
+            before("/edit/:id", (req, resp) -> EndpointFilters.verifyCredentials(req, resp, PermissionType.EDIT_PATIENT));
+            post("/edit/:id", new UpdateRecordEndpoint());
             before("/search", (req, resp) -> EndpointFilters.verifyCredentials(req, resp, PermissionType.READ_PATIENT));
             get("/search", new SearchRecordPage());
             post("/search", new SearchPatientsEndpoint());
