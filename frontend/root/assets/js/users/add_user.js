@@ -22,6 +22,7 @@ function createUser(evt) {
                 var json_data = JSON.parse(request.target.responseText);
                 document.getElementById("success-modal-label").innerHTML = "Success!";
                 document.getElementById("success-body").innerHTML = "Username: " + values.get("username") + "<br>Password: " + values.get("password");
+                document.getElementById("success-mail").style.display = "block";
                 document.getElementById("success-mail").onclick = () => {
                     window.open("mailto:" + encodeURIComponent("?subject=Your IIS Login Credentials&body=Here is your IIS Login:\nUsername: " + values.get("username") + "\nPassword: " + values.get("password") + "\n You will get a 2 factor authentication code upon first login.", "_blank"));
                 };
@@ -35,6 +36,7 @@ function createUser(evt) {
                 var json_data = JSON.parse(request.target.responseText);
                 document.getElementById("success-modal-label").innerHTML = "Error";
                 document.getElementById("success-body").innerHTML = json_data["message"];
+                document.getElementById("success-mail").style.display = "none";
                 responseModal.show();
                 console.log("error");
             }
