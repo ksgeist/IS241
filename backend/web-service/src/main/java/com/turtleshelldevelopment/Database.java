@@ -26,7 +26,8 @@ public class Database {
         // if not create a new superuser
         try {
             BackendServer.serverLogger.info("Checking Account...");
-            PreparedStatement checkForUser = db.getConnection().prepareStatement("SELECT user_id FROM User LIMIT 1;");
+            Connection dbConnection = db.getConnection();
+            PreparedStatement checkForUser = dbConnection.prepareStatement("SELECT user_id FROM User LIMIT 1;");
             ResultSet set = checkForUser.executeQuery();
             if(set.next()) {
                 System.out.println("Found account: " + set.getInt("user_id") + " on database " + url);
@@ -35,7 +36,7 @@ public class Database {
                 String adminPassword = RandomStringUtils.random(16, true, true);
                 String systemAdminUsername = "admin";
                 Account admin = new Account(systemAdminUsername, adminPassword);
-                CallableStatement statement = db.getConnection().prepareCall("CALL ADD_USER(?,?,?,?,?,?,?,?)");
+                CallableStatement statement = dbConnection.prepareCall("CALL ADD_USER(?,?,?,?,?,?,?,?)");
                 statement.setString(1, systemAdminUsername);
                 statement.setBytes(2, admin.getPasswordHash());
                 statement.setBytes(3, admin.getPasswordSalt());
@@ -52,6 +53,7 @@ public class Database {
                 statement.close();
             }
             checkForUser.close();
+            dbConnection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
