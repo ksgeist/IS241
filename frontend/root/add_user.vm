@@ -52,6 +52,7 @@
             <form onsubmit="createUser();" id="createUserForm">
                 <fieldset class="form-control">
                     <legend>ADD USER</legend>
+                    <div id="inputs-bg">
                     <div class="input-group">
                         <span class="input-group-text">Username</span>
                         <input type="text" id="username" name="username" class="form-control name-fields" maxlength="45" minlength="4" required>
@@ -91,7 +92,7 @@
                     <div class="input-group">
                         <span class="input-group-text">Site</span>
                         <select id="sites" name="site" class="form-select name-fields" required>
-                            <option value="invalid">Select a Site...</option>
+                            <option hidden selected value>Select a Site...</option>
                             #foreach( $site in $sites)
                                 <option value="${site.Id}">${site.Name}</option>
                             #end
@@ -101,11 +102,12 @@
                     <div class="input-group">
                         <span class="input-group-text">Permissions Level</span>
                         <select id="user-type" name="user_type" class="form-select name-fields" required>
-                            <option value="invalid">Select Permissions Level...</option>
+                            <option hidden selected value>Select Permissions Level...</option>
                             #foreach($type in $types)
                                 <option value="${type.Id}">${type.Name}</option>
                             #end
                         </select>
+                    </div>
                     </div>
                 </fieldset>
                 <br/>
