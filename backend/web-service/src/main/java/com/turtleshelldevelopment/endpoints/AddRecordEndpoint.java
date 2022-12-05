@@ -109,11 +109,15 @@ public class AddRecordEndpoint implements Route {
                 patientCall.setDate(5, new Date(dateOfBirth.toEpochSecond(LocalTime.now(), timeZone)));
                 patientCall.setString(6, contactEmail);
                 patientCall.setString(7, patientSex);
+                //Not Required
                 patientCall.setString(8, contactAddress);
                 patientCall.setString(9, contactPhone);
                 patientCall.setString(10, contactPhoneType);
+                //Not Required
                 patientCall.setString(11, insuranceProviderName);
+                //Not Required
                 patientCall.setString(12, insuranceGroupNumber);
+                //Not Required
                 patientCall.setString(13, insurancePolicyNumber);
                 patientCall.setDate(14, new Date(dateFiled.toEpochSecond(LocalTime.now(), timeZone)));
                 patientCall.setString(15, vaccineManu);
