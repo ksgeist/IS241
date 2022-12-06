@@ -60,10 +60,10 @@
             button.addEventListener("click", function(){
              var expand = this.nextElementSibling;
              console.log(expand);
-             if(expand.style.display === "block"){
+             if(expand.style.display === "inline"){
                 expand.style.display = "none";
              }else{
-             expand.style.display = "block";}
+             expand.style.display = "inline";}
             });
 
         }
@@ -96,24 +96,129 @@
     <!-- ======== RESULTS (templates, not actual data) ========================= -->  
     <form >
     <fieldset class="form-control">
+    
         <div class = "user_entry_elements">
             <button type="button" class="user_entry"> "sample display name/info" </button>
             
             <div class ="expand_wrapper">
             <form action="" method="POST" class = "user_entry_expand">
-                <span class="input-group-text">Name </span>
-                        <input
-                            type="text"
-                            class = "inline-text"
-                            value= "pull from data base"
-                        />
-                        <span class="input-group-text"> test </span>
-                        <input/>
+                <span class="input-group-text">Username </span>
+                <input
+                type="text"
+                class = "inline-text"
+                id="Username"
+                value= "pull from data base"
+                />
+
+                <span class="input-group-text"> Email </span>
+                <input
+                type="text"
+                class = "inline-text"
+                id = "email"
+                value= "pull from data base"
+                />
+
+                <span class="input-group-text"> First Name </span>
+                <input
+                type="text"
+                class = "inline-text"
+                id = "first"
+                value= "pull from data base"
+                />
+
+                <span class="input-group-text"> Last Name </span>
+                <input
+                type="text"
+                class = "inline-text"
+                id = "last"
+                value= "pull from data base"
+                />
+
+                <span class="input-group-text"> Site </span>
+                <input
+                type="text"
+                class = "inline-text"
+                id = "site"
+                value= "pull from data base"
+                />
+
+                <span class="input-group-text"> Password </span>
+                <input
+                type="text"
+                class = "inline-text"
+                id = "password"
+                value= "pull from data base"
+                />
+
+                <button type="button" class="edit_user_update"> 
+                Update 
+                </button>
 
             </form>
         </div>
         </div>
+        
+        
+        <!-- second demo entity -->
+            <div class = "user_entry_elements">
+            <button type="button" class="user_entry"> "sample display name/info" </button>
+            
+            <div class ="expand_wrapper">
+            <form action="" method="POST" class = "user_entry_expand">
+                <span class="input-group-text">Username </span>
+                <input
+                type="text"
+                class = "inline-text"
+                id="Username"
+                value= "pull from data base"
+                />
 
+                <span class="input-group-text"> Email </span>
+                <input
+                type="text"
+                class = "inline-text"
+                id = "email"
+                value= "pull from data base"
+                />
+
+                <span class="input-group-text"> First Name </span>
+                <input
+                type="text"
+                class = "inline-text"
+                id = "first"
+                value= "pull from data base"
+                />
+
+                <span class="input-group-text"> Last Name </span>
+                <input
+                type="text"
+                class = "inline-text"
+                id = "last"
+                value= "pull from data base"
+                />
+
+                <span class="input-group-text"> Site </span>
+                <input
+                type="text"
+                class = "inline-text"
+                id = "site"
+                value= "pull from data base"
+                />
+
+                <span class="input-group-text"> Password </span>
+                <input
+                type="text"
+                class = "inline-text"
+                id = "password"
+                value= "pull from data base"
+                />
+
+                <button type="button" class="edit_user_update"> 
+                Update </button>
+                
+            </form>
+        </div>
+        </div>
     </fieldset>
     </form>
 </body>
