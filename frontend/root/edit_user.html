@@ -33,19 +33,33 @@
 
     <!-- ======== COLLAPSE SCRIPT========================= -->  
     <script defer="defer">
-        var usersArray = document.getElementsByClassName("user_entry_elements");
-        console.log(usersArray);
-        console.log(usersArray[0]);
-        console.log(usersArray.length);
-        console.log("End test");
+        // for (var usersArray = [], i=usersArray1.length; i;){
+        //  usersArray[--i] = usersArray1[i];
+        // console.log(usersArray[i]);
+        // console.log("D");
+        // usersArray2=usersArray;
+        // }
+        document.addEventListener('DOMContentLoaded', function() {
+            var usersCol = document.getElementsByClassName("user_entry_elements");
+        
+        // var usersArray = []
+        // for (var i=usersCol.length; i;){
+        //     console.log(1);
+        //     console.log(--i);
+        // }
 
-        for (var i = 0; i<usersArray.length; i++){
-            var button = usersArray[i].children;
-            console.log(usersArray[i].children);
+        // console.log(usersCol.item(0));
+        console.log(usersCol.length);
+        // console.log("End test");
 
+        for (var i = 0; i<usersCol.length; i++){
+            var button = usersCol.item(i).children[0];
+            console.log(usersCol.item(i).children[0]);
 
+            console.log(usersCol.item(i).children);
             button.addEventListener("click", function(){
              var expand = this.nextElementSibling;
+             console.log(expand);
              if(expand.style.display === "block"){
                 expand.style.display = "none";
              }else{
@@ -53,6 +67,10 @@
             });
 
         }
+
+
+    });
+
     </script>
     </head>
 <body id="add_record_body">
@@ -81,8 +99,9 @@
         <div class = "user_entry_elements">
             <button type="button" class="user_entry"> "sample display name/info" </button>
             
+            <div class ="expand_wrapper">
             <form action="" method="POST" class = "user_entry_expand">
-                <span class="input-group-text">Name</span>
+                <span class="input-group-text">Name </span>
                         <input
                             type="text"
                             class = "inline-text"
@@ -93,6 +112,8 @@
 
             </form>
         </div>
+        </div>
+
     </fieldset>
     </form>
 </body>

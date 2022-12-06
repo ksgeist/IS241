@@ -14,8 +14,8 @@ fieldset.form-control > div.user_entry_elements > button.user_entry{
     width: 100%;
 }
 
-fieldset.form-control > div.user_entry_elements > form.user_entry_expand{
-
+fieldset.form-control > div.user_entry_elements > div.expand_wrapper{
+    display: none;
 }
 
 input.inline-text{
