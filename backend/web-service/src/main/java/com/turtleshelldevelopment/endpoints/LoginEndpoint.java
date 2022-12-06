@@ -51,13 +51,15 @@ public class LoginEndpoint implements Route {
             }
             //Validate that the credentials are valid in our database
             if(validate(username, password)) {
+                Account acc;
+                if((acc = Account.getAccountInfo(username)) == null) {
+                    return ResponseUtils.createError("Invalid Username or Password", 401, response).toString();
+                } else if(acc.isDisabled()) {
+                    return ResponseUtils.createError("Account is disabled", 401, response).toString();
+                }
                 JWTAuthentication.generateMultiFactorToken(username, response);
                 //Return successful login response
-                try {
-                    Account acc = Account.getAccountInfo(username);
-                    if(acc == null) {
-                        return ResponseUtils.createError("Invalid Username or Password", 401, response).toString();
-                    }
+                try {;
                     if(!acc.accountRequiresMFA()) JWTAuthentication.generateAuthToken(username, new Permissions(username).getPermissionsAsString(), response);
                     return ResponseUtils.createLoginSuccess(acc.accountRequiresMFA(), response).toString();
                 } catch (SQLException e) {

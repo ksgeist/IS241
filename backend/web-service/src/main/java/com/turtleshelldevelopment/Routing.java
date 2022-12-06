@@ -81,8 +81,15 @@ public class Routing {
             before("/add", (req, resp) -> verifyCredentials(req, resp, PermissionType.ADD_USER));
             get("/add", new UserCreatePage());
             post("/add", new NewAccountEndpoint());
+            before("/edit", (req, resp) -> verifyCredentials(req, resp, PermissionType.EDIT_USER));
             get("/edit", new UserEditPage());
             patch("/edit/:id", new UserAccountEditEndpoint());
+            get("/disable/:id", new DisableUserAccountEndpoint());
+            get("/enable/:id", new EnableUserAccountEndpoint());
+            before("/permission/set/:id", (req, resp) -> verifyCredentials(req, resp, PermissionType.EDIT_USER));
+            post("/permission/set/:id", new ChangePermissionEndpoint());
+            before("/site/set/:id", (req, resp) -> verifyCredentials(req, resp, PermissionType.EDIT_USER));
+            post("/site/set/:id", new ChangeSiteEndpoint());
             path("/login", () -> {
                 before("/mfa", (req, res) -> {
                     TokenUtils tokenUtils = new TokenUtils(req.cookie("token"), Issuers.MFA_LOGIN.getIssuer());

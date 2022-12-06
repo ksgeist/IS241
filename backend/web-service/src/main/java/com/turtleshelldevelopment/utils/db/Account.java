@@ -30,11 +30,11 @@ public class Account {
     private String lastName;
     private String email;
     private boolean firstLogin;
-    private boolean needsMFA;
+    private boolean needsMFA, canLogin;
     private String mfaSecret;
 
     public static Account getAccountInfo(String username) throws SQLException {
-        try (Connection databaseConnection = BackendServer.database.getDatabase().getConnection(); PreparedStatement accountCall = databaseConnection.prepareStatement("SELECT user_id, username, first_name, last_name, site_id, user_type, email, onboarding, 2fa_secret FROM User WHERE username = ?;")) {
+        try (Connection databaseConnection = BackendServer.database.getDatabase().getConnection(); PreparedStatement accountCall = databaseConnection.prepareStatement("SELECT user_id, username, first_name, last_name, site_id, user_type, email, onboarding, 2fa_secret, allow_login FROM User WHERE username = ?;")) {
             accountCall.setString(1, username);
             ResultSet set = accountCall.executeQuery();
             if (set.next()) {
@@ -42,7 +42,7 @@ public class Account {
                         set.getString("first_name"), set.getString("last_name"),
                         set.getInt("site_id"), set.getInt("user_type"),
                         set.getString("email"), set.getBoolean("onboarding"),
-                        set.getString("2fa_secret"));
+                        set.getString("2fa_secret"), set.getBoolean("allow_login"));
                 accountCall.close();
                 set.close();
                 return acc;
@@ -54,7 +54,7 @@ public class Account {
         }
     }
 
-    private Account(int userID, String username, String firstName, String lastName, int siteId, int userType, String email, boolean onboarding, String mfaSecret) {
+    private Account(int userID, String username, String firstName, String lastName, int siteId, int userType, String email, boolean onboarding, String mfaSecret, boolean canLogin) {
         this.userId = userID;
         this.username = username;
         this.firstName = firstName;
@@ -63,9 +63,9 @@ public class Account {
         this.userType = userType;
         this.email = email;
         this.firstLogin = onboarding;
-        //TODO Handle if mfa is not validated yet
         this.needsMFA = !(onboarding || (mfaSecret != null && mfaSecret.isEmpty()) || mfaSecret == null);
         this.mfaSecret = mfaSecret;
+        this.canLogin = canLogin;
     }
 
     public Account(String username, String password) {
@@ -177,8 +177,17 @@ public class Account {
         this.firstName = firstName;
     }
 
-    public int getUserType() {
-        return userType;
+    public String getUserType() {
+        try (Connection conn = BackendServer.database.getDatabase().getConnection();
+            PreparedStatement getType = conn.prepareStatement("SELECT type_name FROM UserType WHERE user_type_id = ? LIMIT 1")) {
+            getType.setInt(1, userType);
+            ResultSet set = getType.executeQuery();
+            set.next();
+            return set.getString("type_name");
+        } catch (SQLException e) {
+            System.out.println("Failed to get user type");
+            return null;
+        }
     }
 
     public void setUserType(int userType) {
@@ -203,6 +212,10 @@ public class Account {
 
     public String getMFASecret() {
         return mfaSecret;
+    }
+
+    public boolean isDisabled() {
+        return !this.canLogin;
     }
 
 }
