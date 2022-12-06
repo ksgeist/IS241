@@ -65,7 +65,7 @@ public class Database {
     }
 
     public HikariDataSource getDatabase() {
-        BackendServer.serverLogger.info("Hikari (Active: " + db.getHikariPoolMXBean().getActiveConnections() + ", Idle: " + db.getHikariPoolMXBean().getIdleConnections() + ", Total: " + db.getHikariPoolMXBean().getTotalConnections() + ")");
+        //BackendServer.serverLogger.info("Hikari (Active: " + db.getHikariPoolMXBean().getActiveConnections() + ", Idle: " + db.getHikariPoolMXBean().getIdleConnections() + ", Total: " + db.getHikariPoolMXBean().getTotalConnections() + ")");
         return db;
     }
 
