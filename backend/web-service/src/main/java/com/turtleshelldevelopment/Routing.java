@@ -81,7 +81,7 @@ public class Routing {
             before("/add", (req, resp) -> verifyCredentials(req, resp, PermissionType.ADD_USER));
             get("/add", new UserCreatePage());
             post("/add", new NewAccountEndpoint());
-            get("/edit/:id", new UserEditPage());
+            get("/edit", new UserEditPage());
             patch("/edit/:id", new UserAccountEditEndpoint());
             path("/login", () -> {
                 before("/mfa", (req, res) -> {
