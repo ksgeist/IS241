@@ -9,7 +9,7 @@
         <meta charset="utf-8">
 
         <!-- ======== EXTERNAL SCRIPTS ========================= -->
-        <link rel="stylesheet" href="/assets/css/patient_records/add.css">
+        <link rel="stylesheet" href="/assets/css/patient_records/dayweek.css">
         <script src="/assets/js/add_record.js" defer="defer"></script>
         <script src="/assets/js/modernizr.custom.40753.js"></script>
         <link
@@ -63,7 +63,7 @@
             <fieldset class="form-control">
                 <legend>WEEKLY REPORT</legend>
                 	<div>
-                   		<label for="date">Choose week of report:</label>
+                   		<label id="lab" for="date">Choose week of report:</label>
  							<input 
  								type="text" 
  								class="form-control" 
@@ -123,9 +123,9 @@
                     		<br>
                     	</div>
                     	<div class="field-flex">
-                    		<label for="start_age">From:</label>
+                    		<label class="tofrom" for="start_age">From:</label>
 								<input type="text" id="start_age" name="start_age" class="form-control address-fields" pattern="^\d{1,2}">
-                    		<label for="end_age">To:</label>
+                    		<label class="tofrom" for="end_age">To:</label>
 								<input type="text" id="end_age" name="end_age" class="form-control address-fields" pattern="^\d{1,2}">
 						</div>    			
                         <br>

@@ -9,7 +9,7 @@
     <meta charset="utf-8">
 
     <!-- ======== EXTERNAL SCRIPTS ========================= -->
-    <link rel="stylesheet" href="/assets/css/patient_records/add.css">
+    <link rel="stylesheet" href="/assets/css/patient_records/dayweek.css">
     <script src="/assets/js/modernizr.custom.40753.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
@@ -60,7 +60,7 @@
         <fieldset class="form-control">
             <legend>DAILY REPORT</legend>
             <div>
-                <label for="daily-report-date">Choose date for report (up to one week prior):</label>
+                <label id="lab" for="daily-report-date">Choose date for report (up to one week prior):</label>
                 <input type="text" class="form-control" id="daily-report-date" name="daily-report-date">
                 <br>
             </div>
