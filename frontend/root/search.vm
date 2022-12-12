@@ -3,6 +3,7 @@
     <head>
         <title>Patient Search</title>
         <link href="/assets/css/search/search.css" rel="stylesheet"/>
+
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -38,23 +39,23 @@
         <!-- Add Crumb display from bootstrap here to go back-->
         <div class="card-holder">
             <div class="card">
-                <h1>Search for Patient</h1>
-                <div>
-                    <form action="/record/search" method="POST" class="form-control">
-                        <label for="lastName">Last Name
-                        <input type="text" name="lname" class="form-control"/>
-                        </label>
-                        <label for="SSN">Last 4 of SSN
-                        <input type="text" name="ss4" class="form-control" maxlength="4" /></label>
-                        <label for="dateOfBirth">Date of Birth
-                        <input type="date" name="dob" class="form-control"/></label>
-                        <br />
-                        <br />
-                        <div>
-                            <input type="submit" value="Submit" class="btn btn-secondary"/>
-                        </div>
+        		<h2 class="pageName">Search for Patient </h2>       
+ 					<form action="/record/search" method="POST" class="form-control">
+                		<fieldset class="form-control">
+                  			<div>
+								<label for="lastName">Last Name<input type="text" name="lname" class="form-control" placeholder="Roosevelt"></label>
+								<label for="SSN">Last 4 of SSN<input type="text" name="ss4" class="form-control" placeholder="1234" maxlength="4"></label>
+								<label for="dateOfBirth">Date of Birth<input type="date" name="dob" class="form-control"></label>
+							</div>
+
+						<div class="text-center">
+							<input type="submit" value="Submit" class="submit-button btn btn-dark btn-lg">
+						<div>
+						
+     					</fieldset>           
                     </form>
                 </div>
+
             </div>
             <br/>
             #if($results)

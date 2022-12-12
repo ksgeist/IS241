@@ -49,7 +49,7 @@
             </nav>
         </div>
 
-        <h2 class="pageName">Enter New Patient Record:</h2>
+        <h2 class="pageName">Enter New Patient Record</h2>
 
         <!-- ======== PATIENT INPUT FORM ========================= -->
         <!-- Written by KSG -->
@@ -251,17 +251,11 @@
                         <div class="row">
 							<div class="col">
 								<div class="input-group">
-									<span class="input-group-text" 
-									id="lot-num-addon">Lot Number</span>
-									<input type="text" id="lotNumber" 
-									name="lotNumber" class="form-control"
-									aria-describedby="lot-num-addon" 
-									placeholder="900-HJK45"
-									required="required">
+									<span class="input-group-text" id="lot-num-addon">Lot Number</span>
+									<input type="text" id="lotNumber" name="lotNumber" class="form-control" aria-describedby="lot-num-addon" placeholder="900-HJK45" required="required">
 								</div>
-								</div>
-									<div class="col">
-								</div>
+							</div>
+							<div class="col"></div>
 							</div>
                     <br>
                     <!-- Dropdown for Vax Dose -->
@@ -322,22 +316,4 @@
 			<br>
 		</form>
 		<br>
-                <!-- ============================================================================ -->
-                <!-- ======== FOR ALL PAGES ========================= -->
-
-                <!-- ======== HELP POPUP BUTTON ========================= -->
-                <!-- Written by JM -->
-<!-- 
-                <div>
-                    <div class="modal">
-                        <div class="modal-content">
-                            <span class="close-button">&times;</span>
-                            <p>Please contact the Missouri IIS for assistance!</p>
-                            <p>Phone: XXX-XXX-XXXX</p>
-                            <p>Email: helpme@missouri.gov</p><br>
-                        </div>
-                    </div>
-                </div>
- -->
-
-            </body>
+</body>

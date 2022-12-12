@@ -111,7 +111,9 @@
 
                         </fieldset>
                         <br/>
+                    	<div class="text-center">
                         <input type="submit" value="Submit" class="form-control" method="POST" id="newSite"/>
+        				<div>
                     </form>
                 </div>
             </aside>
