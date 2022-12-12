@@ -65,13 +65,14 @@
                             name="insProvider"
                             class="form-control"
                             aria-describedby="insurance"
+                            placeholder="Blue Cross Blue Shield of Missouri"
                             maxlength="45">
                     </div>
                     <br>
                     <div class="field-flex">
                         <div class="input-group">
                             <span class="input-group-text" id="insGroup">Group #</span>
-                            <input type="text" id="insGroup" name="insGroup" class="form-control" aria-describedby="insurance" maxlength="45">
+                            <input type="text" id="insGroup" name="insGroup" class="form-control" placeholder="99-23450" aria-describedby="insurance" maxlength="45">
                         </div>
                         <div class="input-group">
                             <span class="input-group-text" id="insPolicy">Policy #</span>
@@ -81,6 +82,7 @@
                                 name="insPolicy"
                                 class="form-control"
                                 aria-describedby="insurance"
+                                 placeholder="GG3771"
                                 maxlength="45">
                         </div>
                     </div>
