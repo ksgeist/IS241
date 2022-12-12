@@ -10,25 +10,25 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class AddInsuranceInformationEndpoint implements Route {
+public class AddContactEndpoint implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-        String provider = request.queryParams("insProvider");
-        String groupNumber = request.queryParams("insGroup");
-        String policyNumber = request.queryParams("insPolicy");
         String patient_id = request.params("id");
+        String address = request.queryParams("address");
+        String phoneNumber = request.queryParams("phoneNumber");
+        String phoneType = request.queryParams("phoneType");
 
         try(Connection conn = BackendServer.database.getDatabase().getConnection();
-            PreparedStatement add = conn.prepareStatement("INSERT INTO PatientInsurance(patient_id, provider, group_number ,policy_number) VALUES (?,?,?,?)")) {
+            PreparedStatement add = conn.prepareStatement("INSERT INTO PatientContact(patient_id, address, phone_num, phone_type) VALUES (?,?,?,?)")) {
             add.setInt(1, Integer.parseInt(patient_id));
-            add.setString(2, provider);
-            add.setString(3, groupNumber);
-            add.setString(4, policyNumber);
+            add.setString(2, address);
+            add.setString(3, phoneNumber);
+            add.setString(4, phoneType);
             add.executeUpdate();
             response.redirect("/patient/view/" + patient_id);
-            return ResponseUtils.createSuccess("Successfully added Insurance", response);
+            return ResponseUtils.createSuccess("Successfully added Contact", response);
         } catch (SQLException e) {
-            return ResponseUtils.createError("Failed to update Insurance", 500, response);
+            return ResponseUtils.createError("Failed to update Contact", 500, response);
         }
     }
 }
