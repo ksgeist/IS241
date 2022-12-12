@@ -75,27 +75,27 @@
                     <input type="date" id="dob" name="dob" class="form-control" required="required">
                     <div>
                         <label for="lname">Last Name
-                            <input type="text" id="lname" name="lname" class="form-control name-fields" maxlength="45" required="required">
+                            <input type="text" id="lname" name="lname" placeholder="Roosevelt" class="form-control name-fields" maxlength="45" required="required">
                         </label>
                         <label for="fname">First Name
-                            <input type="text" id="fname" name="fname" class="form-control name-fields" maxlength="45" required="required">
+                            <input type="text" id="fname" name="fname" placeholder="Anna" class="form-control name-fields" maxlength="45" required="required">
                         </label>
                         <label for="mname">Middle Name
-                            <input type="text" id="mname" name="mname" class="form-control name-fields" maxlength="45">
+                            <input type="text" id="mname" name="mname" placeholder="Eleanor" class="form-control name-fields" maxlength="45">
                         </label>
                     </div>
                     <div class="field-flex">
                         <!-- Dropdown for Sex Identuty -->
                         <label for="sex">Sex Identity
                             <select id="sex" name="sex" class="form-select"  required="required">
-                                <option value="">None</option>
+                            <option value="" disabled="disabled" selected="selected">Select Identity</option>
                                 <option value="Female">Female</option>
                                 <option value="Male">Male</option>
                                 <option value="Non-Binary">Non-Binary</option>
                             </select>
                         </label>
                         <label for="ss4">Last 4-digits SSN
-                            <input  type="text" id="ss4" name="ss4" class="form-control"  maxlength = "4" pattern="^\d{4}$" required
+                            <input  type="text" id="ss4" name="ss4" class="form-control"  placeholder="1234" maxlength = "4" pattern="^\d{4}$" required
                             oninput="this.setCustomValidity('')"
                             oninvalid="this.setCustomValidity('Must be 4 digits')" >
                         </label>
@@ -107,15 +107,15 @@
                 <legend>CONTACT INFORMATION</legend>
                 <div>
                     <label for="address">Street Address</label>
-                    <input type="text" id="address" name="address" class="form-control" pattern="^\d+(\s{1}\w+)(\s{1}?\w+)+$" maxlength="95"
+                    <input type="text" id="address" name="address" class="form-control" placeholder="4000 Flora Avenue" pattern="^\d+(\s{1}\w+)(\s{1}?\w+)+$" maxlength="95"
                     oninput="this.setCustomValidity('')"
                     oninvalid="this.setCustomValidity('Must be number (0-9) followed by the street name (a-Z) and street type (a-Z)')" >
                     <div>
                         <label for="city">City
-                            <input type="text" id="city" name="city" class="form-control address-fields">
+                            <input type="text" id="city" name="city" class="form-control address-fields" placeholder="Saint Louis">
                         </label>
                         <label for="zip">Zipcode
-                            <input type="text" id="zip" name="zip" class="form-control address-fields" maxlength = "5" pattern="^\d{5}$"
+                            <input type="text" id="zip" name="zip" class="form-control address-fields" placeholder="63110" maxlength = "5" pattern="^\d{5}$"
                             oninput="this.setCustomValidity('')"                                        
                             oninvalid="this.setCustomValidity('Must be 5 digits')"
                             >
@@ -140,14 +140,12 @@
                             &#92;&#147;
                             jjm
                              -->
-                            <input type="text" id="phone" name="phone" class="form-control" pattern="^\([0-9]{3}\) [0-9]{3} - [0-9]{4}$" maxlength ="16"
-                            
+                            <input type="text" id="phone" name="phone" class="form-control" placeholder="314-867-5309" pattern="^\([0-9]{3}\) [0-9]{3} - [0-9]{4}$" maxlength ="16"
                             oninput="this.setCustomValidity('')"
-                            
                             oninvalid="this.setCustomValidity('Must be in format &#92;&#147;(&#35;&#35;&#35;) &#35;&#35;&#35; - &#35;&#35;&#35; &#92;&#147;')">
                         </label>
                         <label for="email">Email Address
-                            <input type="email" id="email" name="email" class="form-control" pattern="^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$" maxlength = "255"
+                            <input type="email" id="email" name="email" class="form-control" placeholder="eleanor@awesome.com" pattern="^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$" maxlength = "255" 
                             oninput="this.setCustomValidity('')"                                        
                             oninvalid="this.setCustomValidity('Must be in format &#92;&lt;email handle&#92;&gt;@&#92;&lt;service&#92;&gt;.&#92;&lt;domain&#92;&gt;')">
                         </label>
@@ -167,13 +165,14 @@
                             name="insProvider"
                             class="form-control"
                             aria-describedby="insurance"
+                            placeholder="Blue Cross Blue Shield of Missouri"
                             maxlength="45">
                     </div>
                     <br>
                     <div class="field-flex">
                         <div class="input-group">
                             <span class="input-group-text" id="insGroup">Group #</span>
-                            <input type="text" id="insGroup" name="insGroup" class="form-control" aria-describedby="insurance" maxlength="45">
+                            <input type="text" id="insGroup" name="insGroup" class="form-control" aria-describedby="insurance" placeholder="99-23450" maxlength="45">
                         </div>
                         <div class="input-group">
                             <span class="input-group-text" id="insPolicy">Policy #</span>
@@ -183,6 +182,7 @@
                                 name="insPolicy"
                                 class="form-control"
                                 aria-describedby="insurance"
+                                placeholder="GG3771"
                                 maxlength="45">
                         </div>
                     </div>
@@ -201,11 +201,15 @@
                         src="https://www.cdc.gov/vaccines/covid-19/downloads/COVID-19-immunization-schedule-ages-6months-older.pdf"
                         tabindex="-1"></iframe>
                     <br><br>
+                    
                     <!-- Vaccine Manufacturer Radio Button -->
+					<div class ="container-fluid">
+						<div class="row justify-content-center">
+							<p>Vaccine Manufacturer</p>
+						</div>
+					</div>
                     <div class="input-group" role="group">
-                        <label for="vaxMan">Manufacturer:</label>
-                        <div class="field-flex">
-                            <!-- <span class="input-group-text" id="basic-addon1">Vaccine Manufacturer</span> -->
+						<div class="field-flex">
                             <input
                                 type="radio"
                                 id="pfizer"
@@ -242,8 +246,6 @@
                         </div>
                     </div>
 
-                    
-                    
                     <!-- Vaccine Lot Number -->
                     <br>
                         <div class="row">
@@ -254,6 +256,7 @@
 									<input type="text" id="lotNumber" 
 									name="lotNumber" class="form-control"
 									aria-describedby="lot-num-addon" 
+									placeholder="900-HJK45"
 									required="required">
 								</div>
 								</div>
@@ -264,8 +267,9 @@
                     <!-- Dropdown for Vax Dose -->
                     <div class="input-group" role="group">
                         <span class="input-group-text">Vaccine Series Dose</span>
-                        <select id="dose" name="dose" class="form-select"  required>
+                        <select id="dose" name="dose" class="form-select"  required="required">
                             <option value="" disabled="disabled" selected="selected">Select Dose</option>
+
                             <option value="adDose1" >Adult (18+) Primary Series, Monovalent Dose 1</option>
                             <option value="adDose2">Adult (18+) Primary Series, Monovalent Dose 2</option>
                             <option value="adBooster1">Adult (18+) Booster, Monovalent Dose 3
@@ -313,11 +317,11 @@
             <br>
             <div class="text-center">
                 <input type="submit" value="Submit" class="submit-button btn btn-dark btn-lg" id="checked">
-                <div>
-                    <br>
-                    <br>
-                </form>
-                <br>
+        	<div>
+			<br>
+			<br>
+		</form>
+		<br>
                 <!-- ============================================================================ -->
                 <!-- ======== FOR ALL PAGES ========================= -->
 

@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/assets/css/patient_records/add.css">
     <script src="/assets/js/add_record.js" defer></script>
     <script src="/assets/js/patient_records/print_VIS.js" defer></script>
+    <script src="/assets/js/radio_button_error_flag.js" defer="defer"></script>
     <script src="/assets/js/modernizr.custom.40753.js"></script>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -63,11 +64,16 @@
                     tabindex="-1">
                 </iframe>
                 <br><br>
+                
                 <!-- Vaccine Manufacturer Radio Button -->
-                <div class="input-group" role="group">
-					 <label for="vaxMan">Manufacturer:</label>
-                    <div class="field-flex">
-<!--                     <span class="input-group-text" id="basic-addon1">Vaccine Manufacturer</span> -->
+                    <!-- Vaccine Manufacturer Radio Button -->
+					<div class ="container-fluid">
+						<div class="row justify-content-center">
+							<p>Vaccine Manufacturer</p>
+						</div>
+					</div>
+                    <div class="input-group" role="group">
+						<div class="field-flex">
 						<input type="radio" id="pfizer" name="vaxMan" value="pfizer" class="vaxMan btn-check" aria-describedby="basic-addon1">
 						<label for="pfizer" class="vaxMan-label btn btn-primary">Pfizer-BioNTech</label><br>
 						<input type="radio" id="moderna" name="vaxMan" value="moderna" class="vaxMan btn-check" aria-describedby="basic-addon1">
@@ -83,40 +89,45 @@
                 <div class="row">
                 <div class="col">
 					<div class="input-group">
-						<span class="input-group-text" id="lot-num-addon">Lot Number</span>
-						<input type="text" id="lotNumber" name="lotNumber" class="form-control"
-							aria-describedby="lot-num-addon" required="required">
+						<span class="input-group-text" 
+						id="lot-num-addon">Lot Number</span>
+						<input type="text" id="lotNumber" 
+						name="lotNumber" class="form-control"
+						aria-describedby="lot-num-addon" 
+						required="required">
 					</div>
-                </div>
-                <div class="col">
-                </div>
+					</div>
+						<div class="col">
+					</div>
                 </div>
                 <br>
                 <!-- Dropdown for Vax Dose -->
                 <div class="input-group" role="group">
-                    <span class="input-group-text">Vaccine Series Dose</span>
-                    <select id="dose" name="dose" class="form-select">
-                        <option value="invalid" selected>Select Dose</option>
-                        <option value="adDose1">Adult (18+) Primary Series, Monovalent Dose 1</option>
-                        <option value="adDose2">Adult (18+) Primary Series, Monovalent Dose 2</option>
-                        <option value="adBooster1">Adult (18+) Booster, Monovalent Dose 3 </option>
-                        <option value="adBooster2">Adult (18+) Booster, Monovalent Dose 4</option>
-                        <option value="adBoosterBiv">Adult (18+) Booster, Bivalent Dose 5</option>
+                        <span class="input-group-text">Vaccine Series Dose</span>
+                        <select id="dose" name="dose" class="form-select"  required="required">
+                            <option value="" disabled="disabled" selected="selected">Select Dose</option>
 
-                        <option value="teenDose1">Teen (12-17) Primary Series, Monovalent Dose 1</option>
-                        <option value="teenDose2">Teen (12-17) Primary Series, Monovalent Dose 2</option>
-                        <option value="teenBooster1">Teen (12-17) Booster, Monovalent Dose 3</option>
-                        <option value="teenBoosterBiv">Teen (12-17) Booster, Bivalent Dose 4</option>
+                            <option value="adDose1" >Adult (18+) Primary Series, Monovalent Dose 1</option>
+                            <option value="adDose2">Adult (18+) Primary Series, Monovalent Dose 2</option>
+                            <option value="adBooster1">Adult (18+) Booster, Monovalent Dose 3
+                            </option>
+                            <option value="adBooster2">Adult (18+) Booster, Monovalent Dose 4</option>
+                            <option value="adBoosterBiv">Adult (18+) Booster, Bivalent Dose 5</option>
 
-                        <option value="chDose1">Child (5-11) Primary Series, Monovalent Dose 1</option>
-                        <option value="chDose2">Child (5-11) Primary Series, Monovalent Dose 2</option>
-                        <option value="chBooster1">Child (5-11) Booster, Monovalent Dose 3</option>
-                        <option value="chBoosterBiv">Child (5-11) Booster, Bivalent Dose 4</option>
+                            <option value="teenDose1">Teen (12-17) Primary Series, Monovalent Dose 1</option>
+                            <option value="teenDose2">Teen (12-17) Primary Series, Monovalent Dose 2</option>
+                            <option value="teenBooster1">Teen (12-17) Booster, Monovalent Dose 3</option>
+                            <option value="teenBoosterBiv">Teen (12-17) Booster, Bivalent Dose 4</option>
 
-                        <option value="infDose1">Young Child (6mos-4) Primary Series, Monovalent Dose 1</option>
-                        <option value="infDose2">Young Child (6mos-4) Primary Series, Monovalent Dose 2</option>
-                        <option value="infBooster1">Young Child (6mos-4) Booster, Monovalent Dose 3</option>
-                    </select>
+                            <option value="chDose1">Child (5-11) Primary Series, Monovalent Dose 1</option>
+                            <option value="chDose2">Child (5-11) Primary Series, Monovalent Dose 2</option>
+                            <option value="chBooster1">Child (5-11) Booster, Monovalent Dose 3</option>
+                            <option value="chBoosterBiv">Child (5-11) Booster, Bivalent Dose 4</option>
+
+                            <option value="infDose1">Young Child (6mos-4) Primary Series, Monovalent Dose 1</option>
+                            <option value="infDose2">Young Child (6mos-4) Primary Series, Monovalent Dose 2</option>
+                            <option value="infBooster1">Young Child (6mos-4) Booster, Monovalent Dose 3</option>
+                        </select>
             </div>
                 <br>
 
@@ -141,7 +152,7 @@
         </fieldset>
         <br>
         <div class="text-center">
-			<input type="submit" value="Submit" class="submit-button btn btn-dark btn-lg">
+            <input type="submit" value="Submit" class="submit-button btn btn-dark btn-lg" id="checked">
 		<div>
         <br>
     </form>
