@@ -155,6 +155,14 @@ public class Routing {
             get("/weekly", new WeeklyReportPage());
             post("/weekly/generate", new WeeklyReportEndpoint());
         });
+        path("/contact", () -> {
+            get("/add/:id", new AddContactPage());
+            post("/add/:id", new AddContactEndpoint());
+        });
+        path("/insurance", () -> {
+            get("/add/:id", new AddInsuranceInformationPage());
+            post("/add/:id", new AddInsuranceInformationEndpoint());
+        });
     }
     public void fire() {
         ignite();
