@@ -80,10 +80,16 @@
                 </div>
                 <!-- Vaccine Lot Number -->
                 <br>
-                <div class="input-group">
-                    <span class="input-group-text" id="lot-num-addon">Lot Number</span>
-                    <input type="text" id="lotNumber" name="lotNumber" class="form-control"
-                        aria-describedby="lot-num-addon">
+                <div class="row">
+                <div class="col">
+					<div class="input-group">
+						<span class="input-group-text" id="lot-num-addon">Lot Number</span>
+						<input type="text" id="lotNumber" name="lotNumber" class="form-control"
+							aria-describedby="lot-num-addon" required="required">
+					</div>
+                </div>
+                <div class="col">
+                </div>
                 </div>
                 <br>
                 <!-- Dropdown for Vax Dose -->
@@ -145,7 +151,8 @@
 
     <!-- ======== HELP POPUP BUTTON ========================= -->
     <!-- Written by JM -->
-    <div>
+ <!-- 
+   <div>
         <div class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
@@ -155,6 +162,7 @@
             </div>
         </div>
     </div>
+ -->
 
 
 </body>

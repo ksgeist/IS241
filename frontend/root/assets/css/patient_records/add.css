@@ -87,3 +87,6 @@ button.btn-primary {
 	background: ghostwhite;
 	color: #000;   
 }
+input:invalid, select:invalid, .vaxMan-label:required {
+    border-color: red;
+}
