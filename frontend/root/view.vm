@@ -161,7 +161,11 @@
                                         <td>N/A</td>
                                     #end
                                     #if($contact.phoneType())
-                                        <td>${contact.phoneType()}</td>
+                                        #if($contact.phoneType() == "Mobi")
+                                            <td>Mobile</td>
+                                        #else
+                                            <td>${contact.phoneType()}</td>
+                                        #end
                                     #else
                                         <td>N/A</td>
                                     #end
@@ -227,7 +231,7 @@
                     </table>
                     #if($edit_patient || $write_patient)
                         <div class="add-div">
-                            <a href="/ins/add/${patient.Id}" class="add-button btn btn-danger">Add Insurance</a>
+                            <a href="/insurance/add/${patient.Id}" class="add-button btn btn-danger">Add Insurance</a>
                         </div>
                     #end
                 </div>

@@ -45,7 +45,7 @@
 		
     <!-- ======== PATIENT INPUT FORM ========================= -->
     <!-- Written by KSG -->
-    <form action="/ins/add/${patient.Id}" method="POST" class="background-call" data-redirect="/patient/view/${patient.Id}">
+    <form action="/insurance/add/${patient.Id}" method="POST" class="background-call" data-redirect="/patient/view/${patient.Id}">
         <fieldset class="form-control">
                 <legend>INSURANCE INFORMATION</legend>
                 <div>

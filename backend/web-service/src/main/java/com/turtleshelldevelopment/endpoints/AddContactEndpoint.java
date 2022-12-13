@@ -18,6 +18,10 @@ public class AddContactEndpoint implements Route {
         String phoneNumber = request.queryParams("phone").replaceAll("\\D+", "");
         String phoneType = request.queryParams("PhoneType");
 
+        if(!phoneType.equals("Home") && !phoneType.equals("Mobi") && !phoneType.equals("Work")) {
+            return ResponseUtils.createError("Invalid Phone Type", 400, response);
+        }
+
         try(Connection conn = BackendServer.database.getDatabase().getConnection();
             PreparedStatement add = conn.prepareStatement("INSERT INTO PatientContact(patient_id, address, phone_num, phone_type) VALUES (?,?,?,?)")) {
             add.setInt(1, Integer.parseInt(patient_id));

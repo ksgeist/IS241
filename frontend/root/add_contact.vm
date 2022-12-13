@@ -68,7 +68,7 @@
                         <label for="phoneType">Phone Type
                             <select id="phoneType" name="PhoneType" class="form-select">
                                 <option value="Home">Home</option>
-                                <option value="Mobile">Mobile</option>
+                                <option value="Mobi">Mobile</option>
                                 <option value="Work">Work</option>
                             </select>
                         </label>
