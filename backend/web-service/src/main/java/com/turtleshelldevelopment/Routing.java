@@ -70,8 +70,8 @@ public class Routing {
     public void createInsuranceRoutes() {
         before("/insurance/*", EndpointFilters::verifyCredentials);
         path("/insurance", () -> {
-            post("/add/:user_id", new AddInsuranceInformationEndpoint());
-            get("/add/:user_id", new AddInsuranceInformationPage());
+            post("/add/:id", new AddInsuranceInformationEndpoint());
+            get("/add/:id", new AddInsuranceInformationPage());
             get("/remove/:user_id/:id", new DeleteInsuranceInformationEndpoint());
         });
     }
