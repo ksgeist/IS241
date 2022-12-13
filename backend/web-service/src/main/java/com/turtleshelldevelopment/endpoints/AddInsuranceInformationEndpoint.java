@@ -18,6 +18,16 @@ public class AddInsuranceInformationEndpoint implements Route {
         String policyNumber = request.queryParams("insPolicy");
         String patient_id = request.params("id");
 
+        if(provider == null || provider.isEmpty()) {
+            return ResponseUtils.createError("No provider name provided!", 400, response);
+        }
+        if(groupNumber == null || groupNumber.isEmpty()) {
+            return ResponseUtils.createError("No group number provided!", 400, response);
+        }
+        if(policyNumber == null || policyNumber.isEmpty()) {
+            return ResponseUtils.createError("No insurance policy provided!", 400, response);
+        }
+
         try(Connection conn = BackendServer.database.getDatabase().getConnection();
             PreparedStatement add = conn.prepareStatement("INSERT INTO Insurance(patient_id, provider, group_number ,policy_number) VALUES (?,?,?,?)")) {
             add.setInt(1, Integer.parseInt(patient_id));
