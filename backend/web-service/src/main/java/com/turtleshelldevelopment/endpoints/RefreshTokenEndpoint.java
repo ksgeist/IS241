@@ -12,7 +12,6 @@ import spark.Route;
 public class RefreshTokenEndpoint implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-        //TODO
         TokenUtils utils = new TokenUtils(request.cookie("token"), Issuers.AUTHENTICATION.getIssuer());
         if(!utils.isInvalid()) {
             JWTAuthentication.generateAuthToken(utils.getDecodedJWT().getSubject(), new Permissions(utils.getDecodedJWT().getSubject()).getPermissionsAsString(), response);
@@ -20,6 +19,6 @@ public class RefreshTokenEndpoint implements Route {
             response.redirect("/");
             return ResponseUtils.createError("Invalid Token", 401, response);
         }
-        return null;
+        return ResponseUtils.createSuccess("Success", response);
     }
 }

@@ -87,7 +87,7 @@ input[type="email"]#email {
 input[type="text"]#phone {
     width: 150px;
 }
-.vaxMan-label: {
+.vaxMan-label {
     background: red;
 }
 label.btn-primary {

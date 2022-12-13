@@ -15,8 +15,8 @@ public class AddContactEndpoint implements Route {
     public Object handle(Request request, Response response) throws Exception {
         String patient_id = request.params("id");
         String address = request.queryParams("address");
-        String phoneNumber = request.queryParams("phoneNumber");
-        String phoneType = request.queryParams("phoneType");
+        String phoneNumber = request.queryParams("phone").replaceAll("\\D+", "");
+        String phoneType = request.queryParams("PhoneType");
 
         try(Connection conn = BackendServer.database.getDatabase().getConnection();
             PreparedStatement add = conn.prepareStatement("INSERT INTO PatientContact(patient_id, address, phone_num, phone_type) VALUES (?,?,?,?)")) {
@@ -25,9 +25,10 @@ public class AddContactEndpoint implements Route {
             add.setString(3, phoneNumber);
             add.setString(4, phoneType);
             add.executeUpdate();
-            response.redirect("/patient/view/" + patient_id);
+            //response.redirect("/patient/view/" + patient_id);
             return ResponseUtils.createSuccess("Successfully added Contact", response);
         } catch (SQLException e) {
+            e.printStackTrace();
             return ResponseUtils.createError("Failed to update Contact", 500, response);
         }
     }

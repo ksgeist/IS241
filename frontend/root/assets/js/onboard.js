@@ -14,10 +14,6 @@ function continueOnboarding(evt) {
     if (request.target.readyState === XMLHttpRequest.DONE) {
       if (request.target.status === 200) {
         var json_data = JSON.parse(request.target.responseText);
-        //TODO Display Qr code
-        //TODO Display manual code
-        //TODO Please use a multi factor authentication app of your choice (Authy, Google Authenticator) and add this code.
-        //TODO Once you have added this please insert the code you are given to continue.
         var qrCode = new Image();
         qrCode.src = json_data["mfaQR"];
         document.getElementById("onboard-body").innerHTML =

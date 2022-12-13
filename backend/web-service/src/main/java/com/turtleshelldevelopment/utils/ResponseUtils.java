@@ -12,6 +12,7 @@ public class ResponseUtils {
      */
     public static JSONObject createError(String error, int status, Response resp) {
         JSONObject errorResponse = new JSONObject();
+        errorResponse.put("success", false);
         errorResponse.put("error", true);
         errorResponse.put("message", error);
         resp.status(status);

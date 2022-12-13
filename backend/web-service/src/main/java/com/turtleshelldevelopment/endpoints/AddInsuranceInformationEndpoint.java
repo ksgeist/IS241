@@ -19,15 +19,16 @@ public class AddInsuranceInformationEndpoint implements Route {
         String patient_id = request.params("id");
 
         try(Connection conn = BackendServer.database.getDatabase().getConnection();
-            PreparedStatement add = conn.prepareStatement("INSERT INTO PatientInsurance(patient_id, provider, group_number ,policy_number) VALUES (?,?,?,?)")) {
+            PreparedStatement add = conn.prepareStatement("INSERT INTO Insurance(patient_id, provider, group_number ,policy_number) VALUES (?,?,?,?)")) {
             add.setInt(1, Integer.parseInt(patient_id));
             add.setString(2, provider);
             add.setString(3, groupNumber);
             add.setString(4, policyNumber);
             add.executeUpdate();
-            response.redirect("/patient/view/" + patient_id);
+            //response.redirect("/patient/view/" + patient_id);
             return ResponseUtils.createSuccess("Successfully added Insurance", response);
         } catch (SQLException e) {
+            //response.redirect("/patient/view/" + patient_id);
             return ResponseUtils.createError("Failed to update Insurance", 500, response);
         }
     }

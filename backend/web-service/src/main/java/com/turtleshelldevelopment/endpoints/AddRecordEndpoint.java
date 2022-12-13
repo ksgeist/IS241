@@ -9,10 +9,7 @@ import spark.Response;
 import spark.Route;
 import spark.template.velocity.VelocityTemplateEngine;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.*;
 import java.util.regex.Pattern;
 
@@ -46,7 +43,6 @@ public class AddRecordEndpoint implements Route {
             try {
                 Integer.parseInt(patientSSN);
             } catch (NumberFormatException e) {
-                //TODO Return to form with previous fields and display error
                 return ResponseUtils.createError("Invalid patient SSN", 400, response);
             }
             String patientBirthDate = request.queryParams("curr-date");
@@ -66,15 +62,20 @@ public class AddRecordEndpoint implements Route {
             String vaccineSeries = request.queryParams("dose");
             int site, user;
 
+            boolean shouldCreateContact = (contactEmail != null && !contactEmail.isEmpty()) || (contactPhone != null && !contactPhone.isEmpty()) || (contactAddress != null && !contactAddress.isEmpty());
+            boolean shouldCreateInsurance = (insuranceProviderName != null && !insuranceProviderName.isEmpty()) && (insuranceGroupNumber != null && !insuranceGroupNumber.isEmpty()) && (insurancePolicyNumber != null && !insurancePolicyNumber.isEmpty());
+
             if(!FormValidator.checkValues()) {
                 return ResponseUtils.createError("Missing Values", 400, response);
             }
             Pattern phoneNum = Pattern.compile("^\\([0-9]{3}\\) [0-9]{3} - [0-9]{4}$");
-            if(!phoneNum.matcher(contactPhone).matches()) {
-                return ResponseUtils.createError("Phone number not properly formatted", 400, response);
-            } else {
-                contactPhone = Pattern.compile("[0-9]+").matcher(contactPhone).group();
-                System.out.println("phone is: " + contactPhone);
+            if(contactPhone != null && !contactPhone.isEmpty()) {
+                if (!phoneNum.matcher(contactPhone).matches()) {
+                    return ResponseUtils.createError("Phone number not properly formatted", 400, response);
+                } else {
+                    contactPhone = Pattern.compile("[0-9]+").matcher(contactPhone).group();
+                    System.out.println("phone is: " + contactPhone);
+                }
             }
             LocalDate dateFiled;
             if((dateFiled = FormValidator.parseDateFromForm(date)) == null) {
@@ -96,38 +97,82 @@ public class AddRecordEndpoint implements Route {
             if((site = tokenVerifier.getSiteId()) == -1) {
                 return ResponseUtils.createError("Invalid Site", 400, response);
             }
-            //TODO check if there are any similar patients in the database and notify of such
             try(Connection databaseConnection = BackendServer.database.getDatabase().getConnection();
-                CallableStatement patientCall = databaseConnection.prepareCall("CALL ADD_PATIENT_INFO(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
-            ) {
-                patientCall.setString(1, patientFirstName);
-                patientCall.setString(2, patientMiddleName);
-                patientCall.setString(3, patientLastName);
-                patientCall.setInt(4, Integer.parseInt(patientSSN));
-                ZoneOffset timeZone = ZoneId.systemDefault().getRules().getOffset(LocalDateTime.now());
+                PreparedStatement createPatient = databaseConnection.prepareStatement("INSERT INTO PatientInformation(first_name, middle_name, last_name, last_ss_num, dob, email, gender) VALUES (?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement createVaccine = databaseConnection.prepareStatement("INSERT INTO Vaccine(lot_num, site_id, patient_id, administered_date, manufacturer, dose, administrated_by) VALUES (?,?,?,?,?,?,?);");
+                PreparedStatement createInsurance = databaseConnection.prepareStatement("INSERT INTO Insurance(patient_id, provider, group_number, policy_number) VALUES (?,?,?,?)");
+                PreparedStatement createContact = databaseConnection.prepareStatement("INSERT INTO PatientContact(patient_id, address, phone_num, phone_type, inactive) VALUES(?,?,?,?,FALSE); ");
 
-                patientCall.setDate(5, new Date(dateOfBirth.toEpochSecond(LocalTime.now(), timeZone)));
-                patientCall.setString(6, contactEmail);
-                patientCall.setString(7, patientSex);
-                //Not Required
-                patientCall.setString(8, contactAddress);
-                patientCall.setString(9, contactPhone);
-                patientCall.setString(10, contactPhoneType);
-                //Not Required
-                patientCall.setString(11, insuranceProviderName);
-                //Not Required
-                patientCall.setString(12, insuranceGroupNumber);
-                //Not Required
-                patientCall.setString(13, insurancePolicyNumber);
-                patientCall.setDate(14, new Date(dateFiled.toEpochSecond(LocalTime.now(), timeZone)));
-                patientCall.setString(15, vaccineManu);
-                patientCall.setInt(16, Constants.VACCINE_SERIES.get(vaccineSeries));
-                patientCall.setInt(17, Integer.parseInt(vaccineLotNum));
-                patientCall.setInt(18, user); //Administered by
-                patientCall.setInt(19, site); //Site id
-                if(patientCall.executeUpdate() == 1) {
-                    System.out.println("Successfully wrote patient to database");
+            ) {
+
+                createPatient.setString(1, patientFirstName);
+                createPatient.setString(2, patientMiddleName);
+                createPatient.setString(3, patientLastName);
+                createPatient.setInt(4, Integer.parseInt(patientSSN));
+                ZoneOffset timeZone = ZoneId.systemDefault().getRules().getOffset(LocalDateTime.now());
+                createPatient.setDate(5, new Date(dateOfBirth.toEpochSecond(LocalTime.now(), timeZone)));
+                if(contactEmail != null && !contactEmail.isEmpty()) {
+                    createPatient.setString(6, contactEmail);
+                } else {
+                    createPatient.setString(6, "");
                 }
+                createPatient.setString(7, patientSex);
+                //DONE
+
+                if(shouldCreateContact) {
+                    if(contactAddress != null && !contactAddress.isEmpty()) {
+                        createContact.setString(2, contactAddress);
+                    } else {
+                        createContact.setNull(2, Types.CHAR);
+                    }
+                    if(contactPhone != null && !contactPhone.isEmpty()) {
+                        createContact.setString(3, contactPhone);
+                        createContact.setString(4, contactPhoneType);
+                    } else {
+                        createContact.setNull(3, Types.CHAR);
+                        createContact.setNull(4, Types.CHAR);
+                    }
+                }
+                //DONE
+
+                if(shouldCreateInsurance) {
+                    createInsurance.setString(2, insuranceProviderName);
+                    createInsurance.setString(3, insuranceGroupNumber);
+                    createInsurance.setString(4, insurancePolicyNumber);
+                }
+
+                createVaccine.setString(1, vaccineLotNum);
+                createVaccine.setInt(2, site);
+                createVaccine.setDate(4, new Date(dateFiled.toEpochSecond(LocalTime.now(), timeZone)));
+                createVaccine.setString(5, vaccineManu);
+                createVaccine.setInt(6, Constants.VACCINE_SERIES.get(vaccineSeries));
+                createVaccine.setInt(7, user);
+
+                if(createPatient.executeUpdate() == 1) {
+                    ResultSet generatedKeys = createPatient.getGeneratedKeys();
+                    if(generatedKeys.next()) {
+                        final int patientId = generatedKeys.getInt(1);
+                        if(shouldCreateContact) {
+                            createContact.setInt(1, patientId);
+                            if (createContact.executeUpdate() == 0) {
+                                return ResponseUtils.createError("Failed to create contact for patient", 500, response);
+                            }
+                        }
+                        if(shouldCreateInsurance) {
+                            createInsurance.setInt(1, patientId);
+                            if(createInsurance.executeUpdate() == 0) {
+                                return ResponseUtils.createError("Failed to create insurance for patient", 500, response);
+                            }
+                        }
+                        createVaccine.setInt(3, patientId);
+                        if(createVaccine.executeUpdate() == 0) {
+                            return ResponseUtils.createError("Failed to create vaccine for patient", 500, response);
+                        }
+                    } else {
+                        return ResponseUtils.createError("Failed to retrieve key for new patient", 500, response);
+                    }
+                }
+
                 databaseConnection.close();
                 return ResponseUtils.createSuccess("Added new patient", response);
             } catch (SQLException e) {

@@ -6,26 +6,17 @@
     <!-- Missouri COVID-19 Vaccine Tracker Application Filename: index.html Team: Turtle Shell
         Development Authors: Katherine Geist Date: 13 Oct 2022 -->
 
-    <meta charset="utf-8">
-
+    <meta charset="utf-8" >
     <!-- ======== EXTERNAL SCRIPTS ========================= -->
     <link rel="stylesheet" href="/assets/css/patient_records/add.css">
-    <script src="/assets/js/add_record.js" defer></script>
-    <script src="/assets/js/patient_records/print_VIS.js" defer></script>
-    <script src="/assets/js/modernizr.custom.40753.js"></script>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
-        crossorigin="anonymous"></script>
-        <style>
-            .nav-handler {
-                margin: 0 auto;
-                width: 1024px;
-                padding-top: 5px;
-            }
-        </style>
+    <style>
+        .nav-handler {
+            margin: 0 auto;
+            width: 1024px;
+            padding-top: 5px;
+        }
+    </style>
+    ${global_head}
 </head>
 
 
@@ -53,7 +44,7 @@
 		
     <!-- ======== PATIENT INPUT FORM ========================= -->
     <!-- Written by KSG -->
-    <form action="/contact/add/${patient.Id}" method="POST">
+    <form action="/contact/add/${patient.Id}" method="POST" class="background-call" data-redirect="/patient/view/${patient.Id}">
          <fieldset class="form-control">
                 <legend>CONTACT INFORMATION</legend>
                 <div>
@@ -82,20 +73,9 @@
                             </select>
                         </label>
                         <label for="phone">Phone Number
-
-                            <!-- These blocks of code entail HTML break characters arranged in a way to trigger a
-                            Javascript break sequence in the oninvalid attribute.(Ex: &#92;&#147;)
-                            because we want quotes inside the parentheses, but to prevent it from being a literal we need a backslash
-                            followed by the quotation mark. This javascript escape syntax does not apply to html and as such the javascript escape
-                            sequence is composed of html escape characters for the backslash and the character in question respectively
-                            &#92;&#147;
-                            jjm
-                             -->
-                            <input type="text" id="phone" name="phone" class="form-control" placeholder="314-867-5309" pattern="^\([0-9]{3}\) [0-9]{3} - [0-9]{4}$" maxlength ="16"
-                            
+                            <input type="text" id="phone" name="phone" class="form-control phone-format" placeholder="(123) 456 - 7890" pattern="^\([0-9]{3}\) [0-9]{3} - [0-9]{4}$" maxlength ="16"
                             oninput="this.setCustomValidity('')"
-                            
-                            oninvalid="this.setCustomValidity('Must be in format &#92;&#147;(&#35;&#35;&#35;) &#35;&#35;&#35; - &#35;&#35;&#35; &#92;&#147;')">
+                            oninvalid="this.setCustomValidity('Must be in format (&#35;&#35;&#35;) &#35;&#35;&#35; - &#35;&#35;&#35;')">
                         </label>
                         <label for="email">Email Address
                             <input type="email" id="email" name="email" class="form-control" placeholder="eleanor@awesome.com" pattern="^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$" maxlength = "255"
@@ -109,15 +89,10 @@
         <br>
         <div class="text-center">
 			<input type="submit" value="Submit" class="submit-button btn btn-dark btn-lg">
-		<div>
+		</div>
         <br>
     </form>
     <br>
-    <!-- ============================================================================ -->
-    <!-- ======== FOR ALL PAGES ========================= -->
-
-    <!-- ======== HELP POPUP BUTTON ========================= -->
-    <!-- Written by JM -->
     <div>
         <div class="modal">
             <div class="modal-content">
@@ -128,6 +103,17 @@
             </div>
         </div>
     </div>
-
-
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="main-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img src="" class="rounded me-2" alt="...">
+                <strong class="me-auto" id="response-name"></strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="response"></div>
+        </div>
+    </div>
+    <script src="/assets/js/patient_records/handle_requests.js" defer></script>
+    <script src="/assets/js/patient_records/format_phone.js" defer></script>
 </body>
+</html>

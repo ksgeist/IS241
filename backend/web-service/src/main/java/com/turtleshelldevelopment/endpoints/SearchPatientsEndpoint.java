@@ -31,21 +31,17 @@ public class SearchPatientsEndpoint implements Route {
         if(!request.queryParams("dob").isEmpty() && (dateOfBirth = FormValidator.parseDateFromForm(request.queryParams("dob"))) == null) return ResponseUtils.createError("Invalid Date Format.", 400, response);
         try(Connection databaseConnection = BackendServer.database.getDatabase().getConnection();
             PreparedStatement patientSearch = databaseConnection.prepareCall("CALL SEARCH_PATIENTS(?, ?, ?)")) {
-            System.out.println("applying params");
             if(!request.queryParams("ss4").isEmpty()) patientSearch.setString(1, request.queryParams("ss4"));
             else patientSearch.setNull(1, Types.VARCHAR);
             if(!request.queryParams("lname").isEmpty()) patientSearch.setNString(2, request.queryParams("lname"));
             //TODO finish up and fix date of birth field to database
             else patientSearch.setNull(2, Types.VARCHAR);
-            System.out.println("Applying dob");
             if(dateOfBirth != null) patientSearch.setDate(3, Date.valueOf(dateOfBirth));
             else patientSearch.setNull(3, Types.DATE);
             //patientSearch.setDate(3, request.queryParams("dob"));
-            System.out.println("Done!");
             ResultSet set = patientSearch.executeQuery();
             List<Patient> patientsList = new ArrayList<>();
             while(set.next()) {
-                System.out.println("got a patient");
                 patientsList.add(new Patient(set.getInt("patient_id"), set.getString("first_name"),
                         set.getString("middle_name"), set.getString("last_name"), set.getInt("last_ss_num"),
                         set.getDate("dob"), set.getString("email"), set.getString("gender")
@@ -58,7 +54,6 @@ public class SearchPatientsEndpoint implements Route {
             e.printStackTrace();
             return ResponseUtils.createError("Failed to access database", 500, response);
         }
-        //System.out.println("Returning...");
         return new VelocityTemplateEngine().render(new ModelAndView(modelData, "/frontend/search.vm"));
     }
 }

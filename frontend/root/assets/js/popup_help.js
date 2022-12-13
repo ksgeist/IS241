@@ -6,7 +6,7 @@
 	Written by Jasmin Milicevic, put into separate file by KSG & updated to work with dashboards
 
 */
-
+/*
 const modal = document.querySelector(".modal");
 const trigger = document.querySelector(".trigger");
 const closeButton = document.querySelector(".close-button");
@@ -26,3 +26,4 @@ function windowOnClick(event) {
 trigger.addEventListener("click", toggleModal);
 closeButton.addEventListener("click", toggleModal);
 window.addEventListener("click", windowOnClick);
+*/

@@ -1,5 +1,6 @@
 package com.turtleshelldevelopment;
 
+import com.auth0.jwt.JWT;
 import com.turtleshelldevelopment.utils.Issuers;
 import spark.Response;
 
@@ -107,7 +108,11 @@ public class JWTAuthentication {
                 .withIssuedAt(currTime)
                 .withExpiresAt(inst)
                 .sign(BackendServer.JWT_ALGO);
-        response.cookie("/","token", jwt, 600, true, true);
+        String refresh = JWT.create()
+                .withIssuer(Issuers.AUTHENTICATION.getIssuer())
+                .withSubject(username)
+                        .sign(BackendServer.JWT_ALGO);
+        response.cookie("/","token", jwt, 600, true, false);
     }
 
     /**
@@ -124,7 +129,7 @@ public class JWTAuthentication {
         //Get the time now
         Instant currentTime = Instant.now();
         //Add three minutes to current time, this being our expiration for the token
-        Instant expiration = currentTime.plus(3, ChronoUnit.MINUTES);
+        Instant expiration = currentTime.plus(5, ChronoUnit.MINUTES);
         //Generate JWT token to be sent to client
         String jwt = com.auth0.jwt.JWT.create()
                 .withIssuer(Issuers.MFA_LOGIN.getIssuer())
@@ -135,6 +140,6 @@ public class JWTAuthentication {
                 .withExpiresAt(expiration)
                 .sign(BackendServer.JWT_ALGO);
         //Set token cookie in response to client
-        response.cookie("/","token", jwt, 300, true, true);
+        response.cookie("/","token", jwt, 300, true, false);
     }
 }

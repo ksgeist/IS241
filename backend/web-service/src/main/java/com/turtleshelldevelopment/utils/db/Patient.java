@@ -90,7 +90,7 @@ public class Patient {
             getInsurances.setInt(1, this.id);
             ResultSet res = getInsurances.executeQuery();
             while(res.next()) {
-                insurances.add(new Insurance(res.getString("provider"), res.getString("group_number"),
+                insurances.add(new Insurance(res.getInt("insurance_id"), res.getString("provider"), res.getString("group_number"),
                         res.getString("policy_number")));
             }
         } catch (SQLException e) {
@@ -101,20 +101,19 @@ public class Patient {
     }
 
     public List<Contact> getContacts() {
-        List<Contact> insurances = new ArrayList<>();
+        List<Contact> contacts = new ArrayList<>();
         try(Connection databaseConnection = BackendServer.database.getDatabase().getConnection(); CallableStatement getInsurances = databaseConnection.prepareCall("CALL GET_CONTACTS(?)");) {
             getInsurances.setInt(1, this.id);
             ResultSet res = getInsurances.executeQuery();
             while(res.next()) {
-                insurances.add(new Contact(res.getInt("id"), res.getInt("patient_id"),
+                contacts.add(new Contact(res.getInt("id"), res.getInt("patient_id"),
                         res.getString("address"), res.getString("phone_num"), res.getString("phone_type")));
             }
-            getInsurances.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            return insurances;
+            return contacts;
         }
-        return insurances;
+        return contacts;
     }
 
     public List<Vaccine> getVaccines() {

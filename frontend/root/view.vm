@@ -12,17 +12,7 @@
         <link rel="stylesheet" href="/assets/css/patient_records/view.css">
         <script src="/assets/js/add_record.js" defer="defer"></script>
         <script src="/assets/js/patient_records/print_VIS.js" defer="defer"></script>
-        <script src="/assets/js/modernizr.custom.40753.js"></script>
-
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
-            crossorigin="anonymous">
-        <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
-            crossorigin="anonymous"></script>
+        ${global_head}
         #set($insurances = $patient.getInsurances())
         #set($contacts = $patient.getContacts())
         #set($vaccines = $patient.getVaccines())
@@ -48,7 +38,7 @@
             </nav>
         </div>
 
-        <form action="/record/edit/${patient.Id}" method="POST" id="update-patient">
+        <form action="/record/edit/${patient.Id}" method="POST" id="update-patient" class="background-call">
             <!--- TODO: update patient using JQuery to handle request and response to a notification on the bottom right with toasts from bootstrap -->
             <fieldset class="form-control">
                 <legend>PATIENT INFORMATION</legend>
@@ -125,7 +115,9 @@
                                 name="email"
                                 class="form-control"
                                 maxlength="255"
-                                value="${patient.Email}"
+                                #if($patient.Email)
+                                    value="${patient.Email}"
+                                #end
                                 #if(!$edit_patient)
                                     disabled
                                 #end>
@@ -158,12 +150,24 @@
                         <tbody>
                             #foreach($contact in $contacts)
                                 <tr>
-                                    <td>${contact.address()}</td>
-                                    <td>${contact.phoneNumber()}</td>
-                                    <td>${contact.phoneType()}</td>
+                                    #if($contact.address())
+                                        <td>${contact.address()}</td>
+                                    #else
+                                        <td>N/A</td>
+                                    #end
+                                    #if($contact.phoneNumber())
+                                        <td>(${contact.phoneNumber().substring(0, 3)})  ${contact.phoneNumber().substring(3, 6)} - ${contact.phoneNumber().substring(6, 10)}</td>
+                                    #else
+                                        <td>N/A</td>
+                                    #end
+                                    #if($contact.phoneType())
+                                        <td>${contact.phoneType()}</td>
+                                    #else
+                                        <td>N/A</td>
+                                    #end
                                     #if($edit_patient)
                                         <td class="delete-button">
-                                            <a href="/contact/remove/${contact.id()}" class="btn btn-danger">Delete</a>
+                                            <a href="/contact/remove/${patient.Id}/${contact.id()}" class="btn btn-danger">Delete</a>
                                         </td>
                                     #end
                                 </tr>
@@ -207,7 +211,7 @@
                                     <td>${insurance.policyNumber()}</td>
                                     #if($edit_patient)
                                         <td class="delete-button">
-                                            <a href="/insurance/remove/${insurance.id()}" class="btn btn-danger">Delete</a>
+                                            <a href="/insurance/remove/${patient.Id}/${insurance.id()}" class="btn btn-danger">Delete</a>
                                         </td>
                                     #end
                                 </tr>
@@ -223,7 +227,7 @@
                     </table>
                     #if($edit_patient || $write_patient)
                         <div class="add-div">
-                            <a href="/insurance/add/${patient.Id}" class="add-button btn btn-danger">Add Insurance</a>
+                            <a href="/ins/add/${patient.Id}" class="add-button btn btn-danger">Add Insurance</a>
                         </div>
                     #end
                 </div>
@@ -276,6 +280,16 @@
             <br>
         </form>
         <br>
-
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="main-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img class="rounded me-2" alt="...">
+                <strong class="me-auto" id="response-name"></strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="response"></div>
+        </div>
+        </div>
+        <script src="/assets/js/patient_records/handle_requests.js"></script>
     </body>
 </html>

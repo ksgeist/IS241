@@ -10,22 +10,14 @@
 
     <!-- ======== EXTERNAL SCRIPTS ========================= -->
     <link rel="stylesheet" href="/assets/css/patient_records/add.css">
-    <script src="/assets/js/add_record.js" defer></script>
-    <script src="/assets/js/patient_records/print_VIS.js" defer></script>
-    <script src="/assets/js/modernizr.custom.40753.js"></script>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
-        crossorigin="anonymous"></script>
-        <style>
-            .nav-handler {
-                margin: 0 auto;
-                width: 1024px;
-                padding-top: 5px;
-            }
-        </style>
+    ${global_head}
+    <style>
+        .nav-handler {
+            margin: 0 auto;
+            width: 1024px;
+            padding-top: 5px;
+        }
+    </style>
 </head>
 
 
@@ -53,7 +45,7 @@
 		
     <!-- ======== PATIENT INPUT FORM ========================= -->
     <!-- Written by KSG -->
-    <form action="/insurance/add/${patient.Id}" method="POST">
+    <form action="/ins/add/${patient.Id}" method="POST" class="background-call" data-redirect="/patient/view/${patient.Id}">
         <fieldset class="form-control">
                 <legend>INSURANCE INFORMATION</legend>
                 <div>
@@ -110,6 +102,15 @@
             </div>
         </div>
     </div>
-
-
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="main-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img class="rounded me-2" alt="...">
+                <strong class="me-auto" id="response-name"></strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="response"></div>
+        </div>
+    </div>
+    <script src="/assets/js/patient_records/handle_requests.js"></script>
 </body>

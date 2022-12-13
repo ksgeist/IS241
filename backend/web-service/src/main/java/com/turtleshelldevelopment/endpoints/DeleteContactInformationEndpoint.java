@@ -13,6 +13,7 @@ import java.sql.SQLException;
 public class DeleteContactInformationEndpoint implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
+        String patientId = request.params("user_id");
         String id = request.params("id");
         try {
             Integer.parseInt(id);
@@ -24,7 +25,7 @@ public class DeleteContactInformationEndpoint implements Route {
              PreparedStatement deleteContact = databaseConnection.prepareStatement("DELETE FROM PatientContact WHERE id = ?")) {
             deleteContact.setInt(1, Integer.parseInt(id));
             if(deleteContact.executeUpdate() == 1) {
-                response.redirect("/patient/view/" + id);
+                response.redirect("/patient/view/" + patientId);
                 return ResponseUtils.createSuccess("Successfully removed Contact for Patient", response);
             }
 

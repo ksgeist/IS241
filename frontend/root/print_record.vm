@@ -11,17 +11,8 @@
         <!-- ======== EXTERNAL SCRIPTS ========================= -->
         <link rel="stylesheet" href="/assets/css/patient_records/add.css">
         <script src="/assets/js/add_record.js" defer="defer"></script>
-        <script src="/assets/js/modernizr.custom.40753.js"></script>
-
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
-            crossorigin="anonymous">
-        <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
-            crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="/assets/css/patient_records/print.css" media="print" />
+        ${global_head}
         <style>
             .nav-handler {
                 margin: 0 auto;
@@ -35,7 +26,8 @@
         <!-- ======== HEADER ========================= -->
         <!-- Written by KSG -->
         ${header}
-
+        #set($vaccines = $patient.getVaccines())
+        #set($insurances = $patient.getInsurances())
         <div class="nav-handler">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -58,75 +50,47 @@
         <!-- Written by KSG -->
 
         <form>
-            <fieldset class="form-control">
-                <legend>PATIENT INFORMATION</legend>
+            <fieldset>
+                <legend style="font-size:20pt;">COVID-19 Vaccine Report for: ${patient.LastName}, ${patient.FirstName} ${patient.MiddleName}</legend>
                 <div>
-                    <label for="dob">DOB</label>
-                    <input
-                        type="date"
-                        id="dob"
-                        name="dob"
-                        class="form-control"
-                        value="${patient.BirthDate}"
-                        disabled="disabled">
-
-                    <div>
-                        <label for="lname">Last Name
-                            <input
-                                type="text"
-                                id="lname"
-                                name="lname"
-                                class="form-control name-fields"
-                                value="${patient.LastName}"
-                                disabled="disabled">
-                        </label>
-                        <label for="fname">First Name
-                            <input
-                                type="text"
-                                id="fname"
-                                name="fname"
-                                class="form-control name-fields"
-                                value="${patient.FirstName}"
-                                disabled="disabled">
-                        </label>
-                        <label for="mname">Middle Name
-                            <input
-                                type="text"
-                                id="mname"
-                                name="mname"
-                                class="form-control name-fields"
-                                value="${patient.LastName}"
-                                disabled="disabled">
-                        </label>
-                    </div>
-
-                    <div class="field-flex">
-                        <label for="ss4">Last 4-digits SSN
-                            <input
-                                type="text"
-                                id="ss4"
-                                name="ss4"
-                                class="form-control"
-                                maxlength="4"
-                                value="${patient.SSNumber}"
-                                disabled="disabled">
-                        </label>
-                        #set($vaccines = $patient.getVaccines())
-                        #set($index = $vaccines.size() - 1)
-                        #set($lotNum = $vaccines.get($index))
-                        <label for="lotNumber">Vaccine Lot Number:
-                            <input
-                                type="text"
-                                id="lotNumber"
-                                name="lotNumber"
-                                class="form-control"
-                                value="${lotNum.lotNumber()}">
-                        </label>
-                        <label for="pnum">Patient Number:
-                            <input type="text" id="pnum" name="pnum" class="form-control" value="${patient.Id}">
-                        </label>
-                    </div>
-                    <div></fieldset>
+                    <p style="font-size:14pt;text-align: right;">Date of Birth: ${patient.BirthDate}
+                    <br>Internal Reference Number: ${patient.Id}</p>
+                </div>
+            </fieldset>
+            <fieldset>
+            <legend>Vaccinations</legend>
+            <table class="table table-striped table-hover table-bordered" style="background-color: white;">
+                        <thead>
+                            <tr>
+                                <th scope="col">Lot Number</th>
+                                <th scope="col">Site Name</th>
+                                <th scope="col">Site Location</th>
+                                <th scope="col">Manufacturer</th>
+                                <th scope="col">Administrated On</th>
+                                <th scope="col">Administered By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($vaccine in $vaccines)
+                                <tr>
+                                    <td>${vaccine.lotNumber()}</td>
+                                    <td>${vaccine.site().name()}</td>
+                                    <td>${vaccine.site().location()}</td>
+                                    <td>${vaccine.manufacturer()}</td>
+                                    <td>${vaccine.administeredDate()}</td>
+                                    <td>${vaccine.givenBy().lastName()}, ${vaccine.givenBy().firstName()}</td>
+                                </tr>
+                            #end
+                            #if($vaccines.isEmpty())
+                                <tr>
+                                    <td colspan="7" class="table-error">
+                                        There are no vaccines for this Patient
+                                    </td>
+                                </tr>
+                            #end
+                        </tbody>
+                    </table>
+            </fieldset>
                     <br>
 
                     <br>

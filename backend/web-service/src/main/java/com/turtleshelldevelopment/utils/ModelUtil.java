@@ -34,7 +34,8 @@ public class ModelUtil {
                 headerInfo.put("logged_in", false);
             }
         }
-        modelData.put("header", new VelocityTemplateEngine().render(new ModelAndView(headerInfo.toMap(), "frontend/header.vm")));
+        modelData.put("header", new VelocityTemplateEngine().render(new ModelAndView(headerInfo.toMap(), "/frontend/header.vm")));
+        modelData.put("global_head", new VelocityTemplateEngine().render(new ModelAndView(Map.of(), "/frontend/global_head.vm")));
     }
 
     public ModelUtil addPermissions(HashMap<PermissionType, Boolean> perms) {

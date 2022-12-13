@@ -72,7 +72,7 @@ public class Routing {
         path("/insurance", () -> {
             post("/add/:user_id", new AddInsuranceInformationEndpoint());
             get("/add/:user_id", new AddInsuranceInformationPage());
-            delete("/remove/:id", new DeleteInsuranceInformationEndpoint());
+            get("/remove/:user_id/:id", new DeleteInsuranceInformationEndpoint());
         });
     }
 
@@ -121,6 +121,7 @@ public class Routing {
     }
 
     public void createVaccineRoutes() {
+        before("/vaccine/*", (req, resp) -> EndpointFilters.verifyCredentials(req, resp, PermissionType.EDIT_PATIENT));
         path("/vaccine", () -> {
            get("/add/:id", new NewDosePage());
            post("/add/:id", new AddVaccineEndpoint());
@@ -128,10 +129,12 @@ public class Routing {
     }
 
     public void createContactRoutes() {
+        before("/contact/*", (req, resp) -> EndpointFilters.verifyCredentials(req, resp, PermissionType.EDIT_PATIENT));
         path("/contact", () -> {
             //Move to delete later
-            get("/remove/:id", new DeleteContactInformationEndpoint());
+            get("/remove/:user_id/:id", new DeleteContactInformationEndpoint());
             get("/add/:id", new AddContactPage());
+            post("/add/:id", new AddContactEndpoint());
         });
     }
 
@@ -149,19 +152,12 @@ public class Routing {
     }
 
     public void createReportRoutes() {
+        before("/report/*", (req, resp) -> EndpointFilters.verifyCredentials(req, resp, PermissionType.REPORTS));
         path("/report", () -> {
             get("/daily", new DailyReportPage());
             post("/daily/generate", new DailyReportEndpoint());
             get("/weekly", new WeeklyReportPage());
             post("/weekly/generate", new WeeklyReportEndpoint());
-        });
-        path("/contact", () -> {
-            get("/add/:id", new AddContactPage());
-            post("/add/:id", new AddContactEndpoint());
-        });
-        path("/insurance", () -> {
-            get("/add/:id", new AddInsuranceInformationPage());
-            post("/add/:id", new AddInsuranceInformationEndpoint());
         });
     }
     public void fire() {

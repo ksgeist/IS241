@@ -13,20 +13,14 @@
     <script src="/assets/js/add_record.js" defer></script>
     <script src="/assets/js/patient_records/print_VIS.js" defer></script>
     <script src="/assets/js/radio_button_error_flag.js" defer="defer"></script>
-    <script src="/assets/js/modernizr.custom.40753.js"></script>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
-        crossorigin="anonymous"></script>
-        <style>
-            .nav-handler {
-                margin: 0 auto;
-                width: 1024px;
-                padding-top: 5px;
-            }
-        </style>
+    <style>
+        .nav-handler {
+            margin: 0 auto;
+            width: 1024px;
+            padding-top: 5px;
+        }
+    </style>
+    ${global_head}
 </head>
 
 

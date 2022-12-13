@@ -152,5 +152,4 @@ function openVIS(lang, vax, manu) {
   }
   window.open(url);
 }
-
 printButton.addEventListener("click", getOptions);
