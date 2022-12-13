@@ -144,7 +144,7 @@ public class AddRecordEndpoint implements Route {
                 createVaccine.setString(1, vaccineLotNum);
                 createVaccine.setInt(2, site);
                 createVaccine.setDate(4, new Date(dateFiled.toEpochSecond(LocalTime.now(), timeZone)));
-                createVaccine.setString(5, vaccineManu);
+                createVaccine.setString(5, vaccineManu.substring(0, 1).toUpperCase() + vaccineManu.substring(1));
                 createVaccine.setInt(6, Constants.VACCINE_SERIES.get(vaccineSeries));
                 createVaccine.setInt(7, user);
 
