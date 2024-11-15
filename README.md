@@ -1,4 +1,4 @@
-This is the README for STLCC IS 241 Systems Analysis and Design class, Fall 2022. We are the Turtle Shell Development team. Members include:
+This is the README for a mock Vaccine Registry, conceived by the Turtle Shell Development team from St. Louis in  Fall 2022. We are:
 - Katherine Geist
 - Colin Kinzel
 - Tom Prindiville
